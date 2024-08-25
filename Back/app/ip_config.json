@@ -1,0 +1,5 @@
+{
+    "request_origins": ["*"],
+    "server_ip": "ip ejemplo",
+    "server_port": "puerto ejemplo"
+}

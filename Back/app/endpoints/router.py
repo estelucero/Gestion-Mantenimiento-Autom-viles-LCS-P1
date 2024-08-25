@@ -1,15 +1,15 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from app.endpoints.dtos import ejemploDTO
 
-app = FastAPI()
+
+router = APIRouter(prefix="/users", tags=["User"])
 
 #PUT-GET-POST-DELETE-PATCH
-
-@app.get("/")
+@router.get("/")
 def index():
     return {"message":"prueba"}
 
-@app.put("/ejemploDTO")
+@router.put("/ejemploDTO")
 def registrarUsuario(usuario : ejemploDTO):
 
     return print("Ingreso nombre:"+usuario.nombre+
