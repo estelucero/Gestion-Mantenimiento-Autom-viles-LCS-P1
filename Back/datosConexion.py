@@ -3,9 +3,9 @@ class datosSQL(object):
   def __init__(self):
     self.host = "localhost"
     self.user = "root"
-    self.password = "completar"
+    self.password = "asd"
 
 class datosAPI(object):
   def __init__(self):
-    self.ip = "completar"
-    self.puerto = "completar"
+    self.ip = "asd"
+    self.puerto = "asd"
