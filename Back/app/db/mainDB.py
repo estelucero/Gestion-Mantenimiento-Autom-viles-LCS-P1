@@ -1,9 +1,13 @@
 import mysql.connector
 
+from app.datosConexion import datosSQL
+
+myUser = datosSQL()
+
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="shurimashuffle"
+  host= myUser.host,
+  user= myUser.user,
+  password= myUser.password
 )
 
 mycursor = mydb.cursor()

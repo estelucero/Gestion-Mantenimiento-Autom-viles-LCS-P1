@@ -1,14 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.endpoints.router import router as user_router
+from app.endpoints.router import router
 
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,4 +15,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(user_router)
+app.include_router(router)
