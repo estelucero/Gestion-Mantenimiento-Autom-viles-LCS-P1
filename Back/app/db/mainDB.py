@@ -1,12 +1,17 @@
 import mysql.connector
+import sys
+#PARA QUE ENCUENTRE EL ARCHIVO DATOS CONEXION
+sys.path.append("Gestion-Mantenimiento-Autom-viles-LCS-P1/Back")
 
+from datosConexion import datosSQL
 
+data = datosSQL()
 
 mydb = mysql.connector.connect(
-  host= "bcenvjguizhu2dxdkmnl-mysql.services.clever-cloud.com",
-  user= "uzuejmdalit6qsrz",
-  passwd= "XxNCaVnLC9N7756xhDtO",
-  database="bcenvjguizhu2dxdkmnl"
+  host= data.host,
+  user= data.user,
+  passwd= data.password,
+  database= data.database
 )
 
 mycursor = mydb.cursor()
