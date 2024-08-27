@@ -1,5 +1,6 @@
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 *{
   font-family: "Poppinms", sans-serif;
   margin: 0;
@@ -46,6 +47,10 @@ header {
   z-index: 100;
 }
 
+p {
+  font-family: "Raleway", sans-serif;
+}
+
 /* Navbar */
 .nav {
   display: flex;
@@ -58,7 +63,6 @@ header {
     max-width: 100%;
     margin-left: auto;
     margin-right:auto;
-  
 }
 
 #menu-icon {
@@ -505,20 +509,20 @@ header {
       url("../assets/imagenes/fondo-principal.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center left;
+    background-position: center;
   }
   .home-text {
     font-size: 2rem;
   }
   
   .home-text .home-titulo {
-    margin-left: 15%;
+    margin-left: 1%;
     color: white;
   }
   
   .home-text .text-blanco {
     display: flex;
-    margin-left: 15%;
+    margin-left: 1%;
     font-size: 1.5rem;
     font-weight: bold;
     color: white;
@@ -551,6 +555,10 @@ header {
     background-color: rgba(29, 29, 28, 0.9);
     padding: 1rem;
     flex-direction: column;
+  }
+
+  .boton-padding {
+    padding: 10px;
   }
 
   .text-alerta {
