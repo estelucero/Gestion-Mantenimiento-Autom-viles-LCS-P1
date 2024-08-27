@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.endpoints.router import router
-
+import subprocess
 
 app = FastAPI()
 
@@ -16,3 +16,5 @@ app.add_middleware(
 )
 
 app.include_router(router)
+
+subprocess.run(["python", "Back/app/db/mainDB.py"])

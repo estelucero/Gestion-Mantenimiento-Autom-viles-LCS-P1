@@ -1,7 +1,4 @@
 import mysql.connector
-import sys
-#PARA QUE ENCUENTRE EL ARCHIVO DATOS CONEXION
-sys.path.append("Gestion-Mantenimiento-Autom-viles-LCS-P1/Back")
 
 from datosConexion import datosSQL
 
