@@ -4,8 +4,6 @@ from datosConexion import datosSQL
 
 data = datosSQL()
 
-print("XD")
-
 mydb = mysql.connector.connect(
   host= data.host,
   user= data.user,
