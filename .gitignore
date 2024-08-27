@@ -1,1 +1,6 @@
+
+#No trackear el entorno virtual
 .venv
+
+#no trackear info sensible
+Back\datosConexion.py
