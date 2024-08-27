@@ -1,6 +1,5 @@
-import sys, mysql.connector
-sys.path.append("Gestion-Mantenimiento-Autom-viles-LCS-P1/Back/app")
-from db.mainDB import mydb, mycursor
+import mysql.connector
+from app.db.mainDB import mydb, mycursor
 from app.endpoints.dtos import usuarioParticularRegistroDTO, usuarioRegistradoDTO
 
 class dbCallService():
