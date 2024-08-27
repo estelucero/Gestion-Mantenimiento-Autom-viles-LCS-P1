@@ -1,11 +1,13 @@
 
 class datosSQL(object):
   def __init__(self):
-    self.host = "localhost"
-    self.user = "root"
-    self.password = "asd"
+    self.host = "COMPLETAR"
+    self.user = "COMPLETAR"
+    self.password = "COMPLETAR"
+    self.database = "COMPLETAR"
 
 class datosAPI(object):
   def __init__(self):
-    self.ip = "asd"
-    self.puerto = "asd"
+    self.ip = "COMPLETAR CON IP PROPIA"
+    self.puerto = "9090"
+
