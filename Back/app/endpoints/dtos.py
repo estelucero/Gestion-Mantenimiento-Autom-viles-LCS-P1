@@ -8,10 +8,13 @@ class ejemploDTO(BaseModel):
 class usuarioParticularRegistroDTO(BaseModel):
     nombre : str
     apellido : str
-    dni : int
+    dni : str
     email : str
     contraseña : str
     cuil : str
 
 class usuarioRegistradoDTO(BaseModel):
     email : str
+
+class verificacionUsuarioLogeo(BaseModel):
+    response : bool
