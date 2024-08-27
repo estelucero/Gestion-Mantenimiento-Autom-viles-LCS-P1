@@ -8,6 +8,7 @@ class dbCallService():
         self.dbConexion = mydb
         self.dbCursor = mycursor
     
+    #PRIMERO SE CARGA EL STORED PROCEDURE CON LOS DATOS A COMPLETAR %S Y LUEGO SE COMPLETA CON OTRO OBJETO, EN ESTE CASO UPDATA.
     def registrarUsuarioParticularDB(self, usuarioParticular : usuarioParticularRegistroDTO):
         try :
             registroUP = "INSERT INTO `usuariosParticular` (`nombre`, `apellido`, `dni`, `email`, `contraseña`, `cuil`) VALUES (%s, %s, %s, %s, %s, %s);"
