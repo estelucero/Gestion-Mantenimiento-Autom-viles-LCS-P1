@@ -463,7 +463,7 @@ header {
 
 @media (max-width: 768px) {
   .nav {
-    padding: 10px 0;
+    padding: 10px 15px;
   }
   #menu-icon {
     display: initial;
@@ -522,6 +522,45 @@ header {
     font-size: 1.5rem;
     font-weight: bold;
     color: white;
+  }
+  .about {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: rgba(29, 29, 28, 0.9);
+    padding: 1rem;
+  }
+
+  .about-text h2 {
+    font-size: 2rem;
+    padding-bottom: 1rem;
+    color: white;
+  }
+
+  .about-text p {
+    font-size: 1.5rem;
+    color: white;
+    padding: 10px 0;
+    max-width: 750px;
+    text-align: center;
+  }
+
+  .register {
+    display: flex;
+    gap: 1.5rem;
+    background-color: rgba(29, 29, 28, 0.9);
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .text-alerta {
+    font-size: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  .cars-text .text-p {
+    font-size: 1.2rem;
+    padding-bottom: 0.5rem;
   }
 }
 
