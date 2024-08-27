@@ -1,4 +1,8 @@
 import uvicorn
+from datosConexion import datosAPI
+
+myIp = datosAPI()
 
 if __name__ == "__main__":
-    config = uvicorn.run("app.endpoints.router:app", host="192.168.1.40", port=9090, log_level="info")
+    config = uvicorn.run("app.api:app", host=myIp.ip, port=myIp.puerto, log_level="info")
+
