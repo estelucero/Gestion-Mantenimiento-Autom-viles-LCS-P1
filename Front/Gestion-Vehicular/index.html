@@ -14,27 +14,30 @@
   </head>
   <body>
     <!-- Navbar -->
-
-    <nav>
-      <div class="nav nav-container">
-        <i class="bx bx-menu" id="menu-icon"></i>
-        <a href="#" class="logo">Control<span>Car</span></a>
-        <ul class="navbar">
-          <li class="navbar-padding">
-            <a href="">Inicio</a>
-          </li>
-          <li class="navbar-padding">
-            <a href=""><b>Iniciar Sesión</b></a>
-          </li>
-          <li class="boton-text">
-            <button class="boton-naranja">
+    <header>
+      <nav>
+        <div class="nav nav-container">
+          <i class="bx bx-menu" id="menu-icon"></i>
+          <a href="#" class="logo">Control<span>Car</span></a>
+          <ul class="navbar">
+            <li class="navbar-padding">
+              <a href="">Inicio</a>
+            </li>
+            <li class="navbar-padding">
+              <a href=""><b>Iniciar Sesión</b></a>
+            </li>
+            <li class="boton-text">
+              <button class="boton-naranja">
+                <a>Registrarse</a>
+              </button>
+            </li>
+            <li class="navbar-padding" id="link-registrarse">
               <a>Registrarse</a>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
     <!-- Home -->
     <section class="home" id="home">
       <div class="home-text">
@@ -121,7 +124,15 @@
       </div>
     </section>
     <!-- Sponsors-->
-    <section></section>
+    <section>
+      <div class="sponsor-section">
+        <div class="sponsor-container"><img src="./assets/logos/fiat.png" alt="logo Fiat"></div>
+        <div class="sponsor-container"><img src="./assets/logos/ford.png" alt="logo Ford"></div>
+        <div class="sponsor-container"><img src="./assets/logos/kia.png" alt="logo Kia"></div>
+        <div class="sponsor-container"><img src="./assets/logos/mclaren.png" alt="logo McLaren"></div>
+        <div class="sponsor-container"><img src="./assets/logos/toyota.png" alt="logo Toyota"></div>
+      </div>
+    </section>
     <!-- Footer -->
     <section class="footer">
       <div class="footer-container container">
@@ -137,7 +148,7 @@
         <div class="footer-box box-column">
           <h3>Página</h3>
           <a href="#">Inicio</a>
-          <a href="#">About Us</a>
+          <a href="#">Sobre Nosotros</a>
           <a href="#">Alertas</a>
           <a href="#">Registrarse</a>
         </div>
@@ -152,5 +163,8 @@
     <div class="copytight">
       <p>&#169; Universidad Nacional General Sarmiento</p>
     </div>
+
+    <!-- Scripts -->
+     <script src="./scripts/index.js"></script>
   </body>
 </html>
