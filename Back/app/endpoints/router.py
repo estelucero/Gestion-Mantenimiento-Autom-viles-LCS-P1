@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO
+from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO
 from app.endpoints.endpoint import dbCallService
 
 
@@ -89,6 +89,29 @@ def eliminarVehiculoUsuarioOrganizacion(patente = Query()):
     response = call_service.eliminarVehiculoUsuarioOrganizacionDB(patente)
 
     if (response != True and response != False):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+
+#AMBAS AGREGAR REVISION RECIBEN LO MISMO. UN OBJETO DE ESE TIPO. NECESITO QUE HANDLEES LAS FECHAS EN EL FRONT, NO PUEDE HABER NULL EN LOS CAMPOS DE LAS FECHAS CDO LO ENVIES.
+#DEVUELVE UN ERROR SI FALLA EL AGREGAR
+@router.post("/agregarRevisionesVehiculoParticular")    
+def agregarRevisionesVehiculoParticular(revisiones : list[vehiculoRevisionDTO]):
+    for vehiculoRevision in revisiones:
+        response = call_service.agregarRevisionVehiculoParticularDB(vehiculoRevision)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+@router.post("/agregarRevisionesVehiculoOrganizacion")    
+def agregarRevisionesVehiculoOrganizacion(revisiones : list[vehiculoRevisionDTO]):
+    for vehiculoRevision in revisiones:
+        response = call_service.agregarRevisionVehiculoOrganizacionDB(vehiculoRevision)
+
+    if (response != True and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
