@@ -1,6 +1,7 @@
+from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoRegistradoDTO, verificacionUsuarioLogeoDTO
+from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO
 
 class dbCallService():
     def __init__(self):
@@ -139,3 +140,102 @@ class dbCallService():
         except mysql.connector.Error as err:
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
+        
+
+    def calculoRevision(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
+        
+        if vehiculoRevision.revisionPorFecha:
+
+            if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
+                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=183)
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos'):
+                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+                return vehiculoRevision
+
+            if(vehiculoRevision.nombre.lower() == 'revision_fluidos'):
+                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'servicio_completo'):
+                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'revision_escape'):
+                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'revision_bateria'):
+                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=912)
+                return vehiculoRevision
+
+        else:
+
+            #ASIGNO LOS KM DEL VEHICULO A LA REVISION X KM
+            if esParticular:
+                try :
+                    vehiculoGETKM = "SELECT `CantKM` FROM vehiculosParticular WHERE patente = %s"
+                    vehiculoGETKMData = (vehiculoRevision.patente,)
+                    self.dbCursor.execute(vehiculoGETKM, vehiculoGETKMData)
+                    result = self.dbCursor.fetchall()
+                    vehiculoRevision.kmActual = result[0][0]
+                
+                except mysql.connector.Error as err:
+                    self.dbConexion.rollback()
+                    return {"error":"Algo fue mal: {}".format(err)}
+            
+            else:
+                
+                try :
+                    vehiculoGETKM = "SELECT `CantKM` FROM vehiculosOrganizacion WHERE patente = %s"
+                    vehiculoGETKMData = (vehiculoRevision.patente,)
+                    self.dbCursor.execute(vehiculoGETKM, vehiculoGETKMData)
+                    result = self.dbCursor.fetchall()
+                    vehiculoRevision.kmActual = result[0][0]
+                
+                except mysql.connector.Error as err:
+                    self.dbConexion.rollback()
+                    return {"error":"Algo fue mal: {}".format(err)}
+                
+            if(vehiculoRevision.nombre.lower() == 'revision_frenos'):
+                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 20000
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'rotacion_neumaticos'):
+                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 13500
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'revision_correa'):
+                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 80000
+                return vehiculoRevision
+            
+            if(vehiculoRevision.nombre.lower() == 'cambio_bujias'):
+                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 100000
+                return vehiculoRevision
+
+    
+    def agregarRevisionVehiculoParticularDB(self, vehiculoRevision : vehiculoRevisionDTO):
+        try:
+            auxiliar = self.calculoRevision(vehiculoRevision, True)
+            revisionUP="INSERT INTO `revisionesVehiculoParticular` (`nombre`, `fechaUltRevision`, `fechaProxRevision`, `kmUltRevision`, `kmProxRevision`, `estado`, `patenteVehiculo`, `revisaPorFecha`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
+            revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.kmActual, auxiliar.kmProxRevision, auxiliar.estado, auxiliar.patente, auxiliar.revisionPorFecha)
+            self.dbCursor.execute(revisionUP, revisionUPData)
+            self.dbConexion.commit()
+            return True
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+        
+
+    def agregarRevisionVehiculoOrganizacionDB(self, vehiculoRevision : vehiculoRevisionDTO):
+        try:
+            auxiliar = self.calculoRevision(vehiculoRevision, False)
+            revisionUP="INSERT INTO `revisionesVehiculoOrganizacion` (`nombre`, `fechaUltRevision`, `fechaProxRevision`, `kmUltRevision`, `kmProxRevision`, `estado`, `patenteVehiculo`, `revisaPorFecha`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
+            revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.kmActual, auxiliar.kmProxRevision, auxiliar.estado, auxiliar.patente, auxiliar.revisionPorFecha)
+            self.dbCursor.execute(revisionUP, revisionUPData)
+            self.dbConexion.commit()
+            return True
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}

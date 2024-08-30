@@ -51,3 +51,13 @@ class vehiculoRegistradoDTO(BaseModel):
     patente : str
     modelo : str
     marca : str
+
+class vehiculoRevisionDTO(BaseModel):
+    nombre : str
+    fechaUltRevision : date
+    fechaProxRevision : date
+    kmActual : float
+    kmProxRevision : float
+    estado : str
+    patente : str
+    revisionPorFecha : bool
