@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO
 from app.endpoints.endpoint import dbCallService
-
+from fastapi_restful.tasks import repeat_every
 
 router = APIRouter(prefix="/users", tags=["User"])
 
@@ -115,3 +115,14 @@ def agregarRevisionesVehiculoOrganizacion(revisiones : list[vehiculoRevisionDTO]
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
+
+
+@router.get("/verificarYActualizarRevisionesAVencer")
+#@repeat_every(seconds=40)
+def verificarYActualizarRevisionesAVencer():
+
+    response = call_service.actualizarRevisionesRegistradasParticularDB()
+    
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    

@@ -23,9 +23,9 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS vehiculosOrganizacion (patente VARC
 
 mycursor.execute("CREATE TABLE IF NOT EXISTS viajesPendientesParticular (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, fechaInicio DATE, distanciaKM DOUBLE(7, 2), nombre VARCHAR(30), estado BOOLEAN, patenteVehiculo VARCHAR(7), cuilUsuario VARCHAR(13), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente), FOREIGN KEY(cuilUsuario) REFERENCES usuariosParticular(cuil));")
 
-mycursor.execute("CREATE TABLE IF NOT EXISTS revisionesVehiculoParticular (nombre VARCHAR(20) PRIMARY KEY, fechaUltRevision DATE, fechaProxRevision DATE, kmUltRevision DOUBLE(10,2), kmProxRevision DOUBLE(10,2), estado VARCHAR(15), patenteVehiculo VARCHAR(7), revisaPorFecha BOOLEAN, FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente));")
+mycursor.execute("CREATE TABLE IF NOT EXISTS revisionesVehiculoParticular (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(20), fechaUltRevision DATE, fechaProxRevision DATE, kmUltRevision DOUBLE(10,2), kmProxRevision DOUBLE(10,2), estado VARCHAR(15), patenteVehiculo VARCHAR(7), revisaPorFecha BOOLEAN, UNIQUE(patenteVehiculo, nombre), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente));")
 
-mycursor.execute("CREATE TABLE IF NOT EXISTS revisionesVehiculoOrganizacion (nombre VARCHAR(20) PRIMARY KEY, fechaUltRevision DATE, fechaProxRevision DATE, kmUltRevision DOUBLE(10,2), kmProxRevision DOUBLE(10,2), estado VARCHAR(15), patenteVehiculo VARCHAR(7), revisaPorFecha BOOLEAN, FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosOrganizacion(patente));")
+mycursor.execute("CREATE TABLE IF NOT EXISTS revisionesVehiculoOrganizacion (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(20), fechaUltRevision DATE, fechaProxRevision DATE, kmUltRevision DOUBLE(10,2), kmProxRevision DOUBLE(10,2), estado VARCHAR(15), patenteVehiculo VARCHAR(7), revisaPorFecha BOOLEAN, UNIQUE(patenteVehiculo, nombre), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosOrganizacion(patente));")
 
 mycursor.execute("CREATE TABLE IF NOT EXISTS controlPendienteParticular (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, fechaHastaVencer DATE, cuilDueño VARCHAR(13), patenteVehiculo VARCHAR(7), FOREIGN KEY(cuilDueño) REFERENCES usuariosParticular(cuil), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente));")
 

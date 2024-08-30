@@ -144,6 +144,8 @@ class dbCallService():
 
     def calculoRevision(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
         
+
+        vehiculoRevision.estado = "en_orden"
         if vehiculoRevision.revisionPorFecha:
 
             if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
@@ -235,6 +237,180 @@ class dbCallService():
             revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.kmActual, auxiliar.kmProxRevision, auxiliar.estado, auxiliar.patente, auxiliar.revisionPorFecha)
             self.dbCursor.execute(revisionUP, revisionUPData)
             self.dbConexion.commit()
+            return True
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+        
+    
+    def obtenerRevisionesRegistradas(self, esParticular):
+        try:
+            if esParticular:
+                self.dbCursor.execute("SELECT id, patenteVehiculo, nombre, fechaProxRevision, kmProxRevision, revisaPorFecha, estado, kmUltRevision FROM `revisionesVehiculoParticular`")
+                patentes = self.dbCursor.fetchall()
+                return patentes
+            else:
+                self.dbCursor.execute("SELECT id, patenteVehiculo, nombre, fechaProxRevision, kmProxRevision, revisaPorFecha, estado, kmUltRevision FROM `revisionesVehiculoOrganizacion`")
+                patentes = self.dbCursor.fetchall()
+                return patentes
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+
+    def actualizarNuevoEstado(self, idRevision, esParticular):
+
+        try:
+            if esParticular:
+                actualizarRevUP = "UPDATE `revisionesVehiculoParticular` SET estado = 'por_vencer' WHERE id = %s"
+                actualizarRevUPDATA = (idRevision,)
+                self.dbCursor.execute(actualizarRevUP, actualizarRevUPDATA)
+                self.dbConexion.commit()
+                return
+            else:
+                actualizarRevUP = "UPDATE `revisionesVehiculoOrganizacion` SET estado = 'por_vencer' WHERE id = %s"
+                actualizarRevUPDATA = (idRevision,)
+                self.dbCursor.execute(actualizarRevUP, actualizarRevUPDATA)
+                self.dbConexion.commit()
+                return
+        
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+        
+
+
+    #TUPLA REVISION DE FORMA (ID, PATENTE, NOMBREREVISION, FECHAPROXREVISION, KMPROXREVISION, REVISAPORFECHA, ESTADO, KMANTERIOREVISION)
+    def actualizarRevision(self, revisionTuple, esParticular):
+        try:
+            #SI YA ESTA ACTUALIZADO, NO PERDER TIEMPO REACTUALIZANDO.
+            if(revisionTuple[6] == 'por_vencer'):
+                return
+
+            if esParticular:
+
+                #REVISIONES X FECHA
+                if(revisionTuple[5] == True):
+                    
+                    #AVISOS 1 DIA ANTES.
+                    if(revisionTuple[2] == 'cambio_aceite' or revisionTuple[2] == 'revision_neumaticos' or revisionTuple[2] == 'revision_fluidos'):
+                        delta = revisionTuple[3] - date.today()
+                        if(delta.days <= 1):
+                            self.actualizarNuevoEstado(revisionTuple[0], True)
+                            return
+                        else:
+                            return
+
+                    #AVISOS 2 DIA ANTES.    
+                    if(revisionTuple[2] == 'servicio_completo' or revisionTuple[2] == 'revision_escape'):
+                        delta = revisionTuple[3] - date.today()
+                        if(delta.days <= 2):
+                            self.actualizarNuevoEstado(revisionTuple[0], True)
+                            return
+                        else:
+                            return
+                    
+                    #AVISOS 1 MES ANTES.
+                    if(revisionTuple[2] == 'revision_bateria'):
+                        delta = revisionTuple[3] - date.today()
+                        if(delta.days <= 31):
+                            self.actualizarNuevoEstado(revisionTuple[0], True)
+                            return
+                        else:
+                            return
+                        
+                #REVISIONES X KM        
+                else:
+
+                    #OBTENER LOS KM ACTUALES DEL VEHICULO A REVISAR
+                    obtenerKMActualesUP = "SELECT CantKM FROM `vehiculosParticular` WHERE patente = %s"
+                    obtenerKMActualesUPData = (revisionTuple[1],)
+                    self.dbCursor.execute(obtenerKMActualesUP, obtenerKMActualesUPData)
+                    kmActuales = self.dbCursor.fetchall()
+                    
+                    #AVISO 2000 km ANTES DE TENERLOS QUE CAMBIAR
+                    if(revisionTuple[2] == 'revision_frenos' or revisionTuple[2] == 'rotacion_neumaticos'):
+                        #SI LOS KM QUE SE RECORRIERON SON MAYORES A LOS DE LA PROXIMA REVISION - CUANTOS KM ANTES AVISAR
+                        if( kmActuales[0][0] - revisionTuple[7] >= revisionTuple[5]-2000 ):
+                            self.actualizarNuevoEstado(revisionTuple[0], True)
+                            return
+                        else:
+                            return
+                    
+                    #AVISO 25000 km ANTES DE TENERLOS QUE CAMBIAR
+                    if(revisionTuple[2] == 'revision_correa' or revisionTuple[2] == 'cambio_bujias'):
+                        if( kmActuales[0][0] - revisionTuple[7] >= revisionTuple[5]-25000 ):
+                            self.actualizarNuevoEstado(revisionTuple[0], True)
+                            return
+                        else:
+                            return
+            
+            #LO MISMO PERO SE CARGA PARA CUANDO SON DE ORGANIZACION
+            else:
+                #REVISIONES POR FECHA
+                if(revisionTuple[5] == True):
+
+                    #AVISOS 1 DIA ANTES.
+                    if(revisionTuple[2] == 'cambio_aceite' or revisionTuple[2] == 'revision_neumaticos' or revisionTuple[2] == 'revision_fluidos'):
+                        delta = revisionTuple[3] - date.today()
+                        if(delta.days <= 1):
+                            self.actualizarNuevoEstado(revisionTuple[0], False)
+                            return
+                        else:
+                            return
+
+                    #AVISOS 2 DIA ANTES.
+                    if(revisionTuple[2] == 'servicio_completo' or revisionTuple[2] == 'revision_escape'):
+                        delta = revisionTuple[3] - date.today()
+                        if(delta.days <= 2):
+                            self.actualizarNuevoEstado(revisionTuple[0], False)
+                            return
+                        else:
+                            return
+                        
+                    #AVISOS 1 MES ANTES.
+                    if(revisionTuple[2] == 'revision_bateria'):
+                        delta = revisionTuple[3] - date.today()
+                        if(delta.days <= 31):
+                            self.actualizarNuevoEstado(revisionTuple[0], False)
+                            return
+                        else:
+                            return
+                        
+                #REVISIONES X KM        
+                else:
+                    #OBTENER LOS KM ACTUALES DEL VEHICULO A REVISAR
+                    obtenerKMActualesUP = "SELECT CantKM FROM `vehiculosOrganizacion` WHERE patente = %s"
+                    obtenerKMActualesUPData = (revisionTuple[1],)
+                    self.dbCursor.execute(obtenerKMActualesUP, obtenerKMActualesUPData)
+                    kmActuales = self.dbCursor.fetchall()
+                    
+                    #AVISO 2000 km ANTES DE TENERLOS QUE CAMBIAR
+                    if(revisionTuple[2] == 'revision_frenos' or revisionTuple[2] == 'rotacion_neumaticos'):
+                        #SI LOS KM QUE SE RECORRIERON SON MAYORES A LOS DE LA PROXIMA REVISION - CUANTOS KM ANTES AVISAR
+                        if( kmActuales[0][0] - revisionTuple[7] >= revisionTuple[5]-2000 ):
+                            self.actualizarNuevoEstado(revisionTuple[0], False)
+                            return
+                        else:
+                            return
+                    
+                    #AVISO 25000 km ANTES DE TENERLOS QUE CAMBIAR
+                    if(revisionTuple[2] == 'revision_correa' or revisionTuple[2] == 'cambio_bujias'):
+                        if( kmActuales[0][0] - revisionTuple[7] >= revisionTuple[5]-25000 ):
+                            self.actualizarNuevoEstado(revisionTuple[0], False)
+                            return
+                        else:
+                            return
+                        
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+    def actualizarRevisionesRegistradasParticularDB(self):
+        try:
+            aux = self.obtenerRevisionesRegistradas(True)
+            for i in range(len(aux)):
+                self.actualizarRevision(aux[i], True)
             return True
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
