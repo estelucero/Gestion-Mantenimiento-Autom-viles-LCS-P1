@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Style-->
+  <link rel="stylesheet" href="../style/index.css" />
+  <link rel="stylesheet" href="../style/inicio.css" />
+  <!-- Box Icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav>
+      <div class="nav nav-container">
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <a href="#" class="logo">Control<span>Car</span></a>
+        <ul class="navbar navbar-center">
+          <div class="user-info-menu">
+            <div class="user-info">
+              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic">
+              <h3>Lando Norris</h3>
+            </div>
+          </div>
+          <li class="navbar-padding">
+            <a href="">Inicio</a>
+          </li>
+          <li class="navbar-padding" id="alerta">
+            <a href="">Notificaciones</a>
+          </li>
+          <li class="navbar-padding" id="logout">
+            <a href="">Cerrar Sesión</a>
+          </li>
+          <img src="../assets/logos/alerta.png" alt="" class="user-pic-pic" id="logo-alerta">
+          <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" onclick="toggleMenu()" id="logo-user">
+        </ul>
+        <div class="sub-menu-wrap" id="subMenu">
+          <div class="sub-menu">
+            <div class="user-info">
+              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic">
+              <h3>Lando Norris</h3>
+            </div>
+            <hr>
+            <a href="#" class="sub-menu-link">
+              <img src="../assets/logos/log-out.png" alt="logo log-out" class="user-pic-pic">
+              <p>Cerrar Sesión</p>
+              <span>></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!-- Seccion Titulo -->
+  <section class="home titulo-img" id="home">
+    <div class="home-text titulo-izquierda">
+      <h1 class="home-titulo ">Bienvenido a Su <span>Cuenta</span></h1>
+      <p class="text-blanco">Simplifica la gestión, acelera tu éxito.</p>
+    </div>
+  </section>
+  <!-- Seccion Autos -->
+  <section class="section-autos">
+    <div class="section-buscador">
+      <input type="text" placeholder="Buscar...">
+      <button><i class='bx bx-search'></i></button>
+    </div>
+    <!-- Cards -->
+    <div class="section-card">
+      <div class="wrapper">
+        <div class="notifications">
+          <!-- Auto 1-->
+          <div class="single-box">
+            <div class="box-avatar-text">
+              <div class="avatar">
+                <img src="../assets/imagenes/corolla.png" alt="perfil-imagen">
+              </div>
+              <div class="box-text">
+                <p class="notifi"><a href="" class="name">Toyota Corolla</a> necesita cambio de aceite
+                <p class="time">Hace 1 Minuto</p>
+              </div>
+            </div>
+            <div class="box-img">
+              <img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic">
+              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic">
+            </div>
+          </div>
+          <!-- Auto 2 -->
+          <div class="single-box ">
+            <div class="box-avatar-text">
+              <div class="avatar">
+                <img src="../assets/imagenes/corolla.png" alt="perfil-imagen">
+              </div>
+              <div class="box-text">
+                <p class="notifi"><a href="" class="name">Toyota Corolla</a> necesita cambio de aceite </p>
+                <p class="time">Hace 1 Minuto</p>
+              </div>
+            </div>
+            <div class="box-img">
+              <img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic">
+              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Footer -->
+  <section class="footer">
+    <div class="footer-container container">
+      <div class="footer-box">
+        <a href="#" class="logo">Control<span>Car</span></a>
+        <div class="social">
+          <a href="#"><i class="bx bxl-facebook"></i></a>
+          <a href="#"><i class="bx bxl-twitter"></i></a>
+          <a href="#"><i class="bx bxl-instagram"></i></a>
+          <a href="#"><i class="bx bxl-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-box box-column">
+        <h3>Página</h3>
+        <a href="#">Inicio</a>
+        <a href="#">Sobre Nosotros</a>
+        <a href="#">Alertas</a>
+        <a href="#">Registrarse</a>
+      </div>
+      <div class="footer-box box-column">
+        <h3>Contacto</h3>
+        <a href="#">Teléfono</a>
+        <a href="#">Mail</a>
+      </div>
+    </div>
+  </section>
+  <!-- Copyright -->
+  <div class="copytight">
+    <p>&#169; Universidad Nacional General Sarmiento</p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../scripts/index.js"></script>
+  <script src="../scripts/inicio.js"></script>
+</body>
+
+</html>
