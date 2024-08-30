@@ -124,15 +124,32 @@
 }
 
 /* Seccion Autos */
+.auto-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  padding: 20px;
+}
+
+.auto-text .home-titulo {
+  color: black;
+}
+
+.auto-text span {
+  color: var(--main-color);
+}
+
 .section-buscador {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  padding: 15px;
 }
 
 input {
-  width: 500px;
+  width: 600px;
   padding: 10px;
   padding-right: 35px;
   border: 1px solid #ccc;
@@ -141,7 +158,7 @@ input {
   font-size: 1rem;
 }
 
-button {
+.button-search {
   background-color: orange;
   padding: 10px;
   border: 0;
@@ -154,7 +171,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.button-search:hover {
   background-color: rgba(48, 46, 44, 0.705);
 }
 
@@ -228,6 +245,65 @@ span.dot {
   margin-left: 10px;
 }
 
+.box-avatar-text {
+  display: flex;
+}
+
+.box-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-img img {
+  margin-left: 1rem;
+}
+
+.button-add-car {
+  width: 100%;
+  height: 16vh;
+  padding: 17px;
+  margin: 12px 0px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  justify-content: space-between;
+  border-style: dashed;
+  border-color: rgba(102, 100, 98, 0.705);
+  border-width: 2px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.button-add-car:hover {
+  background-color: rgba(128, 125, 123, 0.705);
+}
+
+.centrar-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.agregar-auto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-flex {
+  display: flex;
+}
+
+.text-patente {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
 /* Responsive */
 
 @media (max-width: 700px) {
@@ -243,6 +319,34 @@ span.dot {
 
   a.read {
     font-size: 1rem;
+  }
+
+  .box-img {
+    display: flex;
+    flex-direction: column;
+  }
+
+  
+
+  .avatar img {
+    width: 100px;
+    margin-right: 5px;
+  }
+
+  .section-buscador {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 15px;
+  }
+
+  .auto-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    padding: 10px;
   }
 }
 
@@ -266,4 +370,16 @@ span.dot {
   .user-info-menu {
     display: flex;
   }
+}
+
+@media (max-width: 576px) {
+  .auto-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
+    
+  }
+
+ 
 }

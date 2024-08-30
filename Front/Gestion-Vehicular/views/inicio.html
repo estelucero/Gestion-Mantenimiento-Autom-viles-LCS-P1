@@ -58,20 +58,32 @@
   <!-- Seccion Titulo -->
   <section class="home titulo-img" id="home">
     <div class="home-text titulo-izquierda">
-      <h1 class="home-titulo ">Bienvenido a Su <span>Cuenta</span></h1>
+      <h1 class="home-titulo">Bienvenido a Su <span>Cuenta</span></h1>
       <p class="text-blanco">Simplifica la gestión, acelera tu éxito.</p>
     </div>
   </section>
   <!-- Seccion Autos -->
   <section class="section-autos">
+    <div class="auto-text">
+      <h3 class="home-titulo">Vehículos <span>Registrados</span></h3>
+    </div>
     <div class="section-buscador">
-      <input type="text" placeholder="Buscar...">
-      <button><i class='bx bx-search'></i></button>
+      <input type="text" placeholder="Buscar por patente...">
+      <button class="button-search"><i class='bx bx-search'></i></button>
     </div>
     <!-- Cards -->
     <div class="section-card">
       <div class="wrapper">
         <div class="notifications">
+          <!-- Agregar Auto -->
+           <button class="button-add-car">
+            <div class="centrar-div">
+              <div class="agregar-auto">
+                <img src="../assets/logos/mas.png" alt="" class="user-pic-pic">
+                <p>Agregar auto</p>
+              </div>
+            </div>
+           </button>
           <!-- Auto 1-->
           <div class="single-box">
             <div class="box-avatar-text">
@@ -79,8 +91,10 @@
                 <img src="../assets/imagenes/corolla.png" alt="perfil-imagen">
               </div>
               <div class="box-text">
-                <p class="notifi"><a href="" class="name">Toyota Corolla</a> necesita cambio de aceite
-                <p class="time">Hace 1 Minuto</p>
+                <div class="text-patente"><p>AA 123 BB</p></div>
+                <div class="text-flex">Marca: <p>Toyota</p></div>
+                <div class="text-flex">Modelo: <p>Corola</p></div>
+                <div class="text-flex">Año de Fabricación: <p>2018</p></div>
               </div>
             </div>
             <div class="box-img">
@@ -95,8 +109,10 @@
                 <img src="../assets/imagenes/corolla.png" alt="perfil-imagen">
               </div>
               <div class="box-text">
-                <p class="notifi"><a href="" class="name">Toyota Corolla</a> necesita cambio de aceite </p>
-                <p class="time">Hace 1 Minuto</p>
+                <div class="text-patente"><p>AA 456 BB</p></div>
+                <div class="text-flex">Marca: <p>Toyota</p></div>
+                <div class="text-flex">Modelo: <p>Corola</p></div>
+                <div class="text-flex">Año de Fabricación: <p>2018</p></div>
               </div>
             </div>
             <div class="box-img">
