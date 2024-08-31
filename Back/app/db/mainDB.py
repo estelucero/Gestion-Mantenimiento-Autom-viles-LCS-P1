@@ -21,7 +21,7 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS vehiculosParticular (patente VARCHA
 
 mycursor.execute("CREATE TABLE IF NOT EXISTS vehiculosOrganizacion (patente VARCHAR(7) PRIMARY KEY, modelo VARCHAR(60), marca VARCHAR(60), fechaFabricacion DATE, vim VARCHAR(17), cantKM DOUBLE(10,2), cuitDueño VARCHAR(13), UNIQUE(vim), FOREIGN KEY(cuitDueño) REFERENCES usuariosOrganizacion(cuit));")
 
-mycursor.execute("CREATE TABLE IF NOT EXISTS viajesPendientesParticular (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, fechaInicio DATE, distanciaKM DOUBLE(7, 2), nombre VARCHAR(30), estado BOOLEAN, patenteVehiculo VARCHAR(7), cuilUsuario VARCHAR(13), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente), FOREIGN KEY(cuilUsuario) REFERENCES usuariosParticular(cuil));")
+mycursor.execute("CREATE TABLE IF NOT EXISTS viajesPendienteParticular (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, fechaInicio DATE, distanciaKM DOUBLE(7, 2), nombre VARCHAR(30), estado BOOLEAN, patenteVehiculo VARCHAR(7), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente));")
 
 mycursor.execute("CREATE TABLE IF NOT EXISTS revisionesVehiculoParticular (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(20), fechaUltRevision DATE, fechaProxRevision DATE, kmUltRevision DOUBLE(10,2), kmProxRevision DOUBLE(10,2), estado VARCHAR(15), patenteVehiculo VARCHAR(7), revisaPorFecha BOOLEAN, UNIQUE(patenteVehiculo, nombre), FOREIGN KEY(patenteVehiculo) REFERENCES vehiculosParticular(patente));")
 

@@ -62,3 +62,14 @@ class vehiculoRevisionDTO(BaseModel):
 
 class notifMarcarLeidaDTO(BaseModel):
     idNotif : int
+
+class viajeDTO(BaseModel):
+    fechaInicio : date
+    distanciaKM : float
+    nombre : str
+    patente : str
+
+class viajeRealizadoDTO(BaseModel):
+    id : int
+    distanciaKM : float
+    patente : str
