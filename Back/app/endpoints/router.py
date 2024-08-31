@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO
+from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO, viajeDTO
 from app.endpoints.endpoint import dbCallService
 from fastapi_restful.tasks import repeat_every
 
@@ -154,6 +154,27 @@ def marcarNotificacionLeida(notifLeida : notifMarcarLeidaDTO):
 def actualizarRevisiones():
 
     response = call_service.actualizarRevisiones()
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#RECIBE UN OBJETO VIAJE
+@router.post("/ingresarViaje")
+def ingresarViaje(viaje : viajeDTO):
+
+    response = call_service.ingresarViajeDB(viaje)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+@router.put("/actualizarViajes")
+def actualizarViaje():
+
+    response = call_service.actualizarViajesDB()
 
     if (response != True and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])

@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO
+from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
 
 class dbCallService():
     def __init__(self):
@@ -447,6 +447,12 @@ class dbCallService():
             self.dbCursor.execute(obtRevVehiculoUP, obtRevVehiculoUPData)
             revVehiculoList = self.dbCursor.fetchall()
             return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], kmActual=revVehiculoList[0][4], kmProxRevision=revVehiculoList[0][5], estado=revVehiculoList[0][6], patente=revVehiculoList[0][7], revisionPorFecha=revVehiculoList[0][8])
+        else:
+            obtRevVehiculoUP = "SELECT * FROM `revisionesVehiculoOrganizacion` WHERE id = %s"
+            obtRevVehiculoUPData = (idRevision,)
+            self.dbCursor.execute(obtRevVehiculoUP, obtRevVehiculoUPData)
+            revVehiculoList = self.dbCursor.fetchall()
+            return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], kmActual=revVehiculoList[0][4], kmProxRevision=revVehiculoList[0][5], estado=revVehiculoList[0][6], patente=revVehiculoList[0][7], revisionPorFecha=revVehiculoList[0][8])
 
     def calculoRevisionActualizada(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
         vehiculoRevision.estado = "en_orden"
@@ -565,5 +571,68 @@ class dbCallService():
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
+        
+    def ingresarViajeDB(self, viaje : viajeDTO):
+        try:
+            ingresarViajeUP = "INSERT INTO `viajesPendienteParticular` (`fechaInicio`, `distanciaKM`, `nombre`, `estado`, `patenteVehiculo`) VALUES (%s,%s,%s,%s,%s)"
+            ingresarViajeUPData = (viaje.fechaInicio, viaje.distanciaKM, viaje.nombre, False, viaje.patente)
+            self.dbCursor.execute(ingresarViajeUP, ingresarViajeUPData)
+            self.dbConexion.commit()
+            return True
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+        
+    def obtenerViajesRealizados(self):
+        try:
+            self.dbCursor.execute("SELECT id, fechaInicio, estado, patenteVehiculo, distanciaKM FROM `viajesPendienteParticular`")
+            aux = self.dbCursor.fetchall()
+            viajesRealizados = []
+
+            for i in range(len(aux)):
+                if(aux[i][1] <= date.today()) and aux[i][2] == False:
+                    viajesRealizados.append(viajeRealizadoDTO(id=aux[i][0], distanciaKM=aux[i][4], patente=aux[i][3]))
+
+            return viajesRealizados
+            
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+    def agregarKMVehiculoParticular(self, cantKM, patente):
+        try:
+            agregarKMUP = "UPDATE `vehiculosParticular` SET cantKM=%s WHERE patente = %s"
+            agregarKMUPData = (self.obtenerCantKMActualesVehiculo(patente,True)+cantKM, patente)
+            self.dbCursor.execute(agregarKMUP, agregarKMUPData)
+            self.dbConexion.commit()
+            return
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+    def realizarViaje(self, idViaje):
+        try:
+            realizarViajeUP = "UPDATE `viajesPendienteParticular` SET estado=%s WHERE id=%s"
+            realizarViajeUPData = (True, idViaje)
+            self.dbCursor.execute(realizarViajeUP, realizarViajeUPData)
+            self.dbConexion.commit()
+            return
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+    def actualizarViajesDB(self):
+        aux = self.obtenerViajesRealizados()
+        for i in range(len(aux)):
+            self.agregarKMVehiculoParticular(aux[i].distanciaKM, aux[i].patente)
+            self.realizarViaje(aux[i].id)
+
+        return True
+
+
+        
+
+
+
             
     
