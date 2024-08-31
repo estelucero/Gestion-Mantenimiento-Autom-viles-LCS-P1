@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
-from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO
+from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO
 from app.endpoints.endpoint import dbCallService
-
+from fastapi_restful.tasks import repeat_every
 
 router = APIRouter(prefix="/users", tags=["User"])
 
@@ -110,6 +110,50 @@ def agregarRevisionesVehiculoParticular(revisiones : list[vehiculoRevisionDTO]):
 def agregarRevisionesVehiculoOrganizacion(revisiones : list[vehiculoRevisionDTO]):
     for vehiculoRevision in revisiones:
         response = call_service.agregarRevisionVehiculoOrganizacionDB(vehiculoRevision)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#ACTUALIZA LAS FLAGS (EN ORDEN -> PROXIMA A VENCER)DE LAS REVISIONES CUANDO ESTAN CERCA DE VENCER.
+@router.put("/verificarYActualizarRevisionesAVencer")
+#@repeat_every(seconds=40)
+def verificarYActualizarRevisionesAVencer():
+
+    response = call_service.actualizarRevisionesRegistradasParticularDB()
+    
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+
+#GENERA LAS NOTIFICACIONES NECESARIAS CUANDO UNA REVISION ESTA PROXIMA A VENCER    
+@router.post("/generarRevisionesVencidas")
+def generarRevisionesVencidas():
+    response = call_service.ingresarNotificacionesParticularDB()
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#RECIBE UN OBJETO CON LA ID DE LA NOTIF, DEVUELVE TRUE SI LA MARCA, DEVUELVE UN ERROR SI NO.
+@router.put("/marcarNotificacionLeida")
+def marcarNotificacionLeida(notifLeida : notifMarcarLeidaDTO):
+    
+    response = call_service.marcarNotificacionLeidaDB(notifLeida)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#LAS REVISIONES QUE YA SE HAYAN PASADO DE FECHA O KM LAS DA POR SOLUCIONADAS Y ACTUALIZA LOS VALORES DE LAS REVISIONES.
+#ELIMINA LAS NOTIFICACIONES RELACIONADAS A ESA REVISION.
+#LA REVISION ELIMINADA SE GUARDA EN LA TABLA DE REVISION COMPLETADA PARA TENER EL HISTORIAL
+@router.put("/actualizarRevisiones")
+def actualizarRevisiones():
+
+    response = call_service.actualizarRevisiones()
 
     if (response != True and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
