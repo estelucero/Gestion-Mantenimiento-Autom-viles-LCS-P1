@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <title>Control Car - Inicio</title>
+  <!-- Favicon -->
+  <link rel="icon" href="../assets/logos/car.png" type="image/x-icon">
   <!-- Style-->
   <link rel="stylesheet" href="../style/index.css" />
   <link rel="stylesheet" href="../style/inicio.css" />
@@ -30,12 +32,13 @@
             <a href="">Inicio</a>
           </li>
           <li class="navbar-padding" id="alerta">
-            <a href="">Notificaciones</a>
+            <a href="../views/notificationPage.html">Notificaciones</a>
           </li>
           <li class="navbar-padding" id="logout">
             <a href="">Cerrar Sesión</a>
           </li>
-          <img src="../assets/logos/alerta.png" alt="" class="user-pic-pic" id="logo-alerta">
+          <a href="../views/notificationPage.html"><img src="../assets/logos/alerta.png" alt="" class="user-pic-pic" id="logo-alerta"></a>
+          
           <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" onclick="toggleMenu()" id="logo-user">
         </ul>
         <div class="sub-menu-wrap" id="subMenu">
@@ -134,7 +137,7 @@
               </div>
             </div>
             <div class="box-img">
-              <img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic">
+              <a href="../views/auto.html"><img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic"></a>
               <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic">
             </div>
           </div>
@@ -152,7 +155,7 @@
               </div>
             </div>
             <div class="box-img">
-              <img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic">
+              <a href="../views/auto.html"><img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic"></a>
               <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic">
             </div>
           </div>
@@ -174,15 +177,12 @@
       </div>
       <div class="footer-box box-column">
         <h3>Página</h3>
-        <a href="#">Inicio</a>
-        <a href="#">Sobre Nosotros</a>
-        <a href="#">Alertas</a>
-        <a href="#">Registrarse</a>
+        <a href="./inicio.html">Inicio</a>
       </div>
       <div class="footer-box box-column">
         <h3>Contacto</h3>
-        <a href="#">Teléfono</a>
-        <a href="#">Mail</a>
+        <a href="">Teléfono</a>
+        <a href="">Mail</a>
       </div>
     </div>
   </section>
