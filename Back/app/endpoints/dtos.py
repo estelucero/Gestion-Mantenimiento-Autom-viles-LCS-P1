@@ -34,7 +34,6 @@ class nuevoVehiculoUsuarioParticularDTO(BaseModel):
     fechaFabricacion : date
     vim : str
     cantKm : float
-    tipoCombustible : str
     cuilDueño : str
 
 class nuevoVehiculoUsuarioOrganizacionDTO(BaseModel):
@@ -44,7 +43,6 @@ class nuevoVehiculoUsuarioOrganizacionDTO(BaseModel):
     fechaFabricacion : date
     vim : str
     cantKm : float
-    tipoCombustible : str
     cuitDueño : str
 
 class vehiculoRegistradoDTO(BaseModel): 
@@ -61,3 +59,6 @@ class vehiculoRevisionDTO(BaseModel):
     estado : str
     patente : str
     revisionPorFecha : bool
+
+class notifMarcarLeidaDTO(BaseModel):
+    idNotif : int
