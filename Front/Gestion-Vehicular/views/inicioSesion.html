@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Style-->
+  <link rel="stylesheet" href="../style/index.css" />
+  <link rel="stylesheet" href="../style/inicio.css" />
+  <link rel="stylesheet" href="../style/inicioSesion.css" />
+  <!-- Box Icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav>
+      <div class="nav nav-container nav-borde">
+        <i class="bx bx-menu menu-close" id="menu-icon"></i>
+        <a href="#" class="logo">Control<span>Car</span></a>
+        <ul class="navbar">
+          <li class="navbar-padding">
+            <a href="">Inicio</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Seccion Inicio Sesion -->
+  <section class="sec-container">
+    <div class="forms-container">
+      <div class="signin-signup">
+        <!-- Iniciar Sesion -->
+        <form action="#" class="sign-in-form">
+          <h2 class="title">Iniciar Sesión</h2>
+          <div class="input-field">
+            <input type="text" placeholder="Mail" />
+          </div>
+          <div class="input-field">
+            <input type="password" placeholder="Contraseña" />
+          </div>
+          <input type="submit" value="Iniciar Sesión" class="btn solid" />
+        </form>
+        <!-- Registrarse Particular -->
+        <form action="#" class="sign-up-form" id="form-particular">
+          <h2 class="title">Registrar <span>Particular</span></h2>
+          <div class="input-field">
+            <input type="text" placeholder="Nombre" />
+          </div>
+          <div class="input-field">
+            <input type="text" placeholder="Apellido" />
+          </div>
+          <div class="input-field">
+            <input type="text" placeholder="DNI" />
+          </div>
+          <div class="input-field">
+            <input type="text" placeholder="CUIL" />
+          </div>
+          <div class="input-field">
+            <input type="email" placeholder="Mail" />
+          </div>
+          <div class="input-field">
+            <input type="password" placeholder="Contraseña" />
+          </div>
+          <input type="submit" class="btn" value="Registrarse" />
+        </form>
+        <!-- Registrarse Entidad -->
+        <form action="#" class="sign-up-form" id="form-entidad">
+          <h2 class="title">Registrar <span>Entidad</span></h2>
+          <div class="input-field">
+            <input type="text" placeholder="Nombre" />
+          </div>
+          <div class="input-field">
+            <input type="text" placeholder="Apellido" />
+          </div>
+          <div class="input-field">
+            <input type="text" placeholder="DNI" />
+          </div>
+          <div class="input-field">
+            <input type="text" placeholder="CUIT" />
+          </div>
+          <div class="input-field">
+            <input type="email" placeholder="Mail" />
+          </div>
+          <div class="input-field">
+            <input type="password" placeholder="Contraseña" />
+          </div>
+          <input type="submit" class="btn" value="Registrarse" />
+        </form>
+      </div>
+    </div>
+    <!-- Panels -->
+    <div class="panels-container">
+      <!-- Panel Registrarse -->
+      <div class="panel left-panel">
+        <div class="content">
+          <h2 class="text-titulo-panel">¡Regístrate!</h2>
+          <p>
+            Regístrese con sus datos personales para usar todas las funciones del sitio
+          </p>
+          <button class="btn transparent" id="sign-up-btn-p">
+            Particular
+          </button>
+          <button class="btn transparent" id="sign-up-btn-e">
+            Entidad
+          </button>
+        </div>
+      </div>
+      <!-- Panel Iniciar Sesion -->
+      <div class="panel right-panel">
+        <div class="content">
+          <h2 class="text-titulo-panel">¡Bienvenido!</h2>
+          <p>
+            Ingrese sus datos personales para usar todas las funciones del sitio
+          </p>
+          <button class="btn transparent" id="sign-in-btn">
+            Iniciar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="../scripts/index.js"></script>
+  <script src="../scripts/inicioSesion.js"></script>
+</body>
+</html>
