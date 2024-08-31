@@ -14,7 +14,7 @@
 
 <body>
   <!-- Navbar -->
-  <header>
+  <header class="header-desactive">
     <nav>
       <div class="nav nav-container">
         <i class="bx bx-menu" id="menu-icon"></i>
@@ -76,7 +76,7 @@
       <div class="wrapper">
         <div class="notifications">
           <!-- Agregar Auto -->
-           <button class="button-add-car">
+           <button class="button-add-car" id="show-car">
             <div class="centrar-div">
               <div class="agregar-auto">
                 <img src="../assets/logos/mas.png" alt="" class="user-pic-pic">
@@ -84,6 +84,42 @@
               </div>
             </div>
            </button>
+           <!-- PopUp -->
+           <div class="popup-container">
+            <div class="popup">
+              <div class="close-btn">&times;</div>
+              <div class="form">
+                <h2>Cargar Vehículo</h2>
+                <div class="form-element">
+                  <label for="patente">Patente</label>
+                  <input type="patente" id="patente" placeholder="Escribir patente">
+                </div>
+                <div class="form-element">
+                  <label for="modelo">Modelo</label>
+                  <input type="modelo" id="modelo" placeholder="Escribir modelo">
+                </div>
+                <div class="form-element">
+                  <label for="marca">Marca</label>
+                  <input type="marca" id="marca" placeholder="Escribir marca">
+                </div>
+                <div class="form-element">
+                  <label for="anio-fab">Año de Fabricación</label>
+                  <input type="anio-fab" id="anio-fab" placeholder="Escribir año de fabricación">
+                </div>
+                <div class="form-element">
+                  <label for="chasis">N° de Chasis</label>
+                  <input type="chasis" id="chasis" placeholder="Escribir n° de chasis">
+                </div>
+                <div class="form-element">
+                  <label for="km">Cantidad de Kilómetros</label>
+                  <input type="km" id="km" placeholder="Escribir cantidad de km">
+                </div>
+                <div class="form-element">
+                  <button>Guardar</button>
+                </div>
+              </div>
+             </div>
+           </div>
           <!-- Auto 1-->
           <div class="single-box">
             <div class="box-avatar-text">
