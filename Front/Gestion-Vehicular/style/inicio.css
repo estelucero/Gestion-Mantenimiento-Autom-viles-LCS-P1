@@ -1,3 +1,28 @@
+::-webkit-scrollbar {
+  width: 80px;
+  /* Ancho del scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: orange;
+  /* Color del "thumb" del scrollbar */
+  border-radius: 10px;
+  /* Bordes redondeados para el "thumb" */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* Fondo del "track" del scrollbar */
+}
+
+/* Opcional: estilos para Firefox */
+html {
+  scrollbar-width: auto;
+  /* Opciones: auto | thin | none */
+  scrollbar-color: orange transparent;
+  /* Color del "thumb" y del "track" */
+}
+
 /* Navbar */
 .navbar-center {
   justify-content: center;
@@ -332,11 +357,11 @@ span.dot {
 
 .popup {
   position: absolute;
-  top: -150%;
+  top: -160%;
   left: 50%;
   opacity: 0;
   transform: translate(-50%, -50%) scale(1.25);
-  width: 380px;
+  width: 500px;
   padding: 20px 30px;
   background: #fff;
   box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.15);
@@ -344,6 +369,24 @@ span.dot {
   transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
     transform 200ms ease-in-out 0ms;
   z-index: 1000;
+  overflow: auto;
+  max-height: 90vh;
+
+  scrollbar-width: auto;
+  scrollbar-color: orange transparent;
+}
+
+.popup::-webkit-scrollbar {
+  width: 20px;
+}
+
+.popup::-webkit-scrollbar-thumb {
+  background-color: orange;
+  border-radius: 10px;
+}
+
+.popup::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .popup.active {
@@ -375,7 +418,7 @@ span.dot {
   font-size: 25px;
 }
 
-.popup .from h2 {
+.popup .form h2 {
   text-align: center;
   color: #222;
   margin: 10px 8px 20px;
@@ -396,7 +439,8 @@ span.dot {
 .popup .form .form-element input[type="marca"],
 .popup .form .form-element input[type="anio-fab"],
 .popup .form .form-element input[type="chasis"],
-.popup .form .form-element input[type="km"] {
+.popup .form .form-element input[type="km"],
+.popup .form .form-element input[type="file"] {
   margin-top: 5px;
   display: block;
   width: 100%;
@@ -406,9 +450,14 @@ span.dot {
   border-radius: 5px;
 }
 
+.popup .form .form-element input[type="file"] {
+  font-size: 12px;
+}
+
 .popup .form .form-element button {
-  width: 100%;
+  width: 40%;
   height: 40px;
+  margin: 0px 6px 0px 6px;
   border: none;
   outline: none;
   font-size: 16px;
@@ -416,6 +465,13 @@ span.dot {
   color: #f5f5f5;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.popup .form .form-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Responsive */
@@ -475,6 +531,35 @@ span.dot {
     transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
       transform 200ms ease-in-out 0ms;
     z-index: 1000;
+
+    scrollbar-width: thin;
+    scrollbar-color: orange transparent;
+  }
+
+  .popup::-webkit-scrollbar {
+    width: 25px;
+  }
+
+  .popup::-webkit-scrollbar-thumb {
+    background-color: orange;
+    border-radius: 10px;
+  }
+
+  .popup::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .popup::-webkit-scrollbar {
+    width: 50px;
+  }
+
+  .popup::-webkit-scrollbar-thumb {
+    background-color: orange;
+    border-radius: 10px;
+  }
+
+  .popup::-webkit-scrollbar-track {
+    background: transparent;
   }
 
   .popup.active {
@@ -525,7 +610,7 @@ span.dot {
   .popup .form .form-element input[type="km"] {
     margin-top: 5px;
     display: block;
-    width: 90%;
+    width: 100%;
     height: 25px;
     padding: 15px;
     outline: none;
@@ -534,16 +619,25 @@ span.dot {
     font-size: 15px;
   }
 
+  .popup .form .form-element input[type="file"] {
+    display: block;
+    width: 100%;
+    outline: none;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
   .popup .form .form-element button {
-    width: 90%;
+    width: 40%;
     height: 40px;
+    margin: 0px 6px 0px 6px;
     border: none;
     outline: none;
     font-size: 16px;
     background: #222;
     color: #f5f5f5;
     border-radius: 10px;
-    cursor: pointer;
   }
 }
 
