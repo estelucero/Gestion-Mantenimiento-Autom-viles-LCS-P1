@@ -428,12 +428,12 @@ p {
   .about-text {
     display: flex;
     flex-direction: column;
-    padding: 5rem;
+    padding: 1rem;
   }
 
   .register {
     background-color: rgba(29, 29, 28, 0.9);
-    padding: 4rem;
+    padding: 1rem;
   }
 
   section {
@@ -447,7 +447,7 @@ p {
   }
 
   section {
-    padding: 3rem 0 1rem;
+    padding: 3rem 1rem 1rem;
   }
 
   .home-text {
