@@ -45,6 +45,14 @@ class nuevoVehiculoUsuarioOrganizacionDTO(BaseModel):
     cantKm : float
     cuitDueño : str
 
+class vehiculoDTO(BaseModel):
+    patente : str
+    modelo : str
+    marca : str
+    fechaFabricacion : date
+    vim : str
+    cantKm : float
+
 class vehiculoRegistradoDTO(BaseModel): 
     patente : str
     modelo : str
