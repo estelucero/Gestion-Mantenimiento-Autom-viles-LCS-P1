@@ -93,6 +93,27 @@ def eliminarVehiculoUsuarioOrganizacion(patente = Query()):
     
     return response
 
+#RECIBE EL CUIL DEL DUEÑO, DEVUELVE LA LISTA DE SUS VEHICULOS MODELADOS COMO EL OBJETO vehiculoDTO. SI NO ENCUENTRA NADA, DEVUELVE FALSE. SI HAY ERROR, ERROR.
+@router.get("/obtenerVehiculosParticular")
+def obtenerVehiculosParticular(cuilDueño = Query()):
+
+    response = call_service.obtenerVehiculosParticularDB(cuilDueño)
+
+    if (response != False and response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#IGUAL PERO CON CUIT
+@router.get("/obtenerVehiculosOrganizacion")
+def obtenerVehiculosOrganizacion(cuitDueño = Query()):
+
+    response = call_service.obtenerVehiculosOrganizacionDB(cuitDueño)
+
+    if (response != False and response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
 
 #AMBAS AGREGAR REVISION RECIBEN LO MISMO. UNA LISTA DE OBJETOS DE ESE TIPO, LOS ITERA Y LOS VA AGREGANDO. NECESITO QUE HANDLEES LAS FECHAS EN EL FRONT, NO PUEDE HABER NULL EN LOS CAMPOS DE LAS FECHAS CDO LO ENVIES.
 #DEVUELVE UN ERROR SI FALLA EL AGREGAR
@@ -121,7 +142,7 @@ def agregarRevisionesVehiculoOrganizacion(revisiones : list[vehiculoRevisionDTO]
 #@repeat_every(seconds=40)
 def verificarYActualizarRevisionesAVencer():
 
-    response = call_service.actualizarRevisionesRegistradasParticularDB()
+    response = call_service.actualizarRevisionesRegistradas()
     
     if (response != True and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
@@ -129,18 +150,28 @@ def verificarYActualizarRevisionesAVencer():
 #GENERA LAS NOTIFICACIONES NECESARIAS CUANDO UNA REVISION ESTA PROXIMA A VENCER    
 @router.post("/generarRevisionesVencidas")
 def generarRevisionesVencidas():
-    response = call_service.ingresarNotificacionesParticularDB()
+    response = call_service.ingresarNotificacionesDB()
 
     if (response != True and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
 
-#RECIBE UN OBJETO CON LA ID DE LA NOTIF, DEVUELVE TRUE SI LA MARCA, DEVUELVE UN ERROR SI NO.
-@router.put("/marcarNotificacionLeida")
-def marcarNotificacionLeida(notifLeida : notifMarcarLeidaDTO):
+#RECIBE LA ID DE LA NOTIF, DEVUELVE TRUE SI LA MARCA, DEVUELVE UN ERROR SI NO.
+@router.put("/marcarNotificacionLeidaPart")
+def marcarNotificacionLeidaParticular(idNotif):
     
-    response = call_service.marcarNotificacionLeidaDB(notifLeida)
+    response = call_service.marcarNotificacionLeidaParticularDB(idNotif)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+@router.put("/marcarNotificacionLeidaOrg")
+def marcarNotificacionLeidaOrganizacion(idNotif):
+    
+    response = call_service.marcarNotificacionLeidaOrganizacionDB(idNotif)
 
     if (response != True and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
@@ -160,7 +191,7 @@ def actualizarRevisiones():
     
     return response
 
-#RECIBE UN OBJETO VIAJE
+#RECIBE UN OBJETO VIAJE, DEVUELVE TRUE SI NO HAY ERRORES
 @router.post("/ingresarViaje")
 def ingresarViaje(viaje : viajeDTO):
 
@@ -171,12 +202,55 @@ def ingresarViaje(viaje : viajeDTO):
     
     return response
 
+#ACTUALIZA LOS VIAJES, CIERRA LOS COMPLETADOS Y ACTUALIZA LOS KMS
 @router.put("/actualizarViajes")
 def actualizarViaje():
 
     response = call_service.actualizarViajesDB()
 
     if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#RECIBEN LA PATENTE DEL VEHICULO, DEVUELVE UNA LISTA DE OBJETOS notificacionDTO SI ENCUENTRA ALGO, SI NO ENCUENTRA DEVUELVE FALSE. SI HAY ERROR DEVUELVE ERROR.
+@router.get("/obtenerNotificacionesParticular")
+def obtenerNotificacionesParticular(patente = Query()):
+
+    response = call_service.obtenerNotificacionesParticularDB(patente)
+    
+    if (response != None and response != False and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+@router.get("/obtenerNotificacionesOrganizacion")
+def obtenerNotificacionesOrganizacion(patente = Query()):
+
+    response = call_service.obtenerNotificacionesOrganizacionDB(patente)
+
+    if (response != None and response != False and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+#LO MISMO QUE LAS OTRAS PERO SOLO DEVUELVEN LAS QUE NO FUERON LEIDAS
+@router.get("/obtenerNotificacionesSinLeerParticular")
+def obtenerNotificacionesSinLeerParticular(patente = Query()):
+
+    response = call_service.obtenerNotificacionesSinLeerParticularDB(patente)
+
+    if (response != None and response != False and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+@router.get("/obtenerNotificacionesSinLeerOrganizacion")
+def obtenerNotificacionesSinLeerOrganizacion(patente = Query()):
+
+    response = call_service.obtenerNotificacionesSinLeerOrganizacionDB(patente)
+
+    if (response != None and response != False and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response

@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
+from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
 
 class dbCallService():
     def __init__(self):
@@ -141,6 +141,47 @@ class dbCallService():
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
         
+    def generarListaVehiculos(self, lista):
+        try:
+            vehiculosList = []
+            for i in range(len(lista)):
+                vehiculosList.append(vehiculoDTO(patente=lista[i][0], modelo=lista[i][1], marca=lista[i][2], fechaFabricacion=lista[i][3], vim=lista[i][4], cantKm=lista[i][5]))
+            return vehiculosList
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
+        
+    def obtenerVehiculosParticularDB(self, cuil):
+        try:
+            obtVehiculoPartUP = "SELECT patente, modelo, marca, fechaFabricacion , vim, cantKM FROM vehiculosParticular WHERE cuilDueño = %s"
+            obtVehiculoPartUPData = (cuil,)
+            self.dbCursor.execute(obtVehiculoPartUP, obtVehiculoPartUPData)
+            vehiculos=self.generarListaVehiculos(self.dbCursor.fetchall())
+
+            if not vehiculos:
+                return False
+            else:
+                return vehiculos
+            
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
+        
+    def obtenerVehiculosOrganizacionDB(self, cuit):
+        try:
+            obtVehiculoOrgUP = "SELECT patente, modelo, marca, fechaFabricacion , vim, cantKM FROM vehiculosOrganizacion WHERE cuitDueño = %s"
+            obtVehiculoOrgUPData = (cuit,)
+            self.dbCursor.execute(obtVehiculoOrgUP, obtVehiculoOrgUPData)
+            vehiculos=self.generarListaVehiculos(self.dbCursor.fetchall())
+
+            if not vehiculos:
+                return False
+            else:
+                return vehiculos
+            
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
 
     def calculoRevision(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
         
@@ -389,16 +430,21 @@ class dbCallService():
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
 
-    def actualizarRevisionesRegistradasParticularDB(self):
+    def actualizarRevisionesRegistradas(self):
         try:
             aux = self.obtenerRevisionesRegistradas(True)
             for i in range(len(aux)):
                 self.actualizarRevision(aux[i], True)
+            
+            aux2 = self.obtenerRevisionesRegistradas(False)
+            for i in range(len(aux2)):
+                self.actualizarRevision(aux2[i], False)
+
             return True
+            
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
-
 
     def obtenerRevisionesVencidas(self, esParticular):
         try:
@@ -414,7 +460,7 @@ class dbCallService():
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
             
-    def ingresarNotificacionesParticularDB(self):
+    def ingresarNotificacionesDB(self):
         try:
             revisionesParticVencidas = self.obtenerRevisionesVencidas(True)
             for i in range(len(revisionesParticVencidas)):
@@ -422,16 +468,23 @@ class dbCallService():
                 revParVencUPData = (revisionesParticVencidas[i][1], revisionesParticVencidas[i][2], revisionesParticVencidas[i][3], revisionesParticVencidas[i][4], revisionesParticVencidas[i][0])
                 self.dbCursor.execute(revPartVencUP, revParVencUPData)
                 self.dbConexion.commit()
+
+            revisionesOrgVencidas = self.obtenerRevisionesVencidas(False)
+            for i in range(len(revisionesOrgVencidas)):
+                revOrgVencUP = "INSERT INTO `controlPendienteOrganizacion` (`nombre`,`fechaHastaVencer`,`kmHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,%s,FALSE)"
+                revOrgVencUPData = (revisionesOrgVencidas[i][1], revisionesOrgVencidas[i][2], revisionesOrgVencidas[i][3], revisionesOrgVencidas[i][4], revisionesOrgVencidas[i][0])
+                self.dbCursor.execute(revOrgVencUP, revOrgVencUPData)
+                self.dbConexion.commit()
             return True
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
         
     
-    def marcarNotificacionLeidaDB(self, notif : notifMarcarLeidaDTO):
+    def marcarNotificacionLeidaParticularDB(self, idNotif):
         try:
             marcarNotifLeidaUP = "UPDATE `controlPendienteParticular` SET estaLeida = TRUE WHERE id = %s"
-            marcarNotifLeidaUPData = (notif.idNotif,)
+            marcarNotifLeidaUPData = (idNotif,)
             self.dbCursor.execute(marcarNotifLeidaUP, marcarNotifLeidaUPData)
             self.dbConexion.commit()
             return True
@@ -439,6 +492,16 @@ class dbCallService():
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
         
+    def marcarNotificacionLeidaOrganizacionDB(self, idNotif):
+        try:
+            marcarNotifLeidaUP = "UPDATE `controlPendienteOrganizacion` SET estaLeida = TRUE WHERE id = %s"
+            marcarNotifLeidaUPData = (idNotif,)
+            self.dbCursor.execute(marcarNotifLeidaUP, marcarNotifLeidaUPData)
+            self.dbConexion.commit()
+            return True
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
 
     def obtenerRevisionVehiculo(self, idRevision, esParticular):
         if esParticular:
@@ -630,8 +693,75 @@ class dbCallService():
         return True
 
 
-        
+    def generarListaNotificacion(self, lista):
+        notificaciones = []
+        for i in range(len(lista)):
+            notificaciones.append(notificacionDTO(nombre=lista[i][0], fechaVence=lista[i][1], kmVence=lista[i][2], patente=lista[i][3]))       
+        return notificaciones
 
+    def obtenerNotificacionesParticularDB(self, patente):
+        try:
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
+            obtNotifUPData = (patente,)
+            self.dbCursor.execute(obtNotifUP, obtNotifUPData)
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+
+            if not notifAux:
+                return False
+            else:
+                return notifAux
+
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+        
+    def obtenerNotificacionesOrganizacionDB(self, patente):
+        try:
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s"
+            obtNotifUPData = (patente,)
+            self.dbCursor.execute(obtNotifUP, obtNotifUPData)
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+
+            if not notifAux:
+                return False
+            else:
+                return notifAux
+
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+    def obtenerNotificacionesSinLeerParticularDB(self, patente):
+        try:
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s AND estaLeida = %s"
+            obtNotifUPData = (patente, False)
+            self.dbCursor.execute(obtNotifUP, obtNotifUPData)
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+
+            if not notifAux:
+                return False
+            else:
+                return notifAux
+
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+      
+    def obtenerNotificacionesSinLeerOrganizacionDB(self, patente):
+        try:
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s AND estaLeida = %s"
+            obtNotifUPData = (patente, False)
+            self.dbCursor.execute(obtNotifUP, obtNotifUPData)
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+
+            if not notifAux:
+                return False
+            else:
+                return notifAux
+
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
 
 
             
