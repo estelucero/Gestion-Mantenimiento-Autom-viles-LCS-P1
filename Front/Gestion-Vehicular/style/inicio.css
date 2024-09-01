@@ -113,10 +113,8 @@
 /* Seccion Titulo */
 .titulo-img {
   min-height: 650px;
-  background-image: linear-gradient(
-      rgba(48, 46, 44, 0.705),
-      rgba(48, 46, 44, 0.705)
-    ),
+  background-image: linear-gradient(rgba(48, 46, 44, 0.705),
+      rgba(48, 46, 44, 0.705)),
     url("../assets/imagenes/fondo-inicio.jpg");
 }
 
@@ -306,6 +304,10 @@ span.dot {
   margin-bottom: 5px;
 }
 
+.patente-p {
+  font-family: "Poppims", sans-serif;
+}
+
 /* Sección Autos: Cards*/
 .header-desactive.active {
   display: none;
@@ -323,6 +325,7 @@ span.dot {
   align-items: center;
   z-index: 999;
 }
+
 .popup-container.active {
   display: flex;
 }
