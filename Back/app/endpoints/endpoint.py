@@ -8,6 +8,10 @@ class dbCallService():
         self.dbConexion = mydb
         self.dbCursor = mycursor
     
+    #SI SE ME CERRO LA CONEXION, LA VUELVO A ABRIR ANTES DE REALIZAR INTERACCION CON LA DB.
+    def chequearCnxDB(self):
+        self.dbConexion.ping(reconnect=True, attempts=1, delay=0)
+
     #PRIMERO SE CARGA EL STORED PROCEDURE CON LOS DATOS A COMPLETAR %S Y LUEGO SE COMPLETA CON OTRO OBJETO, EN ESTE CASO UPDATA.
     def registrarUsuarioParticularDB(self, usuarioParticular : usuarioParticularRegistroDTO):
         try :
