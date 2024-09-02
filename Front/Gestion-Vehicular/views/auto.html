@@ -98,14 +98,67 @@
       <div class="alertas-section-cards">
         <div class="alertas">
           <!-- Agregar Alerta -->
-          <button class="button-agregar-alerta">
+          <button class="button-agregar-alerta" id="show-car">
             <div class="centrar-div">
               <div class="agregar-auto">
-                <img src="../assets/logos/mas.png" alt="" class="user-pic-pic" />
-                <p>Agregar alerta</p>
+                <img src="../assets/logos/mas.png" alt="" class="user-pic-pic">
+                <p>Agregar auto</p>
               </div>
             </div>
           </button>
+          <!-- PopUp -->
+          <div class="popup-container">
+            <div class="popup">
+              <div class="close-btn">&times;</div>
+              <div class="form">
+                <h2>Cargar Alerta</h2>
+                <div class="form-element form_personal">
+                  <label for="campo_rubro">Tipo de Alerta</label>
+                  <select id="campo_rubro" name="DesplegableRubro">
+                    <option value="" disabled selected>Seleccione</option>
+                    <option value="aceite">Cambio de aceite</option>
+                    <option value="neumatico">Revisión de neumático</option>
+                    <option value="vtv">Verificación Técnica Vehicular</option>
+                    <option value="servicio">Servicio Completo</option>
+                    <option value="escape">Revisión caño de escape</option>
+                    <option value="bateria">Revisión de batería</option>
+                    <option value="enfriamiento">Sistema de Enfriamiento</option>
+                  </select>
+                </div>
+                <div class="form-element">
+                  <label for="patente">Cargar última fecha de servicio (opcional)</label>
+                </div>
+                <div class="form-element form-group">
+                  <label for="calendar">Selecciona una fecha:</label>
+                  <div class="calendar">
+                    <div class="calendar-header">
+                      <select id="month"></select>
+                      <select id="year"></select>
+                    </div>
+                    <div class="calendar-body">
+                      <!-- Headers for days of the week -->
+                      <div class="header">Dom</div>
+                      <div class="header">Lun</div>
+                      <div class="header">Mar</div>
+                      <div class="header">Mié</div>
+                      <div class="header">Jue</div>
+                      <div class="header">Vie</div>
+                      <div class="header">Sáb</div>
+                      <!-- Days will be inserted here by JavaScript -->
+                    </div>
+                  </div>
+                </div>
+                <div class="form-element form-group">
+                  <label for="selectedDate">Fecha Seleccionada:</label>
+                  <input type="text" id="selectedDate" name="selectedDate" readonly>
+                </div>
+                <div class="form-element form-div">
+                  <button class="btn-form">Guardar</button>
+                  <button class="btn-form">Cancelar</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Alerta 1-->
           <div class="alerta">
             <div class="box-avatar-text">
@@ -321,6 +374,7 @@
   <!-- Scripts -->
   <script src="../scripts/index.js"></script>
   <script src="../scripts/inicio.js"></script>
+  <script src="../scripts/auto.js"></script>
 </body>
 
 </html>
