@@ -1,326 +1,407 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Car - Vehiculo</title>
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/logos/car.png" type="image/x-icon" />
+    <!-- Style-->
+    <link rel="stylesheet" href="../style/index.css" />
+    <link rel="stylesheet" href="../style/inicio.css" />
+    <link rel="stylesheet" href="../style/autos.css" />
+    <!-- Box Icons -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>autos</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control Car - Vehiculo</title>
-  <!-- Favicon -->
-  <link rel="icon" href="../assets/logos/car.png" type="image/x-icon">
-  <!-- Style-->
-  <link rel="stylesheet" href="../style/index.css" />
-  <link rel="stylesheet" href="../style/inicio.css" />
-  <link rel="stylesheet" href="../style/autos.css" />
-  <!-- Box Icons -->
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <title>autos</title>
-</head>
+  <body>
+    <!-- Navbar -->
+    <header class="header-desactive">
+      <nav>
+        <div class="nav nav-container">
+          <i class="bx bx-menu" id="menu-icon"></i>
+          <a href="#" class="logo">Control<span>Car</span></a>
+          <ul class="navbar navbar-center">
+            <div class="user-info-menu">
+              <div class="user-info">
+                <img
+                  src="../assets/imagenes/Lando.jpg"
+                  alt=""
+                  class="user-pic"
+                />
+                <h3>Lando Norris</h3>
+              </div>
+            </div>
+            <li class="navbar-padding">
+              <a href="../views/inicio.html">Inicio</a>
+            </li>
+            <li class="navbar-padding" id="alerta">
+              <a href="../views/notificationPage.html">Notificaciones</a>
+            </li>
+            <li class="navbar-padding" id="logout">
+              <a href="">Cerrar Sesión</a>
+            </li>
+            <a href="../views/notificationPage.html"
+              ><img
+                src="../assets/logos/alerta.png"
+                alt=""
+                class="user-pic-pic"
+                id="logo-alerta"
+            /></a>
 
-<body>
-  <!-- Navbar -->
-  <header class="header-desactive">
-    <nav>
-      <div class="nav nav-container">
-        <i class="bx bx-menu" id="menu-icon"></i>
-        <a href="#" class="logo">Control<span>Car</span></a>
-        <ul class="navbar navbar-center">
-          <div class="user-info-menu">
-            <div class="user-info">
-              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic">
-              <h3>Lando Norris</h3>
-            </div>
-          </div>
-          <li class="navbar-padding">
-            <a href="../views/inicio.html">Inicio</a>
-          </li>
-          <li class="navbar-padding" id="alerta">
-            <a href="../views/notificationPage.html">Notificaciones</a>
-          </li>
-          <li class="navbar-padding" id="logout">
-            <a href="">Cerrar Sesión</a>
-          </li>
-          <a href="../views/notificationPage.html"><img src="../assets/logos/alerta.png" alt="" class="user-pic-pic"
-              id="logo-alerta"></a>
-
-          <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" onclick="toggleMenu()" id="logo-user">
-        </ul>
-        <div class="sub-menu-wrap" id="subMenu">
-          <div class="sub-menu">
-            <div class="user-info">
-              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic">
-              <h3>Lando Norris</h3>
-            </div>
-            <hr>
-            <a href="#" class="sub-menu-link">
-              <img src="../assets/logos/log-out.png" alt="logo log-out" class="user-pic-pic">
-              <p>Cerrar Sesión</p>
-              <span>></span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
-  <!-- Seccion Auto -->
-  <section class="auto-info-card" id="home">
-    <img src="../assets/imagenes/corolla.png" class="auto-info-img" />
-    <div class="auto-info-section">
-      <h1 class="auto-info-text titulo">PATENTE</h1>
-      <div class="auto-info-text-section">
-        <h2 class="auto-info-text-subtitulo">Marca:</h2>
-        <p class="auto-info-text">Toyota</p>
-      </div>
-      <div class="auto-info-text-section">
-        <h2 class="auto-info-text-subtitulo">Modelo:</h2>
-        <p class="auto-info-text">Corolla</p>
-      </div>
-      <div class="auto-info-text-section">
-        <h2 class="auto-info-text-subtitulo">Año:</h2>
-        <p class="auto-info-text">2024</p>
-      </div>
-      <div class="auto-info-text-section">
-        <h2 class="auto-info-text-subtitulo">N° chasis:</h2>
-        <p class="auto-info-text">222</p>
-      </div>
-      <div class="auto-info-text-section">
-        <h2 class="auto-info-text-subtitulo">Kilometraje:</h2>
-        <p class="auto-info-text">22Km</p>
-      </div>
-    </div>
-  </section>
-  <!-- Seccion Alertas -->
-  <section class="section-alertas-titulo">
-    <div class="alertas-titulo">
-      <h3>Tus <span>Alertas</span></h3>
-    </div>
-    <!-- Cards -->
-    <div class="alertas-section">
-      <div class="alertas-section-cards">
-        <div class="alertas">
-          <!-- Agregar Alerta -->
-          <button class="button-agregar-alerta">
-            <div class="centrar-div">
-              <div class="agregar-auto">
-                <img src="../assets/logos/mas.png" alt="" class="user-pic-pic" />
-                <p>Agregar alerta</p>
+            <img
+              src="../assets/imagenes/Lando.jpg"
+              alt=""
+              class="user-pic"
+              onclick="toggleMenu()"
+              id="logo-user"
+            />
+          </ul>
+          <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+              <div class="user-info">
+                <img
+                  src="../assets/imagenes/Lando.jpg"
+                  alt=""
+                  class="user-pic"
+                />
+                <h3>Lando Norris</h3>
               </div>
-            </div>
-          </button>
-          <!-- Alerta 1-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/contenedor-de-aceite.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Aceite</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 2 -->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/neumatico-alerta.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Neumaticos</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 3-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/vtv.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>VTV</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 4-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/servicio.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Servicio Completo</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 5-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/bateria.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Bateria</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 6-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/tubo-de-escape.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Caño de Escape</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 7-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/sistema-de-refrigeracion.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Sistema de Enfriamiento</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 8-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/valija.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Viaje Programado</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
-            </div>
-          </div>
-          <!-- Alerta 9-->
-          <div class="alerta">
-            <div class="box-avatar-text">
-              <div class="avatar">
-                <img src="../assets/logos/mecanica-de-fluidos.png" alt="perfil-imagen" />
-              </div>
-              <div class="box-text">
-                <div class="text-patente">
-                  <p>Nivel de Fluidos</p>
-                </div>
-                <div class="text-flex">
-                  Fecha de alerta:
-                  <p>26/6/2011</p>
-                </div>
-              </div>
-            </div>
-            <div class="box-img">
-              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
+              <hr />
+              <a href="#" class="sub-menu-link">
+                <img
+                  src="../assets/logos/log-out.png"
+                  alt="logo log-out"
+                  class="user-pic-pic"
+                />
+                <p>Cerrar Sesión</p>
+                <span>></span>
+              </a>
             </div>
           </div>
         </div>
+      </nav>
+    </header>
+    <!-- Seccion Auto -->
+    <section class="auto-info-card" id="home">
+      <div class="box-img-auto">
+        <img src="../assets/imagenes/corolla.png" />
       </div>
-    </div>
-  </section>
-  <!-- Footer -->
-  <section class="footer">
-    <div class="footer-container container">
-      <div class="footer-box">
-        <a href="#" class="logo">Control<span>Car</span></a>
-        <div class="social">
-          <a href=""><i class="bx bxl-facebook"></i></a>
-          <a href=""><i class="bx bxl-twitter"></i></a>
-          <a href=""><i class="bx bxl-instagram"></i></a>
-          <a href=""><i class="bx bxl-youtube"></i></a>
+      <div class="auto-info-section">
+        <h1 class="auto-info-text titulo">PATENTE</h1>
+        <div class="auto-info-text-section">
+          <h2 class="auto-info-text-subtitulo">Marca:</h2>
+          <p class="auto-info-text">Toyota</p>
+        </div>
+        <div class="auto-info-text-section">
+          <h2 class="auto-info-text-subtitulo">Modelo:</h2>
+          <p class="auto-info-text">Corolla</p>
+        </div>
+        <div class="auto-info-text-section">
+          <h2 class="auto-info-text-subtitulo">Año:</h2>
+          <p class="auto-info-text">2024</p>
+        </div>
+        <div class="auto-info-text-section">
+          <h2 class="auto-info-text-subtitulo">N° chasis:</h2>
+          <p class="auto-info-text">222</p>
+        </div>
+        <div class="auto-info-text-section">
+          <h2 class="auto-info-text-subtitulo">Kilometraje:</h2>
+          <p class="auto-info-text">22Km</p>
         </div>
       </div>
-      <div class="footer-box box-column">
-        <h3>Página</h3>
-        <a href="">Inicio</a>
+    </section>
+    <!-- Seccion Alertas -->
+    <section class="section-alertas-titulo">
+      <div class="alertas-titulo">
+        <h3>Tus <span>Alertas</span></h3>
       </div>
-      <div class="footer-box box-column">
-        <h3>Contacto</h3>
-        <a href="">Teléfono</a>
-        <a href="">Mail</a>
+      <!-- Cards -->
+      <div class="alertas-section">
+        <div class="alertas-section-cards">
+          <div class="alertas">
+            <!-- Agregar Alerta -->
+            <button class="button-agregar-alerta">
+              <div class="centrar-div">
+                <div class="agregar-auto">
+                  <img
+                    src="../assets/logos/mas.png"
+                    alt=""
+                    class="user-pic-pic"
+                  />
+                  <p>Agregar alerta</p>
+                </div>
+              </div>
+            </button>
+            <!-- Alerta 1-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img
+                    src="../assets/logos/contenedor-de-aceite.png"
+                    alt="perfil-imagen"
+                  />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Aceite</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 2 -->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img
+                    src="../assets/logos/neumatico-alerta.png"
+                    alt="perfil-imagen"
+                  />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Neumaticos</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 3-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img src="../assets/logos/vtv.png" alt="perfil-imagen" />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>VTV</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 4-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img src="../assets/logos/servicio.png" alt="perfil-imagen" />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Servicio Completo</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 5-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img src="../assets/logos/bateria.png" alt="perfil-imagen" />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Bateria</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 6-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img
+                    src="../assets/logos/tubo-de-escape.png"
+                    alt="perfil-imagen"
+                  />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Caño de Escape</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 7-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img
+                    src="../assets/logos/sistema-de-refrigeracion.png"
+                    alt="perfil-imagen"
+                  />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Sistema de Enfriamiento</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 8-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img src="../assets/logos/valija.png" alt="perfil-imagen" />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Viaje Programado</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+            <!-- Alerta 9-->
+            <div class="alerta">
+              <div class="box-avatar-text">
+                <div class="avatar">
+                  <img
+                    src="../assets/logos/mecanica-de-fluidos.png"
+                    alt="perfil-imagen"
+                  />
+                </div>
+                <div class="box-text">
+                  <div class="text-patente">
+                    <p>Nivel de Fluidos</p>
+                  </div>
+                  <div class="text-flex">
+                    Fecha de alerta:
+                    <p>26/6/2011</p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-img">
+                <img
+                  src="../assets/logos/eliminar.png"
+                  alt=""
+                  class="user-pic-pic"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
+    <!-- Footer -->
+    <section class="footer">
+      <div class="footer-container container">
+        <div class="footer-box">
+          <a href="#" class="logo">Control<span>Car</span></a>
+          <div class="social">
+            <a href=""><i class="bx bxl-facebook"></i></a>
+            <a href=""><i class="bx bxl-twitter"></i></a>
+            <a href=""><i class="bx bxl-instagram"></i></a>
+            <a href=""><i class="bx bxl-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-box box-column">
+          <h3>Página</h3>
+          <a href="">Inicio</a>
+        </div>
+        <div class="footer-box box-column">
+          <h3>Contacto</h3>
+          <a href="">Teléfono</a>
+          <a href="">Mail</a>
+        </div>
+      </div>
+    </section>
+    <!-- Copyright -->
+    <div class="copytight">
+      <p>&#169; Universidad Nacional General Sarmiento</p>
     </div>
-  </section>
-  <!-- Copyright -->
-  <div class="copytight">
-    <p>&#169; Universidad Nacional General Sarmiento</p>
-  </div>
 
-  <!-- Scripts -->
-  <script src="../scripts/index.js"></script>
-  <script src="../scripts/inicio.js"></script>
-</body>
-
+    <!-- Scripts -->
+    <script src="../scripts/index.js"></script>
+    <script src="../scripts/inicio.js"></script>
+  </body>
 </html>
