@@ -1,6 +1,7 @@
 from datetime import date
 from tokenize import Double
-from pydantic import BaseModel
+from typing import Optional
+from pydantic import BaseModel, Field
 
 class ejemploDTO(BaseModel):
     nombre : str
@@ -81,3 +82,18 @@ class viajeRealizadoDTO(BaseModel):
     id : int
     distanciaKM : float
     patente : str
+
+class notificacionDTO(BaseModel):
+    nombre : str
+    fechaVence : date
+    kmVence : float
+    patente : str
+
+class vehiculoModificarDTO(BaseModel):
+    patenteAnterior: str
+    patenteNueva: Optional[str] = None
+    modelo: Optional[str] = None
+    marca: Optional[str] = None
+    fecha: Optional[str] = None
+    vim: Optional[str] = None
+    cantKM: Optional[float] = None

@@ -1,5 +1,6 @@
+from datetime import date
 from fastapi import APIRouter, HTTPException, Query
-from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO, viajeDTO
+from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoModificarDTO, vehiculoRevisionDTO, viajeDTO
 from app.endpoints.endpoint import dbCallService
 from fastapi_restful.tasks import repeat_every
 
@@ -91,6 +92,31 @@ def eliminarVehiculoUsuarioOrganizacion(patente = Query()):
     if (response != True and response != False):
         raise HTTPException(status_code = 400, detail = response["error"])
     
+    return response
+
+#RECIBEN LOS DATOS (si no los modifica enviar "", si es un numero -1), DEVUELVE TRUE SI LO MODIFICO, O ERROR SI FALLA.
+#SI NO HACE CAMBIOS, CHEQUEAR EN FRONT. ACA ASUMO QUE HAY UN CAMBIO AL MENOS.
+#BORRO TODAS LAS TABLAS RELACIONADAS AL VEHICULO (REVISIONES, VIAJES, NOTIFICACIONES Y CONTROLES COMPLETADOS) SI LLEGO LO HAGO BIEN Y ACTUALIZO LOS DATOS.
+#¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ LA FECHA ME LA ENVIAN COMO UN STRING EJ(1992-05-22)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@router.patch("/modificarVehiculoParticular")
+def modificarVehiculoParticular(vehiculoModif : vehiculoModificarDTO):
+
+    response = call_service.modificarVehiculoParticularDB(vehiculoModif)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+
+    return response
+
+@router.patch("/modificarVehiculoOrganizacion")
+def modificarVehiculoOrganizacion(vehiculoModif : vehiculoModificarDTO):
+
+    response = call_service.modificarVehiculoOrganizacionDB(vehiculoModif)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+
     return response
 
 #RECIBE EL CUIL DEL DUEÑO, DEVUELVE LA LISTA DE SUS VEHICULOS MODELADOS COMO EL OBJETO vehiculoDTO. SI NO ENCUENTRA NADA, DEVUELVE FALSE. SI HAY ERROR, ERROR.
