@@ -243,6 +243,12 @@ a.read:hover {
   justify-content: space-between;
 }
 
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .avatar img {
   width: 140px;
   margin-right: 15px;
@@ -286,7 +292,7 @@ span.dot {
 
 .button-add-car {
   width: 100%;
-  height: 12vh;
+  height: 20vh;
   padding: 17px;
   margin: 12px 0px;
   display: flex;
