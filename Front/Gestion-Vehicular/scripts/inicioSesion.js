@@ -68,8 +68,6 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
     const nombre = document.getElementById("nombre-entidad").value;
-    const apellido = document.getElementById("apellido-entidad").value;
-    const dni = document.getElementById("dni-entidad").value;
     const cuit = document.getElementById("cuit").value;
     const mail = document.getElementById("mail-entidad").value;
     const contrasena = document.getElementById("contrasena-entidad").value;
