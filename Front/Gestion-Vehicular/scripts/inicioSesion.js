@@ -34,21 +34,24 @@ document
 
     // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
     // Ejemplo utilizando fetch:
-    fetch("http://192.168.1.37:9090/users/registroUsuarioParticular", {
-      // Reemplaza con la URL de tu servidor
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nombre: nombre,
-        apellido: apellido,
-        dni: dni,
-        email: mail,
-        contraseña: contrasena,
-        cuil: cuil,
-      }),
-    })
+    fetch(
+      "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
+      {
+        // Reemplaza con la URL de tu servidor
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: nombre,
+          apellido: apellido,
+          dni: dni,
+          email: mail,
+          contraseña: contrasena,
+          cuil: cuil,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         alert("Formulario enviado exitosamente!");
@@ -65,27 +68,28 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
     const nombre = document.getElementById("nombre-entidad").value;
-    const apellido = document.getElementById("apellido-entidad").value;
-    const dni = document.getElementById("dni-entidad").value;
     const cuit = document.getElementById("cuit").value;
     const mail = document.getElementById("mail-entidad").value;
     const contrasena = document.getElementById("contrasena-entidad").value;
 
     // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
     // Ejemplo utilizando fetch:
-    fetch("http://192.168.1.37:9090/users/registroUsuarioOrganizacion", {
-      // Reemplaza con la URL de tu servidor
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        razonSocial: nombre,
-        email: mail,
-        contraseña: contrasena,
-        cuit: cuit,
-      }),
-    })
+    fetch(
+      "https://back-gestion-p1.vercel.app/users/registroUsuarioOrganizacion",
+      {
+        // Reemplaza con la URL de tu servidor
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          razonSocial: nombre,
+          email: mail,
+          contraseña: contrasena,
+          cuit: cuit,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         alert("Formulario enviado exitosamente!");
@@ -108,7 +112,7 @@ document
     if (validateEmail(mail) && password.length > 0) {
       // Llama al servidor para verificar las credenciales
       fetch(
-        `http://192.168.1.37:9090/users/verificarLogeoExitosoUsuarioParticular?email=${encodeURIComponent(
+        `https://back-gestion-p1.vercel.app/users/verificarLogeoExitosoUsuarioParticular?email=${encodeURIComponent(
           mail
         )}&password=${encodeURIComponent(password)}`
       )
@@ -124,7 +128,7 @@ document
             window.location.href = "../views/inicio.html";
           } else {
             fetch(
-              `http://192.168.1.37:9090/users/verificarLogeoExitosoUsuarioOrganizacion?email=${encodeURIComponent(
+              `https://back-gestion-p1.vercel.app/users/verificarLogeoExitosoUsuarioOrganizacion?email=${encodeURIComponent(
                 mail
               )}&password=${encodeURIComponent(password)}`
             )
