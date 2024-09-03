@@ -1,13 +1,17 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
+from app.endpoints.dtos import notifMarcarLeidaDTO, notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
 
 class dbCallService():
     def __init__(self):
         self.dbConexion = mydb
         self.dbCursor = mycursor
     
+    #SI SE ME CERRO LA CONEXION, LA VUELVO A ABRIR ANTES DE REALIZAR INTERACCION CON LA DB.
+    def chequearCnxDB(self):
+        self.dbConexion.ping(reconnect=True, attempts=1, delay=0)
+
     #PRIMERO SE CARGA EL STORED PROCEDURE CON LOS DATOS A COMPLETAR %S Y LUEGO SE COMPLETA CON OTRO OBJETO, EN ESTE CASO UPDATA.
     def registrarUsuarioParticularDB(self, usuarioParticular : usuarioParticularRegistroDTO):
         try :
@@ -764,5 +768,154 @@ class dbCallService():
             return {"error":"Algo fue mal: {}".format(err)}
 
 
+    def eliminarRevisionesYDerivados(self, patente, esParticular):
+        try:
+
+            valorDATA=(patente,)
+
+            if esParticular:
+                
+                
+
+
+                eliminarRevisionesUP = "DELETE FROM `revisionesVehiculoParticular` WHERE patenteVehiculo = %s"
+                eliminarControlesPendientesUP = "DELETE FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
+                eliminarControlesRealizadosUP = "DELETE FROM `controlRealizadoParticular` WHERE patenteVehiculo = %s"
+                eliminarViajesPendientesUP = "DELETE FROM `viajesPendienteParticular` WHERE patenteVehiculo = %s"
+
+                self.dbCursor.execute(eliminarViajesPendientesUP, valorDATA)
+                self.dbCursor.execute(eliminarControlesPendientesUP, valorDATA)
+                self.dbCursor.execute(eliminarControlesRealizadosUP, valorDATA)
+                self.dbCursor.execute(eliminarRevisionesUP, valorDATA)
+                
+                self.dbConexion.commit()
+
+                return
+
+            else:
+
+                eliminarControlesPendientesUP = "DELETE FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s"
+                eliminarControlesRealizadosUP = "DELETE FROM `controlRealizadoOrganizacion` WHERE patenteVehiculo = %s"
+                eliminarRevisionesUP = "DELETE FROM `revisionesVehiculoOrganizacion` WHERE patenteVehiculo = %s"
+
+                self.dbCursor.execute(eliminarControlesPendientesUP, valorDATA)
+                self.dbCursor.execute(eliminarControlesRealizadosUP, valorDATA)
+                self.dbCursor.execute(eliminarRevisionesUP, valorDATA)
+
+                self.dbConexion.commit()
+
+                return
             
-    
+        except mysql.connector.Error as err:
+            self.dbConexion.rollback()
+            return {"error":"Algo fue mal: {}".format(err)}
+
+    def modificarVehiculoParticularDB(self, vehiculoModif : vehiculoModificarDTO):
+        try:
+
+            #ASUMO QUE HAY CAMBIOS, BORRO TODAS LAS REVISIONES, NOTIFICACIONES Y REVISIONES COMPLETADAS ASOCIADOS AL VEHICULO. SOLO PREVISIONAL, SI LLEGO ACTUALIZO BIEN Y NO BORRO.
+
+            self.eliminarRevisionesYDerivados(vehiculoModif.patenteAnterior, True)
+
+            nuevaFecha = None
+
+            if(vehiculoModif.fecha != ""):
+                nuevaFecha = date.fromisoformat(vehiculoModif.fecha)
+
+            if(vehiculoModif.modelo != ""):
+                vehiculoModModeloUP = "UPDATE `vehiculosParticular` SET modelo=%s WHERE patente=%s"
+                vehiculoModModeloUPData = (vehiculoModif.modelo, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModModeloUP, vehiculoModModeloUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.marca != ""):
+                vehiculoModMarcaUP = "UPDATE `vehiculosParticular` SET marca=%s WHERE patente=%s"
+                vehiculoModMarcaUPData = (vehiculoModif.marca, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModMarcaUP, vehiculoModMarcaUPData)
+                self.dbConexion.commit()
+
+            if(nuevaFecha != None):
+                vehiculoModnuevaFechaUP = "UPDATE `vehiculosParticular` SET fechaFabricacion=%s WHERE patente=%s"
+                vehiculoModnuevaFechaUPData = (nuevaFecha, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModnuevaFechaUP, vehiculoModnuevaFechaUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.vim != ""):
+                vehiculoModvimUP = "UPDATE `vehiculosParticular` SET vim=%s WHERE patente=%s"
+                vehiculoModvimUPData = (vehiculoModif.vim, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModvimUP, vehiculoModvimUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.cantKM != -1):
+                vehiculoModcantKMUP = "UPDATE `vehiculosParticular` SET cantKM=%s WHERE patente=%s"
+                vehiculoModcantKMUPData = (vehiculoModif.cantKM, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModcantKMUP, vehiculoModcantKMUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.patenteNueva != ""):
+                vehiculoModPatUP = "UPDATE `vehiculosParticular` SET patente=%s WHERE patente=%s"
+                vehiculoModPatUPData = (vehiculoModif.patenteNueva, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModPatUP, vehiculoModPatUPData)
+                self.dbConexion.commit()
+
+            return True
+        
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
+        
+
+        
+    def modificarVehiculoOrganizacionDB(self, vehiculoModif : vehiculoModificarDTO):
+        try:
+
+            #ASUMO QUE HAY CAMBIOS, BORRO TODAS LAS REVISIONES, NOTIFICACIONES Y REVISIONES COMPLETADAS ASOCIADOS AL VEHICULO. SOLO PREVISIONAL, SI LLEGO ACTUALIZO BIEN Y NO BORRO.
+
+            self.eliminarRevisionesYDerivados(vehiculoModif.patenteAnterior, False)
+
+            nuevaFecha = None
+
+            if(vehiculoModif.fecha != ""):
+                nuevaFecha = date.fromisoformat(vehiculoModif.fecha)
+
+            if(vehiculoModif.modelo != ""):
+                vehiculoModModeloUP = "UPDATE `vehiculosOrganizacion` SET modelo=%s WHERE patente=%s"
+                vehiculoModModeloUPData = (vehiculoModif.modelo, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModModeloUP, vehiculoModModeloUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.marca != ""):
+                vehiculoModMarcaUP = "UPDATE `vehiculosOrganizacion` SET marca=%s WHERE patente=%s"
+                vehiculoModMarcaUPData = (vehiculoModif.marca, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModMarcaUP, vehiculoModMarcaUPData)
+                self.dbConexion.commit()
+
+            if(nuevaFecha != None):
+                vehiculoModnuevaFechaUP = "UPDATE `vehiculosOrganizacion` SET fechaFabricacion=%s WHERE patente=%s"
+                vehiculoModnuevaFechaUPData = (nuevaFecha, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModnuevaFechaUP, vehiculoModnuevaFechaUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.vim != ""):
+                vehiculoModvimUP = "UPDATE `vehiculosOrganizacion` SET vim=%s WHERE patente=%s"
+                vehiculoModvimUPData = (vehiculoModif.vim, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModvimUP, vehiculoModvimUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.cantKM != -1):
+                vehiculoModcantKMUP = "UPDATE `vehiculosOrganizacion` SET cantKM=%s WHERE patente=%s"
+                vehiculoModcantKMUPData = (vehiculoModif.cantKM, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModcantKMUP, vehiculoModcantKMUPData)
+                self.dbConexion.commit()
+
+            if(vehiculoModif.patenteNueva != ""):
+                vehiculoModPatUP = "UPDATE `vehiculosOrganizacion` SET patente=%s WHERE patente=%s"
+                vehiculoModPatUPData = (vehiculoModif.patenteNueva, vehiculoModif.patenteAnterior)
+                self.dbCursor.execute(vehiculoModPatUP, vehiculoModPatUPData)
+                self.dbConexion.commit()
+
+            return True
+        
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}

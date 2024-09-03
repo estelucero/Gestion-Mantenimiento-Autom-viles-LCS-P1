@@ -1,5 +1,6 @@
+from datetime import date
 from fastapi import APIRouter, HTTPException, Query
-from app.endpoints.dtos import notifMarcarLeidaDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoRevisionDTO, viajeDTO
+from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoModificarDTO, vehiculoRevisionDTO, viajeDTO
 from app.endpoints.endpoint import dbCallService
 from fastapi_restful.tasks import repeat_every
 
@@ -15,6 +16,8 @@ def index():
 #RECIBE UN USUARIO PARTICULAR CON TODOS SUS DATOS, Y DEVUELVE EL MAIL DEL REGISTRADO O UN ERROR CON DETALLES.
 @router.post("/registroUsuarioParticular")
 def registrarUsuarioParticular(usuarioParticular : usuarioParticularRegistroDTO) :
+    call_service.chequearCnxDB()
+
     response = call_service.registrarUsuarioParticularDB(usuarioParticular)
     
     if ("error" in response):
@@ -25,6 +28,8 @@ def registrarUsuarioParticular(usuarioParticular : usuarioParticularRegistroDTO)
 #RECIBE UN USUARIO ORGANIZACION CON TODOS SUS DATOS, Y DEVUELVE EL MAIL DEL REGISTRADO O UN ERROR CON DETALLES.
 @router.post("/registroUsuarioOrganizacion")
 def registrarUsuarioOrganizacion(usuarioOrganizacion : usuarioOrganizacionRegistroDTO) :
+    call_service.chequearCnxDB()
+
     response = call_service.registrarUsuarioOrganizacionDB(usuarioOrganizacion)
 
     if ("error" in response):
@@ -36,6 +41,8 @@ def registrarUsuarioOrganizacion(usuarioOrganizacion : usuarioOrganizacionRegist
 #RECIBE UN EMAIL Y PASSWORD DEL FRONT, DEVUELVE BOOLEAN TRUE O FALSE SI SE PUEDE LOGEAR O NO
 @router.get("/verificarLogeoExitosoUsuarioParticular")
 def verifRegistroUsuarioParticular(email = Query(), password = Query()) : 
+    call_service.chequearCnxDB()
+
     response = call_service.verificarUsuarioLogeoExitosoUsuarioParticularDB(email, password)
 
     if ("error" in response):
@@ -46,6 +53,8 @@ def verifRegistroUsuarioParticular(email = Query(), password = Query()) :
 #RECIBE UN EMAIL Y PASSWORD DEL FRONT, DEVUELVE BOOLEAN TRUE O FALSE SI SE PUEDE LOGEAR O NO
 @router.get("/verificarLogeoExitosoUsuarioOrganizacion")
 def verifRegistroUsuarioOrganizacion(email = Query(), password = Query()) : 
+    call_service.chequearCnxDB()
+
     response = call_service.verificarUsuarioLogeoExitosoUsuarioOrganizacionDB(email, password)
 
     if ("error" in response):
@@ -56,6 +65,8 @@ def verifRegistroUsuarioOrganizacion(email = Query(), password = Query()) :
 #RECIBE UN VEHICULO CON TODOS SUS DATOS Y EL CUIL DEL DUEÑO.  DEVUELVE UN OBJETO VEHICULOREGISTRADODTO SI SE REGISTRA CORRECTAMENTE. SI NO ERROR.
 @router.post("/registrarVehiculoUsuarioParticular")
 def registrarVehiculoUsuarioParticular(vehiculoNuevo : nuevoVehiculoUsuarioParticularDTO) :
+    call_service.chequearCnxDB()
+
     response = call_service.registrarNuevoVehiculoUsuarioParticularDB(vehiculoNuevo)
 
     if ("error" in response):
@@ -66,6 +77,8 @@ def registrarVehiculoUsuarioParticular(vehiculoNuevo : nuevoVehiculoUsuarioParti
 #RECIBE UN VEHICULO CON TODOS SUS DATOS Y EL CUIT DEL DUEÑO. DEVUELVE UN OBJETO VEHICULOREGISTRADODTO SI SE REGISTRA CORRECTAMENTE. SI NO ERROR.
 @router.post("/registrarVehiculoUsuarioOrganizacion")
 def registrarVehiculoUsuarioOrganizacion(vehiculoNuevo : nuevoVehiculoUsuarioOrganizacionDTO) :
+    call_service.chequearCnxDB()
+
     response = call_service.registrarNuevoVehiculoUsuarioOrganizacionDB(vehiculoNuevo)
 
     if ("error" in response):
@@ -76,6 +89,8 @@ def registrarVehiculoUsuarioOrganizacion(vehiculoNuevo : nuevoVehiculoUsuarioOrg
 #RECIBE UNA PATENTE, DEVUELVE TRUE SI SE ELIMINO O FALSE SI NO NINGUN AUTO CON ESA PATENTE. SI NO, ERROR.
 @router.delete("/eliminarVehiculoUsuarioParticular")
 def eliminarVehiculoUsuarioParticular(patente = Query()):
+    call_service.chequearCnxDB()
+
     response = call_service.eliminarVehiculoUsuarioParticularDB(patente)
 
     if (response != True and response != False):
@@ -86,6 +101,8 @@ def eliminarVehiculoUsuarioParticular(patente = Query()):
 #RECIBE UNA PATENTE, DEVUELVE TRUE SI SE ELIMINO O FALSE SI NO NINGUN AUTO CON ESA PATENTE. SI NO, ERROR.
 @router.delete("/eliminarVehiculoUsuarioOrganizacion")
 def eliminarVehiculoUsuarioOrganizacion(patente = Query()):
+    call_service.chequearCnxDB()
+
     response = call_service.eliminarVehiculoUsuarioOrganizacionDB(patente)
 
     if (response != True and response != False):
@@ -93,9 +110,37 @@ def eliminarVehiculoUsuarioOrganizacion(patente = Query()):
     
     return response
 
+#RECIBEN LOS DATOS (si no los modifica enviar "", si es un numero -1), DEVUELVE TRUE SI LO MODIFICO, O ERROR SI FALLA.
+#SI NO HACE CAMBIOS, CHEQUEAR EN FRONT. ACA ASUMO QUE HAY UN CAMBIO AL MENOS.
+#BORRO TODAS LAS TABLAS RELACIONADAS AL VEHICULO (REVISIONES, VIAJES, NOTIFICACIONES Y CONTROLES COMPLETADOS) SI LLEGO LO HAGO BIEN Y ACTUALIZO LOS DATOS.
+#¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ LA FECHA ME LA ENVIAN COMO UN STRING EJ(1992-05-22)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+@router.patch("/modificarVehiculoParticular")
+def modificarVehiculoParticular(vehiculoModif : vehiculoModificarDTO):
+    call_service.chequearCnxDB()
+
+    response = call_service.modificarVehiculoParticularDB(vehiculoModif)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+
+    return response
+
+@router.patch("/modificarVehiculoOrganizacion")
+def modificarVehiculoOrganizacion(vehiculoModif : vehiculoModificarDTO):
+    call_service.chequearCnxDB()
+
+    response = call_service.modificarVehiculoOrganizacionDB(vehiculoModif)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+
+    return response
+
 #RECIBE EL CUIL DEL DUEÑO, DEVUELVE LA LISTA DE SUS VEHICULOS MODELADOS COMO EL OBJETO vehiculoDTO. SI NO ENCUENTRA NADA, DEVUELVE FALSE. SI HAY ERROR, ERROR.
 @router.get("/obtenerVehiculosParticular")
 def obtenerVehiculosParticular(cuilDueño = Query()):
+    call_service.chequearCnxDB()
 
     response = call_service.obtenerVehiculosParticularDB(cuilDueño)
 
@@ -107,6 +152,7 @@ def obtenerVehiculosParticular(cuilDueño = Query()):
 #IGUAL PERO CON CUIT
 @router.get("/obtenerVehiculosOrganizacion")
 def obtenerVehiculosOrganizacion(cuitDueño = Query()):
+    call_service.chequearCnxDB()
 
     response = call_service.obtenerVehiculosOrganizacionDB(cuitDueño)
 
@@ -119,7 +165,9 @@ def obtenerVehiculosOrganizacion(cuitDueño = Query()):
 #DEVUELVE UN ERROR SI FALLA EL AGREGAR
 @router.post("/agregarRevisionesVehiculoParticular")    
 def agregarRevisionesVehiculoParticular(revisiones : list[vehiculoRevisionDTO]):
+
     for vehiculoRevision in revisiones:
+        call_service.chequearCnxDB()
         response = call_service.agregarRevisionVehiculoParticularDB(vehiculoRevision)
 
     if (response != True and "error" in response):
@@ -130,6 +178,7 @@ def agregarRevisionesVehiculoParticular(revisiones : list[vehiculoRevisionDTO]):
 @router.post("/agregarRevisionesVehiculoOrganizacion")    
 def agregarRevisionesVehiculoOrganizacion(revisiones : list[vehiculoRevisionDTO]):
     for vehiculoRevision in revisiones:
+        call_service.chequearCnxDB()
         response = call_service.agregarRevisionVehiculoOrganizacionDB(vehiculoRevision)
 
     if (response != True and "error" in response):
@@ -141,6 +190,7 @@ def agregarRevisionesVehiculoOrganizacion(revisiones : list[vehiculoRevisionDTO]
 @router.put("/verificarYActualizarRevisionesAVencer")
 #@repeat_every(seconds=40)
 def verificarYActualizarRevisionesAVencer():
+    call_service.chequearCnxDB()
 
     response = call_service.actualizarRevisionesRegistradas()
     
@@ -150,6 +200,8 @@ def verificarYActualizarRevisionesAVencer():
 #GENERA LAS NOTIFICACIONES NECESARIAS CUANDO UNA REVISION ESTA PROXIMA A VENCER    
 @router.post("/generarRevisionesVencidas")
 def generarRevisionesVencidas():
+    call_service.chequearCnxDB()
+
     response = call_service.ingresarNotificacionesDB()
 
     if (response != True and "error" in response):
@@ -160,6 +212,7 @@ def generarRevisionesVencidas():
 #RECIBE LA ID DE LA NOTIF, DEVUELVE TRUE SI LA MARCA, DEVUELVE UN ERROR SI NO.
 @router.put("/marcarNotificacionLeidaPart")
 def marcarNotificacionLeidaParticular(idNotif):
+    call_service.chequearCnxDB()
     
     response = call_service.marcarNotificacionLeidaParticularDB(idNotif)
 
@@ -170,6 +223,7 @@ def marcarNotificacionLeidaParticular(idNotif):
 
 @router.put("/marcarNotificacionLeidaOrg")
 def marcarNotificacionLeidaOrganizacion(idNotif):
+    call_service.chequearCnxDB()
     
     response = call_service.marcarNotificacionLeidaOrganizacionDB(idNotif)
 
@@ -183,6 +237,7 @@ def marcarNotificacionLeidaOrganizacion(idNotif):
 #LA REVISION ELIMINADA SE GUARDA EN LA TABLA DE REVISION COMPLETADA PARA TENER EL HISTORIAL
 @router.put("/actualizarRevisiones")
 def actualizarRevisiones():
+    call_service.chequearCnxDB()
 
     response = call_service.actualizarRevisiones()
 
@@ -194,6 +249,7 @@ def actualizarRevisiones():
 #RECIBE UN OBJETO VIAJE, DEVUELVE TRUE SI NO HAY ERRORES
 @router.post("/ingresarViaje")
 def ingresarViaje(viaje : viajeDTO):
+    call_service.chequearCnxDB()
 
     response = call_service.ingresarViajeDB(viaje)
 
@@ -205,6 +261,7 @@ def ingresarViaje(viaje : viajeDTO):
 #ACTUALIZA LOS VIAJES, CIERRA LOS COMPLETADOS Y ACTUALIZA LOS KMS
 @router.put("/actualizarViajes")
 def actualizarViaje():
+    call_service.chequearCnxDB()
 
     response = call_service.actualizarViajesDB()
 
@@ -216,6 +273,7 @@ def actualizarViaje():
 #RECIBEN LA PATENTE DEL VEHICULO, DEVUELVE UNA LISTA DE OBJETOS notificacionDTO SI ENCUENTRA ALGO, SI NO ENCUENTRA DEVUELVE FALSE. SI HAY ERROR DEVUELVE ERROR.
 @router.get("/obtenerNotificacionesParticular")
 def obtenerNotificacionesParticular(patente = Query()):
+    call_service.chequearCnxDB()
 
     response = call_service.obtenerNotificacionesParticularDB(patente)
     
@@ -226,6 +284,7 @@ def obtenerNotificacionesParticular(patente = Query()):
 
 @router.get("/obtenerNotificacionesOrganizacion")
 def obtenerNotificacionesOrganizacion(patente = Query()):
+    call_service.chequearCnxDB()
 
     response = call_service.obtenerNotificacionesOrganizacionDB(patente)
 
@@ -237,6 +296,7 @@ def obtenerNotificacionesOrganizacion(patente = Query()):
 #LO MISMO QUE LAS OTRAS PERO SOLO DEVUELVEN LAS QUE NO FUERON LEIDAS
 @router.get("/obtenerNotificacionesSinLeerParticular")
 def obtenerNotificacionesSinLeerParticular(patente = Query()):
+    call_service.chequearCnxDB()
 
     response = call_service.obtenerNotificacionesSinLeerParticularDB(patente)
 
@@ -247,6 +307,7 @@ def obtenerNotificacionesSinLeerParticular(patente = Query()):
 
 @router.get("/obtenerNotificacionesSinLeerOrganizacion")
 def obtenerNotificacionesSinLeerOrganizacion(patente = Query()):
+    call_service.chequearCnxDB()
 
     response = call_service.obtenerNotificacionesSinLeerOrganizacionDB(patente)
 
