@@ -138,8 +138,10 @@ html {
 /* Seccion Titulo */
 .titulo-img {
   min-height: 650px;
-  background-image: linear-gradient(rgba(48, 46, 44, 0.705),
-      rgba(48, 46, 44, 0.705)),
+  background-image: linear-gradient(
+      rgba(48, 46, 44, 0.705),
+      rgba(48, 46, 44, 0.705)
+    ),
     url("../assets/imagenes/fondo-inicio.jpg");
 }
 
@@ -292,7 +294,7 @@ span.dot {
 
 .button-add-car {
   width: 100%;
-  height: 20vh;
+  height: 125px;
   padding: 17px;
   margin: 12px 0px;
   display: flex;
