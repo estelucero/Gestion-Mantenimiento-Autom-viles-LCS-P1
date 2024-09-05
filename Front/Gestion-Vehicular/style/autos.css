@@ -447,6 +447,43 @@
     align-items: center;
 
   }
+
+  .popup {
+    padding: 8px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .form-element {
+    margin-bottom: 15px;
+  }
+
+  .calendar-header select {
+    width: 45%;
+    font-size: 14px;
+  }
+
+  .calendar-body {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+  }
+
+  .header {
+    font-size: 12px;
+  }
+
+  .btn-form {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .form-element label {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
 }
 
 @media (max-width: 340px) {
@@ -492,4 +529,104 @@
     align-items: end;
   }
 
+}
+
+@media only screen and (max-width: 480px) {
+  .popup {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .calendar-header select {
+    width: 48%;
+  }
+
+  .calendar-body {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .btn-form {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* Para pantallas menores a 420px */
+@media only screen and (max-width: 420px) {
+  .popup {
+    padding: 5px;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .form-element {
+    margin-bottom: 10px;
+  }
+
+  .calendar-header select {
+    width: 44%;
+    font-size: 12px;
+  }
+
+  .calendar-body {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+  }
+
+  .header {
+    font-size: 10px;
+  }
+
+  .btn-form {
+    font-size: 10px;
+    padding: 5px;
+  }
+
+  .form-element label {
+    font-size: 12px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 380px) {
+  .popup {
+    padding: 5px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .form-element {
+    margin-bottom: 8px;
+  }
+
+  .calendar-header select {
+    width: 42%;
+    font-size: 11px;
+  }
+
+  .calendar-body {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+  }
+
+  .header {
+    font-size: 9px;
+  }
+
+  .btn-form {
+    font-size: 10px;
+    padding: 4px;
+  }
+
+  .form-element label {
+    font-size: 11px;
+  }
+
+  h2 {
+    font-size: 14px;
+  }
 }
