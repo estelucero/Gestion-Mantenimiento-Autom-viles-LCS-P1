@@ -281,6 +281,10 @@
     font-size: 2rem;
     padding: 10px;
   }
+
+  .popup.active {
+    width: 90%;
+  }
 }
 
 @media (max-width: 768px) {
