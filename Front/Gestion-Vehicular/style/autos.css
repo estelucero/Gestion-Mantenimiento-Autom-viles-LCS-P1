@@ -429,6 +429,11 @@
   }
 
   .button-agregar-alerta {
-    height: 176px;
+    height: 126px;
+  }
+
+  .box-img {
+    width: 100%;
+    align-items: end;
   }
 }
