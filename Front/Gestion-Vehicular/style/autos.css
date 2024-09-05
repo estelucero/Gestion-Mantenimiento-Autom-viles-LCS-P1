@@ -320,6 +320,7 @@
   .alertas {
     grid-template-columns: repeat(1, 1fr);
     gap: 2px;
+    justify-content: center;
   }
 
   .auto-info-card {
@@ -390,5 +391,44 @@
 
   .box-img-auto {
     width: 80%;
+  }
+}
+
+@media (max-width: 440px) {
+  .avatar img {
+    width: 40px;
+    margin: 0;
+  }
+
+  .text-flex {
+    flex-direction: column;
+
+    align-items: center;
+    width: inherit;
+  }
+
+  .alertas {
+    grid-template-columns: repeat(1, minmax(100px, 1fr));
+    flex-direction: column;
+  }
+
+  .box-avatar-text {
+    flex-direction: column;
+  }
+
+  .alerta {
+    flex-direction: column;
+  }
+
+  .box-img img {
+    margin: 0;
+  }
+
+  .text-patente {
+    text-align: center;
+  }
+
+  .button-agregar-alerta {
+    height: 176px;
   }
 }
