@@ -1,8 +1,6 @@
-from datetime import date
 from fastapi import APIRouter, HTTPException, Query
 from app.endpoints.dtos import nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, vehiculoModificarDTO, vehiculoRevisionDTO, viajeDTO
 from app.endpoints.endpoint import dbCallService
-from fastapi_restful.tasks import repeat_every
 
 router = APIRouter(prefix="/users", tags=["User"])
 
@@ -45,7 +43,7 @@ def verifRegistroUsuarioParticular(email = Query(), password = Query()) :
 
     response = call_service.verificarUsuarioLogeoExitosoUsuarioParticularDB(email, password)
 
-    if ("error" in response):
+    if (response != False and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
@@ -57,7 +55,7 @@ def verifRegistroUsuarioOrganizacion(email = Query(), password = Query()) :
 
     response = call_service.verificarUsuarioLogeoExitosoUsuarioOrganizacionDB(email, password)
 
-    if ("error" in response):
+    if (response != False and "error" in response):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response

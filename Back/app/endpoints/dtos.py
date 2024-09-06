@@ -1,7 +1,6 @@
 from datetime import date
-from tokenize import Double
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 class ejemploDTO(BaseModel):
     nombre : str
@@ -24,9 +23,6 @@ class usuarioOrganizacionRegistroDTO(BaseModel):
     email : str
     contraseña : str
     cuit : str
-
-class verificacionUsuarioLogeoDTO(BaseModel):
-    response : bool
 
 class nuevoVehiculoUsuarioParticularDTO(BaseModel):
     patente : str
@@ -101,3 +97,15 @@ class vehiculoModificarDTO(BaseModel):
 class vehiculoConRevisionesDTO(BaseModel):
     vehiculo : vehiculoDTO
     listaNotif : list[notificacionDTO]
+
+class usuarioParticularLogeoDTO(BaseModel):
+    nombre : str
+    apellido : str
+    dni : str
+    email : str
+    cuil : str
+
+class usuarioOrganizacionLogeoDTO(BaseModel):
+    razonSocial : str
+    email : str
+    cuit : str
