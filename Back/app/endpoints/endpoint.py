@@ -213,27 +213,38 @@ class dbCallService():
         if vehiculoRevision.revisionPorFecha:
 
             if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=183)
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=30)
-                return vehiculoRevision
 
-            if(vehiculoRevision.nombre.lower() == 'revision_fluidos'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=183)
+
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=183)
                 return vehiculoRevision
             
-            if(vehiculoRevision.nombre.lower() == 'servicio_completo'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos' or vehiculoRevision.nombre.lower() == 'revision_fluidos'):
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=30)
                 return vehiculoRevision
             
-            if(vehiculoRevision.nombre.lower() == 'revision_escape'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+            if(vehiculoRevision.nombre.lower() == 'servicio_completo' or vehiculoRevision.nombre.lower() == 'revision_escape'):
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=365)
                 return vehiculoRevision
+            
             
             if(vehiculoRevision.nombre.lower() == 'revision_bateria'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=912)
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=912)
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
                 return vehiculoRevision
 
         else:
@@ -540,6 +551,11 @@ class dbCallService():
             revVehiculoList = self.dbCursor.fetchall()
             return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], kmActual=revVehiculoList[0][4], kmProxRevision=revVehiculoList[0][5], estado=revVehiculoList[0][6], patente=revVehiculoList[0][7], revisionPorFecha=revVehiculoList[0][8])
 
+    def fechaValida(self, fechaPrueba):
+        if(fechaPrueba > date.today()):
+            return True
+        return False
+
     def calculoRevisionActualizada(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
         vehiculoRevision.estado = "en_orden"
 
@@ -548,27 +564,38 @@ class dbCallService():
             vehiculoRevision.fechaUltRevision = vehiculoRevision.fechaProxRevision
 
             if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=183)
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=30)
-                return vehiculoRevision
 
-            if(vehiculoRevision.nombre.lower() == 'revision_fluidos'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=183)
+
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=183)
                 return vehiculoRevision
             
-            if(vehiculoRevision.nombre.lower() == 'servicio_completo'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos' or vehiculoRevision.nombre.lower() == 'revision_fluidos'):
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=30)
                 return vehiculoRevision
             
-            if(vehiculoRevision.nombre.lower() == 'revision_escape'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+            if(vehiculoRevision.nombre.lower() == 'servicio_completo' or vehiculoRevision.nombre.lower() == 'revision_escape'):
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=365)
                 return vehiculoRevision
+            
             
             if(vehiculoRevision.nombre.lower() == 'revision_bateria'):
-                vehiculoRevision.fechaProxRevision = vehiculoRevision.fechaUltRevision+timedelta(days=912)
+                aux = vehiculoRevision.fechaUltRevision+timedelta(days=912)
+                if(self.fechaValida(aux)):
+                    vehiculoRevision.fechaProxRevision = aux
+                else:
+                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
                 return vehiculoRevision
 
         else:
