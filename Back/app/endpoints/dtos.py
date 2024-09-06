@@ -104,8 +104,10 @@ class usuarioParticularLogeoDTO(BaseModel):
     dni : str
     email : str
     cuil : str
+    esParticular : bool
 
 class usuarioOrganizacionLogeoDTO(BaseModel):
     razonSocial : str
     email : str
     cuit : str
+    esParticular : bool
