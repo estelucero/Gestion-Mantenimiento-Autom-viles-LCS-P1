@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control Car - Inicio</title>
+  <!-- Favicon -->
+  <link rel="icon" href="../assets/logos/car.png" type="image/x-icon">
+  <!-- Style-->
+  <link rel="stylesheet" href="../style/index.css" />
+  <link rel="stylesheet" href="../style/inicio.css" />
+  <!-- Box Icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <header class="header-desactive">
+    <nav>
+      <div class="nav nav-container">
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <a href="#" class="logo">Control<span>Car</span></a>
+        <ul class="navbar navbar-center">
+          <div class="user-info-menu">
+            <div class="user-info">
+              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic">
+              <h3>Lando Norris</h3>
+            </div>
+          </div>
+          <li class="navbar-padding">
+            <a href="">Inicio</a>
+          </li>
+          <li class="navbar-padding" id="alerta">
+            <a href="../views/notificationPage.html">Notificaciones</a>
+          </li>
+          <li class="navbar-padding" id="logout">
+            <a href="../index.html">Cerrar Sesión</a>
+          </li>
+          <a href="../views/notificationPage.html"><img src="../assets/logos/alerta.png" alt="" class="user-pic-pic"
+              id="logo-alerta"></a>
+          <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" onclick="toggleMenu()" id="logo-user">
+        </ul>
+        <div class="sub-menu-wrap" id="subMenu">
+          <div class="sub-menu">
+            <div class="user-info">
+              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic">
+              <h3>Lando Norris</h3>
+            </div>
+            <hr>
+            <a href="../index.html" class="sub-menu-link">
+              <img src="../assets/logos/log-out.png" alt="logo log-out" class="user-pic-pic">
+              <p>Cerrar Sesión</p>
+              <span>></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!-- Seccion Titulo -->
+  <section class="home titulo-img" id="home">
+    <div class="home-text titulo-izquierda">
+      <h1 class="home-titulo">Bienvenido a Su <span>Cuenta</span></h1>
+      <p class="text-blanco">Simplifica la gestión, acelera tu éxito.</p>
+    </div>
+  </section>
+  <!-- Seccion Autos -->
+  <section class="section-autos">
+    <div class="auto-text">
+      <h3 class="home-titulo">Vehículos <span>Registrados</span></h3>
+    </div>
+    <div class="section-buscador">
+      <input type="text" placeholder="Buscar por patente...">
+      <button class="button-search"><i class='bx bx-search'></i></button>
+    </div>
+    <!-- Cards -->
+    <div class="section-card">
+      <div class="wrapper">
+        <div class="notifications">
+          <!-- Agregar Auto -->
+          <button class="button-add-car" id="show-car">
+            <div class="centrar-div">
+              <div class="agregar-auto">
+                <img src="../assets/logos/mas.png" alt="" class="user-pic-pic">
+                <p>Agregar auto</p>
+              </div>
+            </div>
+          </button>
+          <!-- PopUp -->
+          <div class="popup-container">
+            <div class="popup">
+              <div class="close-btn">&times;</div>
+              <div class="form">
+                <h2>Cargar Vehículo</h2>
+                <div class="form-element">
+                  <label for="patente">Patente</label>
+                  <input type="patente" id="patente" placeholder="Escribir patente">
+                </div>
+                <div class="form-element">
+                  <label for="modelo">Modelo</label>
+                  <input type="modelo" id="modelo" placeholder="Escribir modelo">
+                </div>
+                <div class="form-element">
+                  <label for="marca">Marca</label>
+                  <input type="marca" id="marca" placeholder="Escribir marca">
+                </div>
+                <div class="form-element">
+                  <label for="anio-fab">Año de Fabricación</label>
+                  <input type="anio-fab" id="anio-fab" placeholder="Escribir año de fabricación">
+                </div>
+                <div class="form-element">
+                  <label for="chasis">N° de Chasis</label>
+                  <input type="chasis" id="chasis" placeholder="Escribir n° de chasis">
+                </div>
+                <div class="form-element">
+                  <label for="km">Cantidad de Kilómetros</label>
+                  <input type="km" id="km" placeholder="Escribir cantidad de km">
+                </div>
+                <div class="form-element">
+                  <label for="imagen">Imagen del Vehículo</label>
+                  <input type="file" id="imagen" accept="image/*">
+                </div>
+                <div class="form-element form-div">
+                  <button class="btn-form">Guardar</button>
+                  <button class="btn-form">Cancelar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Auto 1-->
+          <div class="single-box">
+            <div class="box-avatar-text">
+              <div class="avatar">
+                <img src="../assets/imagenes/corolla.png" alt="perfil-imagen">
+              </div>
+              <div class="box-text">
+                <div class="text-patente">
+                  <p class="patente-p">AA 123 BB</p>
+                </div>
+                <div class="text-flex">Marca: <p>Toyota</p>
+                </div>
+                <div class="text-flex">Modelo: <p>Corola</p>
+                </div>
+                <div class="text-flex">Año de Fabricación: <p>2018</p>
+                </div>
+              </div>
+            </div>
+            <div class="box-img">
+              <a href="../views/auto.html"><img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic"></a>
+              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic">
+            </div>
+          </div>
+          <!-- Auto 2 -->
+          <div class="single-box ">
+            <div class="box-avatar-text">
+              <div class="avatar">
+                <img src="../assets/imagenes/corolla.png" alt="perfil-imagen">
+              </div>
+              <div class="box-text">
+                <div class="text-patente">
+                  <p class="patente-p">AA 456 BB</p>
+                </div>
+                <div class="text-flex">Marca: <p>Toyota</p>
+                </div>
+                <div class="text-flex">Modelo: <p>Corola</p>
+                </div>
+                <div class="text-flex">Año de Fabricación: <p>2018</p>
+                </div>
+              </div>
+            </div>
+            <div class="box-img">
+              <a href="../views/auto.html"><img src="../assets/logos/edit-solid-24.png" alt="" class="user-pic-pic"></a>
+              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Footer -->
+  <section class="footer">
+    <div class="footer-container container">
+      <div class="footer-box">
+        <a href="#" class="logo">Control<span>Car</span></a>
+        <div class="social">
+          <a href="#"><i class="bx bxl-facebook"></i></a>
+          <a href="#"><i class="bx bxl-twitter"></i></a>
+          <a href="#"><i class="bx bxl-instagram"></i></a>
+          <a href="#"><i class="bx bxl-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-box box-column">
+        <h3>Página</h3>
+        <a href="./inicio.html">Inicio</a>
+      </div>
+      <div class="footer-box box-column">
+        <h3>Contacto</h3>
+        <a href="">Teléfono</a>
+        <a href="">Mail</a>
+      </div>
+    </div>
+  </section>
+  <!-- Copyright -->
+  <div class="copytight">
+    <p>&#169; Universidad Nacional General Sarmiento</p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../scripts/index.js"></script>
+  <script src="../scripts/inicio.js"></script>
+</body>
+
+</html>
