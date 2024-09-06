@@ -4,7 +4,6 @@ const sign_up_btn2 = document.querySelector("#sign-up-btn-e");
 const sign_up_p = document.getElementById("form-particular");
 const sign_up_e = document.getElementById("form-entidad");
 const container = document.querySelector(".sec-container");
-
 sign_up_btn1.addEventListener("click", () => {
   container.classList.add("sign-up-mode");
   sign_up_e.style.display = "none";
@@ -123,8 +122,9 @@ document
           return response.json(); // Asumiendo que el servidor responde con JSON
         })
         .then((data) => {
-          if (data.response == true) {
+          if (data.esParticular == true) {
             // Redirigir al usuario si la autenticación es exitosa
+            localStorage.setItem("usuario", JSON.stringify(data));
             window.location.href = "../views/inicio.html";
           } else {
             fetch(
@@ -141,7 +141,8 @@ document
                 return response.json(); // Asumiendo que el servidor responde con JSON
               })
               .then((data) => {
-                if (data.response == true) {
+                if (data.esParticular == false) {
+                  localStorage.setItem("usuario", JSON.stringify(data));
                   // Redirigir al usuario si la autenticación es exitosa
                   window.location.href = "../views/inicio.html";
                 } else {
