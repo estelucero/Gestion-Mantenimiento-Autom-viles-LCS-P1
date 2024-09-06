@@ -141,7 +141,7 @@ document
                 return response.json(); // Asumiendo que el servidor responde con JSON
               })
               .then((data) => {
-                if (data.response == true) {
+                if (data.esParticular == false) {
                   localStorage.setItem("usuario", JSON.stringify(data));
                   // Redirigir al usuario si la autenticación es exitosa
                   window.location.href = "../views/inicio.html";
