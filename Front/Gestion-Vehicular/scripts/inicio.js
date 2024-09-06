@@ -88,7 +88,7 @@ document
 // Realizamos la solicitud GET
 fetch(
   `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
-    usuarioJSON.cuilDueño
+    usuarioJSON.cuil
   )}`
 )
   .then((response) => {
