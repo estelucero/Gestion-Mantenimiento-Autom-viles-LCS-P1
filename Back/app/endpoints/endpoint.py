@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notifMarcarLeidaDTO, notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
+from app.endpoints.dtos import notifMarcarLeidaDTO, notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
 
 class dbCallService():
     def __init__(self):
@@ -187,6 +187,26 @@ class dbCallService():
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
 
+    def obtenerVehiculo(self, patente, esParticular):
+        try:
+            if esParticular:    
+                obtVehiculoPartUP = "SELECT patente, modelo, marca, fechaFabricacion , vim, cantKM FROM vehiculosParticular WHERE patente = %s"
+                obtVehiculoPartUPData = (patente,)
+                self.dbCursor.execute(obtVehiculoPartUP, obtVehiculoPartUPData)
+                vehiculo=self.generarListaVehiculos(self.dbCursor.fetchall())
+                return vehiculo
+            else:
+                obtVehiculoOrgUP = "SELECT patente, modelo, marca, fechaFabricacion , vim, cantKM FROM vehiculosOrganizacion WHERE patente = %s"
+                obtVehiculoOrgUPData = (patente,)
+                self.dbCursor.execute(obtVehiculoOrgUP, obtVehiculoOrgUPData)
+                vehiculo=self.generarListaVehiculos(self.dbCursor.fetchall())
+                return vehiculo
+
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
+
+
     def calculoRevision(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
         
 
@@ -362,7 +382,7 @@ class dbCallService():
                     #AVISO 2000 km ANTES DE TENERLOS QUE CAMBIAR
                     if(revisionTuple[2] == 'revision_frenos' or revisionTuple[2] == 'rotacion_neumaticos'):
                         #SI LOS KM QUE SE RECORRIERON SON MAYORES A LOS DE LA PROXIMA REVISION - CUANTOS KM ANTES AVISAR
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-2000 ):
+                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-2000-revisionTuple[7] ):
                             self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
                             return
                         else:
@@ -370,7 +390,7 @@ class dbCallService():
                     
                     #AVISO 25000 km ANTES DE TENERLOS QUE CAMBIAR
                     if(revisionTuple[2] == 'revision_correa' or revisionTuple[2] == 'cambio_bujias'):
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-25000 ):
+                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-25000-revisionTuple[7] ):
                             self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
                             return
                         else:
@@ -416,7 +436,12 @@ class dbCallService():
                     #AVISO 2000 km ANTES DE TENERLOS QUE CAMBIAR
                     if(revisionTuple[2] == 'revision_frenos' or revisionTuple[2] == 'rotacion_neumaticos'):
                         #SI LOS KM QUE SE RECORRIERON SON MAYORES A LOS DE LA PROXIMA REVISION - CUANTOS KM ANTES AVISAR
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-2000 ):
+                        print(kmActuales)
+                        print(" - ")
+                        print(revisionTuple[7])
+                        print(">=")
+                        print(revisionTuple[4]-2000)
+                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-2000-revisionTuple[7] ):
                             self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
                             return
                         else:
@@ -424,7 +449,7 @@ class dbCallService():
                     
                     #AVISO 25000 km ANTES DE TENERLOS QUE CAMBIAR
                     if(revisionTuple[2] == 'revision_correa' or revisionTuple[2] == 'cambio_bujias'):
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-25000 ):
+                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-25000-revisionTuple[7] ):
                             self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
                             return
                         else:
@@ -705,15 +730,17 @@ class dbCallService():
 
     def obtenerNotificacionesParticularDB(self, patente):
         try:
+            aux = self.obtenerVehiculo(patente, True)
+
             obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
 
-            if not notifAux:
+            if not notifAux or not aux:
                 return False
             else:
-                return notifAux
+                return vehiculoConRevisionesDTO(vehiculo=aux[0], listaNotif=notifAux)
 
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
@@ -721,15 +748,17 @@ class dbCallService():
         
     def obtenerNotificacionesOrganizacionDB(self, patente):
         try:
+            aux = self.obtenerVehiculo(patente, False)
+
             obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
 
-            if not notifAux:
+            if not notifAux or not aux:
                 return False
             else:
-                return notifAux
+                return vehiculoConRevisionesDTO(vehiculo=aux[0], listaNotif=notifAux)
 
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
