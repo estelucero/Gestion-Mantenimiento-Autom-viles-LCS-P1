@@ -97,7 +97,3 @@ class vehiculoModificarDTO(BaseModel):
     fecha: Optional[str] = None
     vim: Optional[str] = None
     cantKM: Optional[float] = None
-
-class vehiculoConRevisionesDTO(BaseModel):
-    vehiculo : vehiculoDTO
-    listaNotif : list[notificacionDTO]
