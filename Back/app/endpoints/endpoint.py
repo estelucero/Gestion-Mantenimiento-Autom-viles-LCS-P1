@@ -45,7 +45,7 @@ class dbCallService():
             if not result:
                 return False
             else :
-                return usuarioParticularLogeoDTO(nombre = result[0][0], apellido=result[0][1], dni=result[0][1], cuil= result[0][1], email = emailIng)
+                return usuarioParticularLogeoDTO(nombre = result[0][0], apellido=result[0][1], dni=result[0][1], cuil= result[0][1], email = emailIng, esParticular=True)
             
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
@@ -61,7 +61,7 @@ class dbCallService():
             if not result:
                 return False
             else :
-                return usuarioOrganizacionLogeoDTO(razonSocial=result[0][0], email=emailIng, cuit=result[0][1])
+                return usuarioOrganizacionLogeoDTO(razonSocial=result[0][0], email=emailIng, cuit=result[0][1], esParticular=False)
             
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
