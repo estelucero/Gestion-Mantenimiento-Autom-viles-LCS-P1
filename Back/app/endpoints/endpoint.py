@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notifMarcarLeidaDTO, notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionRegistroDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, verificacionUsuarioLogeoDTO, viajeDTO, viajeRealizadoDTO
+from app.endpoints.dtos import notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionLogeoDTO, usuarioOrganizacionRegistroDTO, usuarioParticularLogeoDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, viajeDTO, viajeRealizadoDTO
 
 class dbCallService():
     def __init__(self):
@@ -35,33 +35,33 @@ class dbCallService():
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
 
-    def verificarUsuarioLogeoExitosoUsuarioParticularDB(self, email, password):
+    def verificarUsuarioLogeoExitosoUsuarioParticularDB(self, emailIng, passwordIng):
         try:
-            verifUP = "SELECT `email` , `contraseña` FROM `usuariosParticular` WHERE email = %s AND contraseña = %s"
-            verifUPData = (email, password)
+            verifUP = "SELECT `nombre`, `apellido`, `dni`, `cuil` FROM `usuariosParticular` WHERE email = %s AND contraseña = %s"
+            verifUPData = (emailIng, passwordIng)
             self.dbCursor.execute(verifUP, verifUPData)
             result = self.dbCursor.fetchall()
             #SI LA LISTA ESTA VACIA, NO ENCONTRO NADA EN EL SELECT
             if not result:
-                return verificacionUsuarioLogeoDTO(response = False)
+                return False
             else :
-                return verificacionUsuarioLogeoDTO(response = True)
+                return usuarioParticularLogeoDTO(nombre = result[0][0], apellido=result[0][1], dni=result[0][1], cuil= result[0][1], email = emailIng)
             
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
             return {"error":"Algo fue mal: {}".format(err)}
         
-    def verificarUsuarioLogeoExitosoUsuarioOrganizacionDB(self, email, password):
+    def verificarUsuarioLogeoExitosoUsuarioOrganizacionDB(self, emailIng, passwordIng):
         try:
-            verifUP = "SELECT `email` , `contraseña` FROM `usuariosOrganizacion` WHERE email = %s AND contraseña = %s"
-            verifUPData = (email, password)
+            verifUP = "SELECT `razonSocial`, `cuit` FROM `usuariosOrganizacion` WHERE email = %s AND contraseña = %s"
+            verifUPData = (emailIng, passwordIng)
             self.dbCursor.execute(verifUP, verifUPData)
             result = self.dbCursor.fetchall()
             #SI LA LISTA ESTA VACIA, NO ENCONTRO NADA EN EL SELECT
             if not result:
-                return verificacionUsuarioLogeoDTO(response = False)
+                return False
             else :
-                return verificacionUsuarioLogeoDTO(response = True)
+                return usuarioOrganizacionLogeoDTO(razonSocial=result[0][0], email=emailIng, cuit=result[0][1])
             
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
