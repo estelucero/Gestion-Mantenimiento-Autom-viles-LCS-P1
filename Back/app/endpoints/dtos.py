@@ -82,8 +82,7 @@ class notificacionDTO(BaseModel):
     patente : str
 
 class vehiculoModificarDTO(BaseModel):
-    patenteAnterior: str
-    patenteNueva: Optional[str] = None
+    patente: str
     modelo: Optional[str] = None
     marca: Optional[str] = None
     fecha: Optional[str] = None
