@@ -58,13 +58,60 @@ fetch(
       <img
         src="../assets/logos/eliminar.png"
         alt="Eliminar"
-        class="user-pic-pic"
+        class="user-pic-pic eliminar-auto"
       />
     </div>
   `;
       divAuto.addEventListener("click", () => {
         localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
         console.log(`Auto ${auto.patente} guardado en el localStorage`);
+      });
+
+      // Agregar evento para guardar en localStorage cuando se haga clic en la tarjeta
+      divAuto.addEventListener("click", () => {
+        localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
+        console.log(`Auto ${auto.patente} guardado en el localStorage`);
+      });
+
+      // Seleccionar el ícono de eliminar y añadir un evento para la solicitud de eliminación
+      const eliminarIcon = divAuto.querySelector(".eliminar-auto");
+      eliminarIcon.addEventListener("click", async (event) => {
+        event.stopPropagation(); // Evita que el click se propague al evento de la tarjeta
+
+        // Confirmar antes de eliminar
+        const confirmacion = confirm(
+          `¿Estás seguro de que quieres eliminar el vehículo con patente ${auto.patente}?`
+        );
+        if (!confirmacion) return;
+
+        try {
+          const response = await fetch(
+            `https://back-gestion-p1.vercel.app/users/eliminarVehiculoUsuarioParticular?patente=${auto.patente}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.ok) {
+            console.log(
+              `Vehículo con patente ${auto.patente} eliminado con éxito`
+            );
+            window.location.reload();
+            // Opcionalmente, eliminar la tarjeta del DOM
+            divAuto.remove();
+          } else {
+            const errorData = await response.json();
+            console.error("Error al eliminar el vehículo:", errorData);
+          }
+        } catch (error) {
+          console.error(
+            "Hubo un problema con la solicitud de eliminación:",
+            error
+          );
+        }
       });
 
       container.appendChild(divAuto);
