@@ -3,7 +3,7 @@ const usuarioJSON = JSON.parse(localStorage.getItem("usuario"));
 const patenteRegex = /^(?:[A-Za-z]{3}[0-9]{3}|[A-Za-z]{2}[0-9]{3}[A-Za-z]{2})$/;
 const modeloMarcaRegex = /^[A-Za-z]+$/;
 const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
-const chasisRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
+const chasisRegex = /^[a-zA-Z0-9]{17}$/;
 const kilometrosMax = 450000;
 
 console.log(usuarioJSON);
@@ -109,6 +109,34 @@ function validarCampo(input, regex, feedbackId) {
   }
 }
 
+function validarFecha(input) {
+  const fechaStr = input.value;
+  const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!fechaRegex.test(fechaStr)) {
+    mostrarError(input, "anio-fab-feedback");
+    return false;
+  }
+
+  const [anio, mes, dia] = fechaStr.split('-').map(Number);
+  const fechaIngresada = new Date(anio, mes - 1, dia);
+  const fechaActual = new Date();
+
+  if (fechaIngresada.getFullYear() !== anio ||
+    fechaIngresada.getMonth() !== (mes - 1) ||
+    fechaIngresada.getDate() !== dia) {
+    mostrarError(input, "anio-fab-feedback");
+    return false;
+  }
+
+  if (fechaIngresada > fechaActual) {
+    mostrarError(input, "anio-fab-feedback");
+    return false;
+  } else {
+    mostrarExito(input, "anio-fab-feedback");
+    return true;
+  }
+}
+
 function validarKilometros() {
   const km = document.getElementById("km");
   const kmFeedback = document.getElementById("km-feedback");
@@ -138,7 +166,7 @@ document.getElementById("marca").addEventListener("input", function () {
 });
 
 document.getElementById("anio-fab").addEventListener("input", function () {
-  validarCampo(this, fechaRegex, "anio-fab-feedback");
+  validarFecha(this);
 });
 
 document.getElementById("chasis").addEventListener("input", function () {
@@ -162,7 +190,7 @@ function validarFormulario() {
   isValid = validarCampo(patente, patenteRegex, "patente-feedback") && isValid;
   isValid = validarCampo(modelo, modeloMarcaRegex, "modelo-feedback") && isValid;
   isValid = validarCampo(marca, modeloMarcaRegex, "marca-feedback") && isValid;
-  isValid = validarCampo(anioFab, fechaRegex, "anio-fab-feedback") && isValid;
+  isValid = validarFecha(anioFab) && isValid;
   isValid = validarCampo(chasis, chasisRegex, "chasis-feedback") && isValid;
   isValid = validarKilometros() && isValid;
 
