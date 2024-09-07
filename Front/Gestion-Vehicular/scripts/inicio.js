@@ -1,30 +1,5 @@
 const usuarioJSON = JSON.parse(localStorage.getItem("usuario"));
-let subMenu = document.getElementById("subMenu");
-function toggleMenu() {
-  subMenu.classList.toggle("open-menu");
-}
 
-document.querySelector("#show-car").addEventListener("click", function () {
-  document.querySelector(".popup").classList.add("active");
-  document.querySelector(".header-desactive").classList.add("active");
-  document.querySelector(".popup-container").classList.add("active");
-});
-
-document
-  .querySelector(".popup .close-btn")
-  .addEventListener("click", function () {
-    document.querySelector(".popup").classList.remove("active");
-    document.querySelector(".header-desactive").classList.remove("active");
-    document.querySelector(".popup-container").classList.remove("active");
-  });
-
-document
-  .querySelector(".btn-form:nth-of-type(2)")
-  .addEventListener("click", function () {
-    document.querySelector(".popup").classList.remove("active");
-    document.querySelector(".header-desactive").classList.remove("active");
-    document.querySelector(".popup-container").classList.remove("active");
-  });
 console.log(usuarioJSON);
 //Resgistro de auto
 document
@@ -88,7 +63,7 @@ document
 // Realizamos la solicitud GET
 fetch(
   `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
-    usuarioJSON.cuil
+    usuarioJSON.cuilDueño
   )}`
 )
   .then((response) => {
