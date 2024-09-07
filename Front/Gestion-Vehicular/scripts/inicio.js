@@ -1,11 +1,10 @@
 const usuarioJSON = JSON.parse(localStorage.getItem("usuario"));
 
-const patenteRegex = /^(?:[A-Z]{3}[0-9]{3}|[A-Z]{2}[0-9]{3}[A-Z]{2})$/;
+const patenteRegex = /^(?:[A-Za-z]{3}[0-9]{3}|[A-Za-z]{2}[0-9]{3}[A-Za-z]{2})$/;
 const modeloMarcaRegex = /^[A-Za-z]+$/;
 const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
 const chasisRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
 const kilometrosMax = 450000;
-
 
 console.log(usuarioJSON);
 //Resgistro de auto
@@ -88,21 +87,18 @@ fetch(
   });
 
 
-// Función para mostrar errores
 function mostrarError(input, feedbackId) {
   input.classList.remove("is-valid");
   input.classList.add("is-invalid");
   document.getElementById(feedbackId).style.display = "block";
 }
 
-// Función para mostrar éxito
 function mostrarExito(input, feedbackId) {
   input.classList.remove("is-invalid");
   input.classList.add("is-valid");
   document.getElementById(feedbackId).style.display = "none";
 }
 
-// Función de validación individual para cada campo
 function validarCampo(input, regex, feedbackId) {
   if (!regex.test(input.value) || input.value.trim() === "") {
     mostrarError(input, feedbackId);
@@ -113,7 +109,6 @@ function validarCampo(input, regex, feedbackId) {
   }
 }
 
-// Validación especial para kilómetros
 function validarKilometros() {
   const km = document.getElementById("km");
   const kmFeedback = document.getElementById("km-feedback");
@@ -127,27 +122,33 @@ function validarKilometros() {
   }
 }
 
-// Agregar eventos de validación en tiempo real para cada campo
 document.getElementById("patente").addEventListener("input", function () {
+  this.value = this.value.toLowerCase();
   validarCampo(this, patenteRegex, "patente-feedback");
 });
+
 document.getElementById("modelo").addEventListener("input", function () {
+  this.value = this.value.toLowerCase();
   validarCampo(this, modeloMarcaRegex, "modelo-feedback");
 });
+
 document.getElementById("marca").addEventListener("input", function () {
+  this.value = this.value.toLowerCase();
   validarCampo(this, modeloMarcaRegex, "marca-feedback");
 });
+
 document.getElementById("anio-fab").addEventListener("input", function () {
   validarCampo(this, fechaRegex, "anio-fab-feedback");
 });
+
 document.getElementById("chasis").addEventListener("input", function () {
   validarCampo(this, chasisRegex, "chasis-feedback");
 });
+
 document.getElementById("km").addEventListener("input", function () {
   validarKilometros();
 });
 
-// Función de validación final al intentar enviar el formulario
 function validarFormulario() {
   let isValid = true;
 
@@ -158,7 +159,6 @@ function validarFormulario() {
   const chasis = document.getElementById("chasis");
   const km = document.getElementById("km");
 
-  // Validar cada campo y actualizar la variable isValid si algo es inválido
   isValid = validarCampo(patente, patenteRegex, "patente-feedback") && isValid;
   isValid = validarCampo(modelo, modeloMarcaRegex, "modelo-feedback") && isValid;
   isValid = validarCampo(marca, modeloMarcaRegex, "marca-feedback") && isValid;
@@ -166,28 +166,46 @@ function validarFormulario() {
   isValid = validarCampo(chasis, chasisRegex, "chasis-feedback") && isValid;
   isValid = validarKilometros() && isValid;
 
-  // Si el formulario no es válido, prevenir el envío
   if (!isValid) {
     alert("Por favor, completa correctamente todos los campos.");
     return false;
   }
 
-  // Si todos los campos son válidos, permitir la acción (envío o guardado)
   alert("Formulario enviado correctamente.");
   return true;
 }
 
-// Agregar evento al botón de guardar
+function limpiarFormulario() {
+  const inputs = document.querySelectorAll(".form input");
+  inputs.forEach((input) => {
+    input.value = "";
+    input.classList.remove("is-valid", "is-invalid");
+  });
+
+  const feedbacks = document.querySelectorAll(".invalid-feedback");
+  feedbacks.forEach((feedback) => {
+    feedback.style.display = "none";
+  });
+}
+
 document.getElementById("guardar-btn").addEventListener("click", function (event) {
-  event.preventDefault(); // Evitar el envío del formulario por defecto
-  const formularioEsValido = validarFormulario(); // Validar el formulario
-  
+  event.preventDefault();
+
+  const formularioEsValido = validarFormulario();
+
   if (formularioEsValido) {
-    // Aquí puedes ejecutar el código para guardar o enviar el formulario
-    // Por ejemplo: document.getElementById("formulario").submit(); si fuera un formulario real
     console.log("Formulario guardado o enviado");
+    document.getElementById("formulario").submit();
   } else {
-    // Evitar guardar si el formulario no es válido
     console.log("No se puede guardar, hay campos inválidos.");
   }
+});
+
+document.querySelector(".btn-form:nth-child(2)").addEventListener("click", function (event) {
+  event.preventDefault();
+  limpiarFormulario();
+});
+
+document.querySelector(".close-btn").addEventListener("click", function () {
+  limpiarFormulario();
 });
