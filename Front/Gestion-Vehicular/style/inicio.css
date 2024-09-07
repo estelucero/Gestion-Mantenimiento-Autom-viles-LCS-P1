@@ -649,6 +649,28 @@ span.dot {
   }
 }
 
+/* Estilo para inputs con error (borde rojo) */
+input.is-invalid {
+  border: 2px solid red;
+}
+
+/* Estilo para inputs válidos (borde verde) */
+input.is-valid {
+  border: 2px solid green;
+}
+
+/* Mensaje de feedback en rojo, oculto por defecto */
+.invalid-feedback {
+  color: red;
+  font-size: 12px;
+  display: none; /* Oculto por defecto */
+}
+
+/* Mostrar feedback cuando el campo es inválido */
+input.is-invalid + .invalid-feedback {
+  display: block;
+}
+
 @media (max-width: 768px) {
   #logo-alerta {
     display: none;
