@@ -124,51 +124,45 @@
                   <h2>Cargar Vehículo</h2>
                   <div class="form-element">
                     <label for="patente">Patente</label>
-                    <input
-                      type="patente"
-                      id="patente"
-                      placeholder="Escribir patente"
-                    />
+                    <input type="patente" id="patente" placeholder="Escribir patente" required/>
+                    <div class="invalid-feedback" id="patente-feedback">
+                      Formato permitido: AAA111 o AA111AA
+                    </div>
                   </div>
                   <div class="form-element">
                     <label for="modelo">Modelo</label>
-                    <input
-                      type="modelo"
-                      id="modelo"
-                      placeholder="Escribir modelo"
-                    />
+                    <input type="modelo" id="modelo" placeholder="Escribir modelo" required/>
+                    <div class="invalid-feedback" id="modelo-feedback">
+                      El modelo solo puede contener letras.
+                    </div>
                   </div>
                   <div class="form-element">
                     <label for="marca">Marca</label>
-                    <input
-                      type="marca"
-                      id="marca"
-                      placeholder="Escribir marca"
-                    />
+                    <input type="marca" id="marca" placeholder="Escribir marca" required/>
+                    <div class="invalid-feedback" id="marca-feedback">
+                      La marca solo puede contener letras.
+                    </div>
                   </div>
                   <div class="form-element">
                     <label for="anio-fab">Año de Fabricación</label>
-                    <input
-                      type="anio-fab"
-                      id="anio-fab"
-                      placeholder="Escribir año de fabricación"
-                    />
+                    <input type="anio-fab" id="anio-fab" placeholder="Escribir año de fabricación" required/>
+                    <div class="invalid-feedback" id="anio-fab-feedback">
+                      El formato debe ser YYYY-MM-DD.
+                    </div>
                   </div>
                   <div class="form-element">
                     <label for="chasis">N° de Chasis</label>
-                    <input
-                      type="chasis"
-                      id="chasis"
-                      placeholder="Escribir n° de chasis"
-                    />
+                    <input type="chasis" id="chasis" placeholder="Escribir n° de chasis" required/>
+                    <div class="invalid-feedback" id="chasis-feedback">
+                      El número de chasis debe tener 17 caracteres alfanuméricos.
+                    </div>
                   </div>
                   <div class="form-element">
                     <label for="km">Cantidad de Kilómetros</label>
-                    <input
-                      type="km"
-                      id="km"
-                      placeholder="Escribir cantidad de km"
-                    />
+                    <input type="km" id="km" placeholder="Escribir cantidad de km" required/>
+                    <div class="invalid-feedback" id="km-feedback">
+                      El kilometraje debe estar entre 0 y 450000.
+                    </div>
                   </div>
                   <div class="form-element">
                     <label for="imagen">Imagen del Vehículo</label>
