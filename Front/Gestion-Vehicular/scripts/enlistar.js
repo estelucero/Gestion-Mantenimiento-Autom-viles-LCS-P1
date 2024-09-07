@@ -99,9 +99,10 @@ fetch(
             console.log(
               `Vehículo con patente ${auto.patente} eliminado con éxito`
             );
-            window.location.reload();
+
             // Opcionalmente, eliminar la tarjeta del DOM
             divAuto.remove();
+            window.location.reload();
           } else {
             const errorData = await response.json();
             console.error("Error al eliminar el vehículo:", errorData);
