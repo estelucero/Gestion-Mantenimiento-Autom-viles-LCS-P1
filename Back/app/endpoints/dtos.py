@@ -59,11 +59,8 @@ class vehiculoRevisionDTO(BaseModel):
     nombre : str
     fechaUltRevision : date
     fechaProxRevision : date
-    kmActual : float
-    kmProxRevision : float
     estado : str
     patente : str
-    revisionPorFecha : bool
 
 class notifMarcarLeidaDTO(BaseModel):
     idNotif : int
@@ -82,7 +79,6 @@ class viajeRealizadoDTO(BaseModel):
 class notificacionDTO(BaseModel):
     nombre : str
     fechaVence : date
-    kmVence : float
     patente : str
 
 class vehiculoModificarDTO(BaseModel):
