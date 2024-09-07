@@ -62,6 +62,10 @@ fetch(
       />
     </div>
   `;
+      divAuto.addEventListener("click", () => {
+        localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
+        console.log(`Auto ${auto.patente} guardado en el localStorage`);
+      });
 
       container.appendChild(divAuto);
     });
