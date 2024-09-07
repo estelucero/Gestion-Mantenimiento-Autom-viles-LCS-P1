@@ -103,3 +103,92 @@ modeloElement.textContent = autoGuardado.modelo;
 anoElement.textContent = new Date(autoGuardado.fechaFabricacion).getFullYear();
 vimElement.textContent = autoGuardado.vim;
 kilometrajeElement.textContent = `${autoGuardado.cantKm} Km`;
+
+//Cargar fomulario de alerta
+document
+  .querySelector(".btn-form")
+  .addEventListener("click", async function (event) {
+    event.preventDefault(); // Previene el comportamiento por defecto del botón
+
+    // Obtener el valor seleccionado del tipo de alerta
+    const tipoAlerta = document.getElementById("campo_rubro").value;
+    const tipoAlertaFormateada = transfromarAlerta(tipoAlerta);
+    console.log(tipoAlertaFormateada);
+    // Obtener la fecha seleccionada del input de fecha
+    const fechaUltimaRevision = formatearFecha(
+      document.getElementById("selectedDate").value
+    );
+    console.log(fechaUltimaRevision);
+    // Asignar una patente de ejemplo, si tienes un input para la patente puedes usar su valor
+    const patente = "aa900bb"; // Puedes reemplazar esto por el valor dinámico
+
+    // Verifica si el tipo de alerta y la fecha han sido seleccionados
+    if (!tipoAlerta || !fechaUltimaRevision) {
+      alert("Por favor, complete todos los campos.");
+      return;
+    }
+
+    // Definir la fecha de próxima revisión (esto puede depender de la lógica de tu negocio)
+    const fechaProximaRevision = fechaUltimaRevision;
+
+    // Definir el estado de la revisión (puedes cambiarlo según la lógica de tu aplicación)
+    const estado = "a";
+
+    // Construir el cuerpo del JSON
+    const data = [
+      {
+        nombre: tipoAlertaFormateada,
+        fechaUltRevision: fechaUltimaRevision,
+        fechaProxRevision: fechaProximaRevision,
+        estado: estado,
+        patente: patente,
+      },
+    ];
+
+    try {
+      const response = await fetch(
+        "https://back-gestion-p1.vercel.app/users/agregarRevisionesVehiculoParticular",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error en el envío de la revisión");
+      }
+
+      const result = await response.json();
+      alert("Revisión guardada con éxito");
+      console.log(result); // Puedes hacer algo más con la respuesta
+    } catch (error) {
+      alert("Hubo un error al guardar la revisión: " + error.message);
+    }
+  });
+function transfromarAlerta(tipoAlerta) {
+  switch (tipoAlerta) {
+    case "aceite":
+      return "cambio_aceite";
+    case "neumatico":
+      return "revision_neumaticos";
+    case "fluidos":
+      return "revision_fluidos";
+    case "servicio":
+      return "servicio_completo";
+    case "escape":
+      return "revision_escape";
+    case "bateria":
+      return "revision_bateria";
+    case "enfriamiento":
+      return "revision_refrig";
+    default:
+      return ""; // Devuelve vacío si no coincide con ninguna alerta
+  }
+}
+function formatearFecha(fecha) {
+  const [dia, mes, año] = fecha.split("/");
+  return `${año}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
+}
