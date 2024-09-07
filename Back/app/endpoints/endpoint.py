@@ -206,74 +206,56 @@ class dbCallService():
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
 
-    def calculoRevision(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
+    def calculoRevision(self, vehiculoRevision : vehiculoRevisionDTO):
         
 
         vehiculoRevision.estado = "en_orden"
-        if vehiculoRevision.revisionPorFecha:
 
-            if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
+        if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
 
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=183)
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=183)
 
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=183)
-                return vehiculoRevision
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=183)
+            return vehiculoRevision
+        
+        if(vehiculoRevision.nombre.lower() == 'revision_neumaticos' or vehiculoRevision.nombre.lower() == 'revision_fluidos'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=30)
+            return vehiculoRevision
+        
+        if(vehiculoRevision.nombre.lower() == 'servicio_completo' or vehiculoRevision.nombre.lower() == 'revision_escape'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=365)
+            return vehiculoRevision
+        
+        
+        if(vehiculoRevision.nombre.lower() == 'revision_bateria' or vehiculoRevision.nombre.lower() == 'revision_refrig'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=912)
             
-            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos' or vehiculoRevision.nombre.lower() == 'revision_fluidos'):
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=30)
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=30)
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'servicio_completo' or vehiculoRevision.nombre.lower() == 'revision_escape'):
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=365)
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=365)
-                return vehiculoRevision
-            
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_bateria'):
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=912)
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
-                return vehiculoRevision
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
+                
+            return vehiculoRevision
+        
 
-        else:
-
-            #ASIGNO LOS KM DEL VEHICULO A LA REVISION X KM
-            vehiculoRevision.kmActual = self.obtenerCantKMActualesVehiculo(vehiculoRevision.patente, esParticular)
-              
-            if(vehiculoRevision.nombre.lower() == 'revision_frenos'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 20000
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'rotacion_neumaticos'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 13500
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_correa'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 80000
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'cambio_bujias'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 100000
-                return vehiculoRevision
 
     
     def agregarRevisionVehiculoParticularDB(self, vehiculoRevision : vehiculoRevisionDTO):
         try:
-            auxiliar = self.calculoRevision(vehiculoRevision, True)
-            revisionUP="INSERT INTO `revisionesVehiculoParticular` (`nombre`, `fechaUltRevision`, `fechaProxRevision`, `kmUltRevision`, `kmProxRevision`, `estado`, `patenteVehiculo`, `revisaPorFecha`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
-            revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.kmActual, auxiliar.kmProxRevision, auxiliar.estado, auxiliar.patente, auxiliar.revisionPorFecha)
+            auxiliar = self.calculoRevision(vehiculoRevision)
+            revisionUP="INSERT INTO `revisionesVehiculoParticular` (`nombre`, `fechaUltRevision`, `fechaProxRevision`, `estado`, `patenteVehiculo`) VALUES (%s,%s,%s,%s,%s);"
+            revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.estado, auxiliar.patente)
             self.dbCursor.execute(revisionUP, revisionUPData)
             self.dbConexion.commit()
             return True
@@ -284,9 +266,9 @@ class dbCallService():
 
     def agregarRevisionVehiculoOrganizacionDB(self, vehiculoRevision : vehiculoRevisionDTO):
         try:
-            auxiliar = self.calculoRevision(vehiculoRevision, False)
-            revisionUP="INSERT INTO `revisionesVehiculoOrganizacion` (`nombre`, `fechaUltRevision`, `fechaProxRevision`, `kmUltRevision`, `kmProxRevision`, `estado`, `patenteVehiculo`, `revisaPorFecha`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
-            revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.kmActual, auxiliar.kmProxRevision, auxiliar.estado, auxiliar.patente, auxiliar.revisionPorFecha)
+            auxiliar = self.calculoRevision(vehiculoRevision)
+            revisionUP="INSERT INTO `revisionesVehiculoOrganizacion` (`nombre`, `fechaUltRevision`, `fechaProxRevision`, `estado`, `patenteVehiculo`) VALUES (%s,%s,%s,%s,%s);"
+            revisionUPData=(auxiliar.nombre, auxiliar.fechaUltRevision, auxiliar.fechaProxRevision, auxiliar.estado, auxiliar.patente)
             self.dbCursor.execute(revisionUP, revisionUPData)
             self.dbConexion.commit()
             return True
@@ -298,11 +280,11 @@ class dbCallService():
     def obtenerRevisionesRegistradas(self, esParticular):
         try:
             if esParticular:
-                self.dbCursor.execute("SELECT id, patenteVehiculo, nombre, fechaProxRevision, kmProxRevision, revisaPorFecha, estado, kmUltRevision FROM `revisionesVehiculoParticular`")
+                self.dbCursor.execute("SELECT id, patenteVehiculo, nombre, fechaProxRevision, estado FROM `revisionesVehiculoParticular`")
                 patentes = self.dbCursor.fetchall()
                 return patentes
             else:
-                self.dbCursor.execute("SELECT id, patenteVehiculo, nombre, fechaProxRevision, kmProxRevision, revisaPorFecha, estado, kmUltRevision FROM `revisionesVehiculoOrganizacion`")
+                self.dbCursor.execute("SELECT id, patenteVehiculo, nombre, fechaProxRevision, estado FROM `revisionesVehiculoOrganizacion`")
                 patentes = self.dbCursor.fetchall()
                 return patentes
         except mysql.connector.Error as err:
@@ -344,121 +326,74 @@ class dbCallService():
             kmActuales = self.dbCursor.fetchall()
             return kmActuales[0][0]
 
-    #TUPLA REVISION DE FORMA (ID, PATENTE, NOMBREREVISION, FECHAPROXREVISION, KMPROXREVISION, REVISAPORFECHA, ESTADO, KMANTERIOREVISION)
+    #TUPLA REVISION DE FORMA (ID, PATENTE, NOMBREREVISION, FECHAPROXREVISION, ESTADO)
     def actualizarRevision(self, revisionTuple, esParticular):
         try:
             #SI YA ESTA ACTUALIZADO, NO PERDER TIEMPO REACTUALIZANDO.
-            if(revisionTuple[6] == 'por_vencer'):
+            if(revisionTuple[4] == 'por_vencer'):
                return
 
             if esParticular:
 
-                #REVISIONES X FECHA
-                if(revisionTuple[5] == True):
                     
-                    #AVISOS 1 DIA ANTES.
-                    if(revisionTuple[2] == 'cambio_aceite' or revisionTuple[2] == 'revision_neumaticos' or revisionTuple[2] == 'revision_fluidos'):
-                        delta = revisionTuple[3] - date.today()
-                        if(delta.days <= 1):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
-                            return
-                        else:
-                            return
+                #AVISOS 1 DIA ANTES.
+                if(revisionTuple[2] == 'cambio_aceite' or revisionTuple[2] == 'revision_neumaticos' or revisionTuple[2] == 'revision_fluidos'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 1):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
+                        return
+                    else:
+                        return
 
-                    #AVISOS 2 DIA ANTES.    
-                    if(revisionTuple[2] == 'servicio_completo' or revisionTuple[2] == 'revision_escape'):
-                        delta = revisionTuple[3] - date.today()
-                        if(delta.days <= 2):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
-                            return
-                        else:
-                            return
-                    
-                    #AVISOS 1 MES ANTES.
-                    if(revisionTuple[2] == 'revision_bateria'):
-                        delta = revisionTuple[3] - date.today()
-                        if(delta.days <= 31):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
-                            return
-                        else:
-                            return
+                #AVISOS 2 DIA ANTES.    
+                if(revisionTuple[2] == 'servicio_completo' or revisionTuple[2] == 'revision_escape'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 2):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
+                        return
+                    else:
+                        return
+                
+                #AVISOS 1 MES ANTES.
+                if(revisionTuple[2] == 'revision_bateria' or revisionTuple[2] == 'revision_refrig'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 31):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
+                        return
+                    else:
+                        return
                         
-                #REVISIONES X KM        
-                else:
-
-                    #OBTENER LOS KM ACTUALES DEL VEHICULO A REVISAR
-                    kmActuales = self.obtenerCantKMActualesVehiculo(revisionTuple[1], True)
-                    
-                    #AVISO 2000 km ANTES DE TENERLOS QUE CAMBIAR
-                    if(revisionTuple[2] == 'revision_frenos' or revisionTuple[2] == 'rotacion_neumaticos'):
-                        #SI LOS KM QUE SE RECORRIERON SON MAYORES A LOS DE LA PROXIMA REVISION - CUANTOS KM ANTES AVISAR
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-2000-revisionTuple[7] ):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
-                            return
-                        else:
-                            return
-                    
-                    #AVISO 25000 km ANTES DE TENERLOS QUE CAMBIAR
-                    if(revisionTuple[2] == 'revision_correa' or revisionTuple[2] == 'cambio_bujias'):
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-25000-revisionTuple[7] ):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
-                            return
-                        else:
-                            return
             
             #LO MISMO PERO SE CARGA PARA CUANDO SON DE ORGANIZACION
             else:
-                #REVISIONES POR FECHA
-                if(revisionTuple[5] == True):
 
-                    #AVISOS 1 DIA ANTES.
-                    if(revisionTuple[2] == 'cambio_aceite' or revisionTuple[2] == 'revision_neumaticos' or revisionTuple[2] == 'revision_fluidos'):
-                        delta = revisionTuple[3] - date.today()
-                        if(delta.days <= 1):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
-                            return
-                        else:
-                            return
+                #AVISOS 1 DIA ANTES.
+                if(revisionTuple[2] == 'cambio_aceite' or revisionTuple[2] == 'revision_neumaticos' or revisionTuple[2] == 'revision_fluidos'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 1):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
+                        return
+                    else:
+                        return
 
-                    #AVISOS 2 DIA ANTES.
-                    if(revisionTuple[2] == 'servicio_completo' or revisionTuple[2] == 'revision_escape'):
-                        delta = revisionTuple[3] - date.today()
-                        if(delta.days <= 2):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
-                            return
-                        else:
-                            return
-                        
-                    #AVISOS 1 MES ANTES.
-                    if(revisionTuple[2] == 'revision_bateria'):
-                        delta = revisionTuple[3] - date.today()
-                        if(delta.days <= 31):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
-                            return
-                        else:
-                            return
-                        
-                #REVISIONES X KM        
-                else:
-                    #OBTENER LOS KM ACTUALES DEL VEHICULO A REVISAR
-                    kmActuales = self.obtenerCantKMActualesVehiculo(revisionTuple[1], False)
+                #AVISOS 2 DIA ANTES.
+                if(revisionTuple[2] == 'servicio_completo' or revisionTuple[2] == 'revision_escape'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 2):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
+                        return
+                    else:
+                        return
                     
-                    #AVISO 2000 km ANTES DE TENERLOS QUE CAMBIAR
-                    if(revisionTuple[2] == 'revision_frenos' or revisionTuple[2] == 'rotacion_neumaticos'):
-                        #SI LOS KM QUE SE RECORRIERON SON MAYORES A LOS DE LA PROXIMA REVISION - CUANTOS KM ANTES AVISAR
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-2000-revisionTuple[7] ):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
-                            return
-                        else:
-                            return
+                #AVISOS 1 MES ANTES.
+                if(revisionTuple[2] == 'revision_bateria' or revisionTuple[2] == 'revision_refrig'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 31):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
+                        return
+                    else:
+                        return
                     
-                    #AVISO 25000 km ANTES DE TENERLOS QUE CAMBIAR
-                    if(revisionTuple[2] == 'revision_correa' or revisionTuple[2] == 'cambio_bujias'):
-                        if( kmActuales - revisionTuple[7] >= revisionTuple[4]-25000-revisionTuple[7] ):
-                            self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
-                            return
-                        else:
-                            return
                         
         except mysql.connector.Error as err:
             self.dbConexion.rollback()
@@ -483,11 +418,11 @@ class dbCallService():
     def obtenerRevisionesVencidas(self, esParticular):
         try:
             if esParticular:
-                self.dbCursor.execute("SELECT id, nombre, fechaProxRevision, kmProxRevision, patenteVehiculo, revisaPorFecha FROM `revisionesVehiculoParticular` WHERE estado = 'por_vencer'")
+                self.dbCursor.execute("SELECT id, nombre, fechaProxRevision, patenteVehiculo FROM `revisionesVehiculoParticular` WHERE estado = 'por_vencer'")
                 obtRevisiones = self.dbCursor.fetchall()
                 return obtRevisiones
             else:
-                self.dbCursor.execute("SELECT id, nombre, fechaProxRevision, kmProxRevision, patenteVehiculo, revisaPorFecha FROM `revisionesVehiculoOrganizacion` WHERE estado = 'por_vencer'")
+                self.dbCursor.execute("SELECT id, nombre, fechaProxRevision, patenteVehiculo FROM `revisionesVehiculoOrganizacion` WHERE estado = 'por_vencer'")
                 obtRevisiones = self.dbCursor.fetchall()
                 return obtRevisiones
         except mysql.connector.Error as err:
@@ -498,15 +433,15 @@ class dbCallService():
         try:
             revisionesParticVencidas = self.obtenerRevisionesVencidas(True)
             for i in range(len(revisionesParticVencidas)):
-                revPartVencUP = "INSERT INTO `controlPendienteParticular` (`nombre`,`fechaHastaVencer`,`kmHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,%s,FALSE)"
-                revParVencUPData = (revisionesParticVencidas[i][1], revisionesParticVencidas[i][2], revisionesParticVencidas[i][3], revisionesParticVencidas[i][4], revisionesParticVencidas[i][0])
+                revPartVencUP = "INSERT INTO `controlPendienteParticular` (`nombre`,`fechaHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,FALSE)"
+                revParVencUPData = (revisionesParticVencidas[i][1], revisionesParticVencidas[i][2], revisionesParticVencidas[i][3], revisionesParticVencidas[i][0])
                 self.dbCursor.execute(revPartVencUP, revParVencUPData)
                 self.dbConexion.commit()
 
             revisionesOrgVencidas = self.obtenerRevisionesVencidas(False)
             for i in range(len(revisionesOrgVencidas)):
-                revOrgVencUP = "INSERT INTO `controlPendienteOrganizacion` (`nombre`,`fechaHastaVencer`,`kmHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,%s,FALSE)"
-                revOrgVencUPData = (revisionesOrgVencidas[i][1], revisionesOrgVencidas[i][2], revisionesOrgVencidas[i][3], revisionesOrgVencidas[i][4], revisionesOrgVencidas[i][0])
+                revOrgVencUP = "INSERT INTO `controlPendienteOrganizacion` (`nombre`,`fechaHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,FALSE)"
+                revOrgVencUPData = (revisionesOrgVencidas[i][1], revisionesOrgVencidas[i][2], revisionesOrgVencidas[i][3], revisionesOrgVencidas[i][0])
                 self.dbCursor.execute(revOrgVencUP, revOrgVencUPData)
                 self.dbConexion.commit()
             return True
@@ -543,81 +478,58 @@ class dbCallService():
             obtRevVehiculoUPData = (idRevision,)
             self.dbCursor.execute(obtRevVehiculoUP, obtRevVehiculoUPData)
             revVehiculoList = self.dbCursor.fetchall()
-            return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], kmActual=revVehiculoList[0][4], kmProxRevision=revVehiculoList[0][5], estado=revVehiculoList[0][6], patente=revVehiculoList[0][7], revisionPorFecha=revVehiculoList[0][8])
+            return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], estado=revVehiculoList[0][4], patente=revVehiculoList[0][5])
         else:
             obtRevVehiculoUP = "SELECT * FROM `revisionesVehiculoOrganizacion` WHERE id = %s"
             obtRevVehiculoUPData = (idRevision,)
             self.dbCursor.execute(obtRevVehiculoUP, obtRevVehiculoUPData)
             revVehiculoList = self.dbCursor.fetchall()
-            return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], kmActual=revVehiculoList[0][4], kmProxRevision=revVehiculoList[0][5], estado=revVehiculoList[0][6], patente=revVehiculoList[0][7], revisionPorFecha=revVehiculoList[0][8])
+            return vehiculoRevisionDTO(nombre=revVehiculoList[0][1], fechaUltRevision=revVehiculoList[0][2], fechaProxRevision=revVehiculoList[0][3], estado=revVehiculoList[0][4], patente=revVehiculoList[0][5])
 
     def fechaValida(self, fechaPrueba):
         if(fechaPrueba > date.today()):
             return True
         return False
 
-    def calculoRevisionActualizada(self, vehiculoRevision : vehiculoRevisionDTO, esParticular):
+    def calculoRevisionActualizada(self, vehiculoRevision : vehiculoRevisionDTO):
         vehiculoRevision.estado = "en_orden"
 
-        if vehiculoRevision.revisionPorFecha:
+        vehiculoRevision.fechaUltRevision = vehiculoRevision.fechaProxRevision
 
-            vehiculoRevision.fechaUltRevision = vehiculoRevision.fechaProxRevision
+        if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
 
-            if(vehiculoRevision.nombre.lower() == 'cambio_aceite'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=183)
 
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=183)
-
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=183)
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_neumaticos' or vehiculoRevision.nombre.lower() == 'revision_fluidos'):
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=30)
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=30)
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'servicio_completo' or vehiculoRevision.nombre.lower() == 'revision_escape'):
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=365)
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=365)
-                return vehiculoRevision
-            
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_bateria'):
-                aux = vehiculoRevision.fechaUltRevision+timedelta(days=912)
-                if(self.fechaValida(aux)):
-                    vehiculoRevision.fechaProxRevision = aux
-                else:
-                    vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
-                return vehiculoRevision
-
-        else:
-
-            #ASIGNO LOS KM DEL VEHICULO A LA REVISION X KM         
-            vehiculoRevision.kmActual = self.obtenerCantKMActualesVehiculo(vehiculoRevision.patente, esParticular)       
-                
-            if(vehiculoRevision.nombre.lower() == 'revision_frenos'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 20000
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'rotacion_neumaticos'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 13500
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'revision_correa'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 80000
-                return vehiculoRevision
-            
-            if(vehiculoRevision.nombre.lower() == 'cambio_bujias'):
-                vehiculoRevision.kmProxRevision = vehiculoRevision.kmActual + 100000
-                return vehiculoRevision
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=183)
+            return vehiculoRevision
+        
+        if(vehiculoRevision.nombre.lower() == 'revision_neumaticos' or vehiculoRevision.nombre.lower() == 'revision_fluidos'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=30)
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=30)
+            return vehiculoRevision
+        
+        if(vehiculoRevision.nombre.lower() == 'servicio_completo' or vehiculoRevision.nombre.lower() == 'revision_escape'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=365)
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=365)
+            return vehiculoRevision
+        
+        
+        if(vehiculoRevision.nombre.lower() == 'revision_bateria' or vehiculoRevision.nombre.lower() == 'revision_refrig'):
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=912)
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
+            return vehiculoRevision
             
     def actualizarRevisiones(self):
         try:
@@ -630,26 +542,19 @@ class dbCallService():
 
             #VERIFICO CUALES DE LAS VENCIDAS YA SE CUMPLIO SU FECHA/KILOMETRAJE
             for i in range(len(revisionesVencidasVerifParticulares)):
-                if(revisionesVencidasVerifParticulares[i][5] == True):
-                    if(revisionesVencidasVerifParticulares[i][2] <= date.today()):
-                        idRevisionesVencidasActualizarParticular.append(revisionesVencidasVerifParticulares[i][0])
-                else:
-                    if(revisionesVencidasVerifParticulares[i][3] <= self.obtenerCantKMActualesVehiculo(revisionesVencidasVerifParticulares[i][4], True)):
-                        idRevisionesVencidasActualizarParticular.append(revisionesVencidasVerifParticulares[i][0])
+                if(revisionesVencidasVerifParticulares[i][2] <= date.today()):
+                    idRevisionesVencidasActualizarParticular.append(revisionesVencidasVerifParticulares[i][0])
 
             for i in range(len(revisionesVencidasVerifOrganizaciones)):
-                if(revisionesVencidasVerifOrganizaciones[i][5] == True):
-                    if(revisionesVencidasVerifOrganizaciones[i][2] <= date.today()):
-                        idRevisionesVencidasActualizarOrganizacion.append(revisionesVencidasVerifOrganizaciones[i][0])
-                else:
-                    if(revisionesVencidasVerifOrganizaciones[i][3] <= self.obtenerCantKMActualesVehiculo(revisionesVencidasVerifOrganizaciones[i][4], False)):
-                        idRevisionesVencidasActualizarOrganizacion.append(revisionesVencidasVerifOrganizaciones[i][0])
+                if(revisionesVencidasVerifOrganizaciones[i][2] <= date.today()):
+                    idRevisionesVencidasActualizarOrganizacion.append(revisionesVencidasVerifOrganizaciones[i][0])
+                
             
             #ACTUALIZO AQUELLAS REVISIONES QUE YA SE HAYAN CUMPLIDO, LAS BORRO DE NOTIFICACIONES Y LAS AGREGO AL HISTORIAL DE REVISIONES HISTÓRICO
             for i in range(len(idRevisionesVencidasActualizarParticular)):
-                vehiculo = self.calculoRevisionActualizada(self.obtenerRevisionVehiculo(idRevisionesVencidasActualizarParticular[i], True), True)      
-                revisionUpdateUP = "UPDATE `revisionesVehiculoParticular` SET fechaUltRevision=%s , fechaProxRevision=%s , kmUltRevision=%s , kmProxRevision=%s, estado=%s WHERE id=%s"
-                revisionUpdateUPData = (vehiculo.fechaUltRevision, vehiculo.fechaProxRevision, vehiculo.kmActual, vehiculo.kmProxRevision, vehiculo.estado, idRevisionesVencidasActualizarParticular[i])
+                vehiculo = self.calculoRevisionActualizada(self.obtenerRevisionVehiculo(idRevisionesVencidasActualizarParticular[i], True))      
+                revisionUpdateUP = "UPDATE `revisionesVehiculoParticular` SET fechaUltRevision=%s , fechaProxRevision=%s, estado=%s WHERE id=%s"
+                revisionUpdateUPData = (vehiculo.fechaUltRevision, vehiculo.fechaProxRevision, vehiculo.estado, idRevisionesVencidasActualizarParticular[i])
                 self.dbCursor.execute(revisionUpdateUP, revisionUpdateUPData)
 
                 revisionUpdateDeleteNotificationUP = "DELETE FROM `controlPendienteParticular` WHERE idRevision=%s"
@@ -663,10 +568,10 @@ class dbCallService():
                 self.dbConexion.commit()
 
             for i in range(len(idRevisionesVencidasActualizarOrganizacion)):
-                vehiculo = self.calculoRevisionActualizada(self.obtenerRevisionVehiculo(idRevisionesVencidasActualizarOrganizacion[i], False), False)
+                vehiculo = self.calculoRevisionActualizada(self.obtenerRevisionVehiculo(idRevisionesVencidasActualizarOrganizacion[i], False))
   
-                revisionUpdateUP = "UPDATE `revisionesVehiculoOrganizacion` SET fechaUltRevision=%s , fechaProxRevision=%s , kmUltRevision=%s , kmProxRevision=%s, estado=%s WHERE id=%s"
-                revisionUpdateUPData = (vehiculo.fechaUltRevision, vehiculo.fechaProxRevision, vehiculo.kmActual, vehiculo.kmProxRevision, vehiculo.estado ,idRevisionesVencidasActualizarParticular[i])
+                revisionUpdateUP = "UPDATE `revisionesVehiculoOrganizacion` SET fechaUltRevision=%s, fechaProxRevision=%s, estado=%s WHERE id=%s"
+                revisionUpdateUPData = (vehiculo.fechaUltRevision, vehiculo.fechaProxRevision, vehiculo.estado ,idRevisionesVencidasActualizarOrganizacion[i])
                 self.dbCursor.execute(revisionUpdateUP, revisionUpdateUPData)
 
                 revisionUpdateDeleteNotificationUP = "DELETE FROM `controlPendienteOrganizacion` WHERE idRevision=%s"
@@ -746,14 +651,14 @@ class dbCallService():
     def generarListaNotificacion(self, lista):
         notificaciones = []
         for i in range(len(lista)):
-            notificaciones.append(notificacionDTO(nombre=lista[i][0], fechaVence=lista[i][1], kmVence=lista[i][2], patente=lista[i][3]))       
+            notificaciones.append(notificacionDTO(nombre=lista[i][0], fechaVence=lista[i][1], patente=lista[i][2]))       
         return notificaciones
 
     def obtenerNotificacionesParticularDB(self, patente):
         try:
             aux = self.obtenerVehiculo(patente, True)
 
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
@@ -771,7 +676,7 @@ class dbCallService():
         try:
             aux = self.obtenerVehiculo(patente, False)
 
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s"
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
@@ -787,7 +692,7 @@ class dbCallService():
 
     def obtenerNotificacionesSinLeerParticularDB(self, patente):
         try:
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s AND estaLeida = %s"
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s AND estaLeida = %s"
             obtNotifUPData = (patente, False)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
@@ -803,7 +708,7 @@ class dbCallService():
       
     def obtenerNotificacionesSinLeerOrganizacionDB(self, patente):
         try:
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, kmHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s AND estaLeida = %s"
+            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s AND estaLeida = %s"
             obtNotifUPData = (patente, False)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
@@ -824,9 +729,6 @@ class dbCallService():
             valorDATA=(patente,)
 
             if esParticular:
-                
-                
-
 
                 eliminarRevisionesUP = "DELETE FROM `revisionesVehiculoParticular` WHERE patenteVehiculo = %s"
                 eliminarControlesPendientesUP = "DELETE FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
