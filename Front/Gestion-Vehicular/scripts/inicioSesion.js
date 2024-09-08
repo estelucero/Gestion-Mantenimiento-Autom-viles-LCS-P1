@@ -9,7 +9,7 @@ const nombreApellidoRegex = /^[A-Za-z]+$/;
 const dniRegex = /^[0-9]{7,8}$/;
 const cuilRegex = /^[0-9]{2}-[0-9]{7,8}-[0-9]$/;
 const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const contrasenaRegex = /^[A-Za-z\d@$!%*?&]{7,}$/;
+const contrasenaRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{7,}$/;
 
 
 sign_up_btn1.addEventListener("click", () => {
@@ -28,47 +28,47 @@ sign_in_btn.addEventListener("click", () => {
 });
 
 //Logica de Registro Particular
-document
-  .getElementById("form-particular")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
-    const nombre = document.getElementById("nombre").value;
-    const apellido = document.getElementById("apellido").value;
-    const dni = document.getElementById("dni").value;
-    const cuil = document.getElementById("cuil").value;
-    const mail = document.getElementById("mail").value;
-    const contrasena = document.getElementById("contrasena").value;
+// document
+//   .getElementById("form-particular")
+//   .addEventListener("submit", function (event) {
+//     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+//     const nombre = document.getElementById("nombre").value;
+//     const apellido = document.getElementById("apellido").value;
+//     const dni = document.getElementById("dni").value;
+//     const cuil = document.getElementById("cuil").value;
+//     const mail = document.getElementById("mail").value;
+//     const contrasena = document.getElementById("contrasena").value;
 
-    // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
-    // Ejemplo utilizando fetch:
-    fetch(
-      "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
-      {
-        // Reemplaza con la URL de tu servidor
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombre: nombre,
-          apellido: apellido,
-          dni: dni,
-          email: mail,
-          contraseña: contrasena,
-          cuil: cuil,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        alert("Formulario enviado exitosamente!");
-        console.log(data);
-      })
-      .catch((error) => {
-        alert("Hubo un problema al enviar el formulario.");
-        console.error(error);
-      });
-  });
+//     // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
+//     // Ejemplo utilizando fetch:
+//     fetch(
+//       "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
+//       {
+//         // Reemplaza con la URL de tu servidor
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           nombre: nombre,
+//           apellido: apellido,
+//           dni: dni,
+//           email: mail,
+//           contraseña: contrasena,
+//           cuil: cuil,
+//         }),
+//       }
+//     )
+//       .then((response) => response.json())
+//       .then((data) => {
+//         alert("Formulario enviado exitosamente!");
+//         console.log(data);
+//       })
+//       .catch((error) => {
+//         alert("Hubo un problema al enviar el formulario.");
+//         console.error(error);
+//       });
+//   });
 //Logica de Registro Entidad
 document
   .getElementById("form-entidad")
@@ -188,7 +188,6 @@ function mostrarError(input, mensaje, feedbackId) {
   errorElement.textContent = mensaje;
 }
 
-// Función para mostrar éxito usando id
 function mostrarExito(input, successId) {
   input.classList.remove("is-invalid");
   input.classList.add("is-valid");
@@ -196,7 +195,6 @@ function mostrarExito(input, successId) {
   successElement.style.display = "none";
 }
 
-// Función para validar un campo según una expresión regular
 function validarCampo(input, regex, mensaje, feedbackId) {
   if (!regex.test(input.value.trim())) {
     mostrarError(input, mensaje, feedbackId);
@@ -207,12 +205,11 @@ function validarCampo(input, regex, mensaje, feedbackId) {
   }
 }
 
-// Validación especial para el CUIL (verifica que coincida con el DNI)
 function validarCuil() {
   const dni = document.getElementById("dni").value.trim();
   const cuil = document.getElementById("cuil");
 
-  if (!/^\d{2}-\d{7,8}-\d{1}$/.test(cuil.value.trim())) {
+  if (!cuilRegex.test(cuil.value.trim())) {
     mostrarError(cuil, "El CUIL debe tener el formato XX-XXXXXXX-X", "cuilFeedback");
     return false;
   }
@@ -227,7 +224,31 @@ function validarCuil() {
   }
 }
 
-// Función de validación final al intentar enviar el formulario
+function validarContrasena() {
+  const contrasena = document.getElementById("contrasena");
+  const valorContrasena = contrasena.value.trim();
+  const tieneLetra = /[A-Za-z]/.test(valorContrasena);
+  const tieneNumero = /\d/.test(valorContrasena);
+
+  if (valorContrasena.length < 7) {
+    mostrarError(contrasena, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback");
+    return false;
+  }
+
+  if (!tieneLetra) {
+    mostrarError(contrasena, "La contraseña debe contener al menos una letra", "contrasenaFeedback");
+    return false;
+  }
+
+  if (!tieneNumero) {
+    mostrarError(contrasena, "La contraseña debe contener al menos un número", "contrasenaFeedback");
+    return false;
+  }
+
+  mostrarExito(contrasena, "contrasenaFeedback");
+  return true;
+}
+
 function validarFormulario() {
   let isValid = true;
 
@@ -238,51 +259,90 @@ function validarFormulario() {
   const mail = document.getElementById("mail");
   const contrasena = document.getElementById("contrasena");
 
-  // Validar cada campo y actualizar el estado de isValid
-  isValid = validarCampo(nombre, /^[a-zA-Z]+$/, "El nombre solo puede contener letras", "nombreFeedback") && isValid;
-  isValid = validarCampo(apellido, /^[a-zA-Z]+$/, "El apellido solo puede contener letras", "apellidoFeedback") && isValid;
-  isValid = validarCampo(dni, /^\d{7,8}$/, "El DNI debe tener 7 u 8 dígitos", "dniFeedback") && isValid;
-  isValid = validarCuil() && isValid; // Validación personalizada para el CUIL
-  isValid = validarCampo(mail, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Por favor, ingresa un correo válido", "mailFeedback") && isValid;
-  isValid = validarCampo(contrasena, /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{7,}$/, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback") && isValid;
+  isValid = validarCampo(nombre, nombreApellidoRegex, "El nombre solo puede contener letras", "nombreFeedback") && isValid;
+  isValid = validarCampo(apellido, nombreApellidoRegex, "El apellido solo puede contener letras", "apellidoFeedback") && isValid;
+  isValid = validarCampo(dni, dniRegex, "El DNI debe tener 7 u 8 dígitos", "dniFeedback") && isValid;
+  isValid = validarCuil() && isValid;
+  isValid = validarCampo(mail, mailRegex, "Por favor, ingresa un correo válido", "mailFeedback") && isValid;
+  isValid = validarContrasena() && isValid;
 
-  return isValid;
+  return isValid; // Devuelve el estado final de validación
 }
 
-// Añadir eventos de validación en tiempo real
 document.querySelectorAll("input").forEach(input => {
-  input.addEventListener("input", function() {
+  input.addEventListener("input", function () {
     switch (input.id) {
       case "nombre":
-        validarCampo(input, /^[a-zA-Z]+$/, "El nombre solo puede contener letras", "nombreFeedback");
+        validarCampo(input, nombreApellidoRegex, "El nombre solo puede contener letras", "nombreFeedback");
         break;
       case "apellido":
-        validarCampo(input, /^[a-zA-Z]+$/, "El apellido solo puede contener letras", "apellidoFeedback");
+        validarCampo(input, nombreApellidoRegex, "El apellido solo puede contener letras", "apellidoFeedback");
         break;
       case "dni":
-        validarCampo(input, /^\d{7,8}$/, "El DNI debe tener 7 u 8 dígitos", "dniFeedback");
+        validarCampo(input, dniRegex, "El DNI debe tener 7 u 8 dígitos", "dniFeedback");
         break;
       case "cuil":
         validarCuil();
         break;
       case "mail":
-        validarCampo(input, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Por favor, ingresa un correo válido", "mailFeedback");
+        validarCampo(input, mailRegex, "Por favor, ingresa un correo válido", "mailFeedback");
         break;
       case "contrasena":
-        validarCampo(input, /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{7,}$/, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback");
+        validarContrasena();
         break;
     }
   });
 });
 
-// Evento del formulario para evitar el envío si hay errores
-document.getElementById("form-particular").addEventListener("submit", function(event) {
-  event.preventDefault(); // Prevenir el envío por defecto
+document.getElementById("form-particular").addEventListener("submit", function (event) {
+  event.preventDefault(); // Previene el envío del formulario
 
-  if (validarFormulario()) {
+  const esValido = validarFormulario(); // Valida todo el formulario
+
+  if (esValido) {
     alert("Formulario enviado correctamente");
-    // Aquí puedes proceder con el envío del formulario si es necesario
-    // document.getElementById("form-particular").submit(); // Comentar esta línea si no usas un backend para procesar el formulario
+    document
+      .getElementById("form-particular")
+      .addEventListener("submit", function (event) {
+        event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+        const dni = document.getElementById("dni").value;
+        const cuil = document.getElementById("cuil").value;
+        const mail = document.getElementById("mail").value;
+        const contrasena = document.getElementById("contrasena").value;
+
+        // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
+        // Ejemplo utilizando fetch:
+        fetch(
+          "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
+          {
+            // Reemplaza con la URL de tu servidor
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              nombre: nombre,
+              apellido: apellido,
+              dni: dni,
+              email: mail,
+              contraseña: contrasena,
+              cuil: cuil,
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            alert("Formulario enviado exitosamente!");
+            console.log(data);
+          })
+          .catch((error) => {
+            alert("Hubo un problema al enviar el formulario.");
+            console.error(error);
+          });
+      });
+    // Aquí puedes proceder con el envío del formulario o cualquier otra acción
   } else {
     alert("Por favor, corrige los errores antes de continuar");
   }
