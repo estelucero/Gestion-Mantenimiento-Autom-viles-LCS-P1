@@ -80,18 +80,22 @@
         <!-- Registrarse Entidad -->
         <form action="#" class="sign-up-form" id="form-entidad">
           <h2 class="title">Registrar <span>Entidad</span></h2>
-          <div class="input-field">
-            <input type="text" placeholder="Nombre Entidad" id="nombre-entidad" />
+          <div>
+            <input class="input-field" type="text" placeholder="Nombre Entidad" id="nombre-entidad" required />
+            <div id="nombreFeedback" class="invalid-feedback">
+              <p>El nombre solo puede contener letras.</p>
+            </div>
           </div>
-
-          <div class="input-field">
-            <input type="text" placeholder="CUIT Entidad" id="cuit" />
+          <div>
+            <input class="input-field" type="text" placeholder="CUIT Entidad" id="cuit" required />
           </div>
-          <div class="input-field">
-            <input type="email" placeholder="Mail" id="mail-entidad" />
+          <div>
+            <input class="input-field" type="email" placeholder="Mail" id="mail-entidad" required />
+            <div id="mailFeedback" class="invalid-feedback">Por favor, ingresa un correo válido.</div>
           </div>
-          <div class="input-field">
-            <input type="password" placeholder="Contraseña" id="contrasena-entidad" />
+          <div>
+            <input class="input-field" type="password" placeholder="Contraseña" id="contrasena-entidad" required />
+            <div id="contrasenaFeedback" class="invalid-feedback">La contraseña debe tener al menos 7 caracteres.</div>
           </div>
           <input type="submit" class="btn" value="Registrarse" />
         </form>
