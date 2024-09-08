@@ -239,7 +239,7 @@ fetch(
         notif.fechaVence,
         notif.patente
       );
-      contenedorAlertas.innerHTML += alertaHTML;
+      contenedorAlertas.insertAdjacentHTML("beforeend", alertaHTML);
     });
 
     // Agregar evento de click a cada ícono de eliminar
