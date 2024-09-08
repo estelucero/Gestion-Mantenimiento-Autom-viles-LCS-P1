@@ -28,85 +28,84 @@ sign_in_btn.addEventListener("click", () => {
 });
 
 //Logica de Registro Particular
-// document
-//   .getElementById("form-particular")
-//   .addEventListener("submit", function (event) {
-//     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
-//     const nombre = document.getElementById("nombre").value;
-//     const apellido = document.getElementById("apellido").value;
-//     const dni = document.getElementById("dni").value;
-//     const cuil = document.getElementById("cuil").value;
-//     const mail = document.getElementById("mail").value;
-//     const contrasena = document.getElementById("contrasena").value;
+function registrarParticular() {
+  // Evita que el formulario se envíe de manera tradicional
+  const nombre = document.getElementById("nombre").value;
+  const apellido = document.getElementById("apellido").value;
+  const dni = document.getElementById("dni").value;
+  const cuil = document.getElementById("cuil").value;
+  const mail = document.getElementById("mail").value;
+  const contrasena = document.getElementById("contrasena").value;
 
-//     // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
-//     // Ejemplo utilizando fetch:
-//     fetch(
-//       "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
-//       {
-//         // Reemplaza con la URL de tu servidor
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           nombre: nombre,
-//           apellido: apellido,
-//           dni: dni,
-//           email: mail,
-//           contraseña: contrasena,
-//           cuil: cuil,
-//         }),
-//       }
-//     )
-//       .then((response) => response.json())
-//       .then((data) => {
-//         alert("Formulario enviado exitosamente!");
-//         console.log(data);
-//       })
-//       .catch((error) => {
-//         alert("Hubo un problema al enviar el formulario.");
-//         console.error(error);
-//       });
-//   });
-//Logica de Registro Entidad
-document
-  .getElementById("form-entidad")
-  .addEventListener("submit", function (event) {
-    event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
-    const nombre = document.getElementById("nombre-entidad").value;
-    const cuit = document.getElementById("cuit").value;
-    const mail = document.getElementById("mail-entidad").value;
-    const contrasena = document.getElementById("contrasena-entidad").value;
+  // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
+  // Ejemplo utilizando fetch:
+  fetch(
+    "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
+    {
+      // Reemplaza con la URL de tu servidor
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nombre: nombre,
+        apellido: apellido,
+        dni: dni,
+        email: mail,
+        contraseña: contrasena,
+        cuil: cuil,
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      alert("Formulario enviado exitosamente!");
+      console.log(data);
+    })
+    .catch((error) => {
+      alert("Hubo un problema al enviar el formulario.");
+      console.error(error);
+    });
 
-    // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
-    // Ejemplo utilizando fetch:
-    fetch(
-      "https://back-gestion-p1.vercel.app/users/registroUsuarioOrganizacion",
-      {
-        // Reemplaza con la URL de tu servidor
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          razonSocial: nombre,
-          email: mail,
-          contraseña: contrasena,
-          cuit: cuit,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        alert("Formulario enviado exitosamente!");
-        console.log(data);
-      })
-      .catch((error) => {
-        alert("Hubo un problema al enviar el formulario.");
-        console.error(error);
-      });
-  });
+  //Logica de Registro Entidad
+  document
+    .getElementById("form-entidad")
+    .addEventListener("submit", function (event) {
+      event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+      const nombre = document.getElementById("nombre-entidad").value;
+      const cuit = document.getElementById("cuit").value;
+      const mail = document.getElementById("mail-entidad").value;
+      const contrasena = document.getElementById("contrasena-entidad").value;
+
+      // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
+      // Ejemplo utilizando fetch:
+      fetch(
+        "https://back-gestion-p1.vercel.app/users/registroUsuarioOrganizacion",
+        {
+          // Reemplaza con la URL de tu servidor
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            razonSocial: nombre,
+            email: mail,
+            contraseña: contrasena,
+            cuit: cuit,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          alert("Formulario enviado exitosamente!");
+          console.log(data);
+        })
+        .catch((error) => {
+          alert("Hubo un problema al enviar el formulario.");
+          console.error(error);
+        });
+    });
+}
 //Logica de inicion de sesion
 document
   .getElementById("inicio-sesion-form")
@@ -178,6 +177,9 @@ function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
+
+
+
 
 // Función para mostrar errores usando id
 function mostrarError(input, mensaje, feedbackId) {
@@ -300,50 +302,38 @@ document.getElementById("form-particular").addEventListener("submit", function (
   const esValido = validarFormulario(); // Valida todo el formulario
 
   if (esValido) {
-    alert("Formulario enviado correctamente");
-    document
-      .getElementById("form-particular")
-      .addEventListener("submit", function (event) {
-        event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
-        const nombre = document.getElementById("nombre").value;
-        const apellido = document.getElementById("apellido").value;
-        const dni = document.getElementById("dni").value;
-        const cuil = document.getElementById("cuil").value;
-        const mail = document.getElementById("mail").value;
-        const contrasena = document.getElementById("contrasena").value;
+    registrarParticular();
 
-        // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
-        // Ejemplo utilizando fetch:
-        fetch(
-          "https://back-gestion-p1.vercel.app/users/registroUsuarioParticular",
-          {
-            // Reemplaza con la URL de tu servidor
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              nombre: nombre,
-              apellido: apellido,
-              dni: dni,
-              email: mail,
-              contraseña: contrasena,
-              cuil: cuil,
-            }),
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            alert("Formulario enviado exitosamente!");
-            console.log(data);
-          })
-          .catch((error) => {
-            alert("Hubo un problema al enviar el formulario.");
-            console.error(error);
-          });
-      });
+
     // Aquí puedes proceder con el envío del formulario o cualquier otra acción
   } else {
     alert("Por favor, corrige los errores antes de continuar");
   }
+});
+
+function limpiarFormulario() {
+  const inputs = document.querySelectorAll("#form-particular input[type='text'], #form-particular input[type='email'], #form-particular input[type='password']");
+
+  // Limpiar todos los inputs (excepto el botón de registro)
+  inputs.forEach(input => {
+    input.value = ""; // Limpiar el valor del input
+    input.classList.remove("is-valid", "is-invalid"); // Remover las clases de validación
+  });
+
+  // Ocultar todos los mensajes de feedback
+  const feedbacks = document.querySelectorAll(".invalid-feedback, .valid-feedback");
+  feedbacks.forEach(feedback => {
+    feedback.style.display = "none"; // Ocultar los mensajes de error/exito
+  });
+
+  // Asegurar que el botón de registro no sea afectado
+  const registrarseBtn = document.querySelector(".btn[value='Registrarse']");
+  if (registrarseBtn) {
+    registrarseBtn.style.display = "block"; // Asegurar que el botón esté visible
+  }
+}
+
+
+document.getElementById("sign-in-btn").addEventListener("click", function () {
+  limpiarFormulario(); // Limpiar los campos del formulario cuando se cambia al panel de registro
 });
