@@ -194,7 +194,7 @@ function formatearFecha(fecha) {
 }
 
 //Cargar alertas
-// Realizar una solicitud GET al endpoint
+// Realizar una solicitud GET al endpoint de obtener notificaciones
 fetch(
   `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesParticular?patente=${autoGuardado.patente}`
 )
@@ -205,11 +205,10 @@ fetch(
     return response.json(); // Convertir la respuesta a JSON
   })
   .then((data) => {
-    // Procesar el JSON recibido
     const contenedorAlertas = document.getElementById("alertas");
 
-    // Función para crear el HTML de la alerta
-    const crearAlertaHTML = (nombre, fechaVence) => {
+    // Función para crear el HTML de la alerta con evento de eliminar
+    const crearAlertaHTML = (nombre, fechaVence, patente) => {
       return `
         <div class="alerta">
           <div class="box-avatar-text">
@@ -227,7 +226,7 @@ fetch(
             </div>
           </div>
           <div class="box-img">
-            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic" />
+            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic" data-nombre="${nombre}" data-patente="${patente}" />
           </div>
         </div>
       `;
@@ -235,9 +234,52 @@ fetch(
 
     // Iterar sobre las notificaciones y generar las alertas
     data.listaNotif.forEach((notif) => {
-      console.log(notif);
-      const alertaHTML = crearAlertaHTML(notif.nombre, notif.fechaVence);
+      const alertaHTML = crearAlertaHTML(
+        notif.nombre,
+        notif.fechaVence,
+        notif.patente
+      );
       contenedorAlertas.innerHTML += alertaHTML;
+    });
+
+    // Agregar evento de click a cada ícono de eliminar
+    document.querySelectorAll(".user-pic-pic").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        const nombreAlerta = e.target.getAttribute("data-nombre");
+        const patente = e.target.getAttribute("data-patente");
+
+        // Confirmar eliminación
+        if (
+          confirm(
+            `¿Estás seguro de que deseas eliminar la alerta ${nombreAlerta}?`
+          )
+        ) {
+          // Hacer la solicitud DELETE al endpoint de eliminación
+          fetch(
+            `https://back-gestion-p1.vercel.app/users/eliminarRevisionVehiculoParticular?patente=${patente}&nombreRevision=${nombreAlerta}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al eliminar la alerta");
+              }
+              return response.json();
+            })
+            .then(() => {
+              // Remover la alerta del DOM después de eliminarla
+              e.target.closest(".alerta").remove();
+              alert(`La alerta ${nombreAlerta} ha sido eliminada.`);
+            })
+            .catch((error) => {
+              console.error("Hubo un problema con la eliminación:", error);
+            });
+        }
+      });
     });
   })
   .catch((error) => {
