@@ -313,3 +313,10 @@ def obtenerNotificacionesSinLeerOrganizacion(patente = Query()):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
+
+@router.delete("/eliminarRevisionVehiculoParticular")
+def eliminarVehiculoUsuarioOrganizacion(patente = Query()):
+    call_service.chequearCnxDB()
+
+    response = call_service.eliminarRevisionVehiculoParticularDB()
+  

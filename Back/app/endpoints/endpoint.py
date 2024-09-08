@@ -658,12 +658,12 @@ class dbCallService():
         try:
             aux = self.obtenerVehiculo(patente, True)
 
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s"
+            obtNotifUP= "SELECT nombre, fechaProxRevision, patenteVehiculo FROM `revisionesVehiculoParticular` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
 
-            if not notifAux or not aux:
+            if not notifAux or aux == None:
                 return False
             else:
                 return vehiculoConRevisionesDTO(vehiculo=aux[0], listaNotif=notifAux)
@@ -676,12 +676,12 @@ class dbCallService():
         try:
             aux = self.obtenerVehiculo(patente, False)
 
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s"
+            obtNotifUP= "SELECT nombre, fechaProxRevision, patenteVehiculo FROM `revisionesVehiculoOrganizacion` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
             notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
 
-            if not notifAux or not aux:
+            if not notifAux or aux == None:
                 return False
             else:
                 return vehiculoConRevisionesDTO(vehiculo=aux[0], listaNotif=notifAux)
