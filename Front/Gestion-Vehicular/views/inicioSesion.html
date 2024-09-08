@@ -36,21 +36,13 @@
       <div class="forms-container">
         <div class="signin-signup">
           <!-- Iniciar Sesion -->
-          <form
-            action="../views/inicio.html"
-            class="sign-in-form"
-            id="inicio-sesion-form"
-          >
+          <form action="../views/inicio.html" class="sign-in-form" id="inicio-sesion-form">
             <h2 class="title">Iniciar Sesión</h2>
             <div class="input-field">
               <input type="text" placeholder="Mail" id="mail-inicio-sesion" />
             </div>
             <div class="input-field">
-              <input
-                type="password"
-                placeholder="Contraseña"
-                id="password-inicio-sesion"
-              />
+              <input type="password" placeholder="Contraseña" id="password-inicio-sesion"/>
             </div>
             <input type="submit" value="Iniciar Sesión" class="btn solid" />
           </form>
@@ -58,22 +50,28 @@
           <form action="#" class="sign-up-form" id="form-particular">
             <h2 class="title">Registrar <span>Particular</span></h2>
             <div class="input-field">
-              <input type="text" placeholder="Nombre" id="nombre" />
+              <input type="text" placeholder="Nombre" id="nombre" required/>
+              <div id="nombreFeedback" class="invalid-feedback">El nombre solo puede contener letras.</div>
             </div>
             <div class="input-field">
-              <input type="text" placeholder="Apellido" id="apellido" />
+              <input type="text" placeholder="Apellido" id="apellido" required/>
+              <div id="apellidoFeedback" class="invalid-feedback">El apellido solo puede contener letras.</div>
             </div>
             <div class="input-field">
               <input type="text" placeholder="DNI" id="dni" />
+              <div id="dniFeedback" class="invalid-feedback">El DNI debe tener 7 u 8 dígitos.</div>
             </div>
             <div class="input-field">
-              <input type="text" placeholder="CUIL" id="cuil" />
+              <input type="text" placeholder="CUIL" id="cuil" required/>
+              <div id="cuilFeedback" class="invalid-feedback">El CUIL debe tener el formato XX-XXXXXXX-X y coincidir con el DNI.</div>
             </div>
             <div class="input-field">
-              <input type="email" placeholder="Mail" id="mail" />
+              <input type="email" placeholder="Mail" id="mail" required/>
+              <div id="mailFeedback" class="invalid-feedback">Por favor, ingresa un correo válido.</div>
             </div>
             <div class="input-field">
-              <input type="password" placeholder="Contraseña" id="contrasena" />
+              <input type="password" placeholder="Contraseña" id="contrasena" required/>
+              <div id="contrasenaFeedback" class="invalid-feedback">La contraseña debe tener al menos 7 caracteres.</div>
             </div>
             <input type="submit" class="btn" value="Registrarse" />
           </form>

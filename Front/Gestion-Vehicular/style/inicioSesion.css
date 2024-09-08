@@ -251,6 +251,46 @@ form.sign-in-form {
   pointer-events: all;
 }
 
+.input-field input.is-invalid {
+  border: 2px solid #dc3545; /* Rojo para campos inválidos */
+}
+
+.input-field input.is-valid {
+  border: 2px solid #28a745; /* Verde para campos válidos */
+}
+
+/* Feedback debajo del input */
+/* Estilo del feedback (mensajes de error o éxito) */
+.invalid-feedback,
+.valid-feedback {
+  width: 100%; /* Ocupa el ancho completo del input-field */
+  font-size: 0.9rem;
+  margin-top: 5px; /* Separación respecto al input */
+  text-align: left;
+  padding-left: 15%; /* Alinea el texto con el input */
+  display: none;
+}
+
+/* Mensajes de error en rojo */
+.invalid-feedback {
+  color: #dc3545; /* Color rojo para el mensaje de error */
+}
+
+/* Mensajes de éxito en verde */
+.valid-feedback {
+  color: #28a745; /* Color verde para el mensaje de éxito */
+}
+
+/* Mostrar mensaje cuando es inválido */
+.is-invalid + .invalid-feedback {
+  display: block; /* Mostrar el mensaje de error */
+}
+
+/* Mostrar mensaje cuando es válido */
+.is-valid + .valid-feedback {
+  display: block; /* Mostrar el mensaje de éxito */
+}
+
 @media (max-width: 870px) {
   .sec-container {
     min-height: 700px;

@@ -474,24 +474,21 @@ span.dot {
   align-items: center;
 }
 
-/* Estilo para inputs con error (borde rojo) */
+/* Feedback */
 input.is-invalid {
   border: 2px solid red;
 }
 
-/* Estilo para inputs válidos (borde verde) */
 input.is-valid {
   border: 2px solid green;
 }
 
-/* Mensaje de feedback en rojo, oculto por defecto */
 .invalid-feedback {
   color: red;
   font-size: 12px;
-  display: none; /* Oculto por defecto */
+  display: none; 
 }
 
-/* Mostrar feedback cuando el campo es inválido */
 input.is-invalid + .invalid-feedback {
   display: block;
 }

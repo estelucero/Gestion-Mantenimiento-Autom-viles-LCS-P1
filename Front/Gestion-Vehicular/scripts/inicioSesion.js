@@ -4,6 +4,14 @@ const sign_up_btn2 = document.querySelector("#sign-up-btn-e");
 const sign_up_p = document.getElementById("form-particular");
 const sign_up_e = document.getElementById("form-entidad");
 const container = document.querySelector(".sec-container");
+
+const nombreApellidoRegex = /^[A-Za-z]+$/;
+const dniRegex = /^[0-9]{7,8}$/;
+const cuilRegex = /^[0-9]{2}-[0-9]{7,8}-[0-9]$/;
+const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const contrasenaRegex = /^[A-Za-z\d@$!%*?&]{7,}$/;
+
+
 sign_up_btn1.addEventListener("click", () => {
   container.classList.add("sign-up-mode");
   sign_up_e.style.display = "none";
@@ -170,3 +178,112 @@ function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
+
+// Función para mostrar errores usando id
+function mostrarError(input, mensaje, feedbackId) {
+  input.classList.add("is-invalid");
+  input.classList.remove("is-valid");
+  const errorElement = document.getElementById(feedbackId);
+  errorElement.style.display = "block";
+  errorElement.textContent = mensaje;
+}
+
+// Función para mostrar éxito usando id
+function mostrarExito(input, successId) {
+  input.classList.remove("is-invalid");
+  input.classList.add("is-valid");
+  const successElement = document.getElementById(successId);
+  successElement.style.display = "none";
+}
+
+// Función para validar un campo según una expresión regular
+function validarCampo(input, regex, mensaje, feedbackId) {
+  if (!regex.test(input.value.trim())) {
+    mostrarError(input, mensaje, feedbackId);
+    return false;
+  } else {
+    mostrarExito(input, feedbackId);
+    return true;
+  }
+}
+
+// Validación especial para el CUIL (verifica que coincida con el DNI)
+function validarCuil() {
+  const dni = document.getElementById("dni").value.trim();
+  const cuil = document.getElementById("cuil");
+
+  if (!/^\d{2}-\d{7,8}-\d{1}$/.test(cuil.value.trim())) {
+    mostrarError(cuil, "El CUIL debe tener el formato XX-XXXXXXX-X", "cuilFeedback");
+    return false;
+  }
+
+  const partesCuil = cuil.value.split("-");
+  if (partesCuil[1] !== dni) {
+    mostrarError(cuil, "El CUIL no coincide con el DNI ingresado", "cuilFeedback");
+    return false;
+  } else {
+    mostrarExito(cuil, "cuilFeedback");
+    return true;
+  }
+}
+
+// Función de validación final al intentar enviar el formulario
+function validarFormulario() {
+  let isValid = true;
+
+  const nombre = document.getElementById("nombre");
+  const apellido = document.getElementById("apellido");
+  const dni = document.getElementById("dni");
+  const cuil = document.getElementById("cuil");
+  const mail = document.getElementById("mail");
+  const contrasena = document.getElementById("contrasena");
+
+  // Validar cada campo y actualizar el estado de isValid
+  isValid = validarCampo(nombre, /^[a-zA-Z]+$/, "El nombre solo puede contener letras", "nombreFeedback") && isValid;
+  isValid = validarCampo(apellido, /^[a-zA-Z]+$/, "El apellido solo puede contener letras", "apellidoFeedback") && isValid;
+  isValid = validarCampo(dni, /^\d{7,8}$/, "El DNI debe tener 7 u 8 dígitos", "dniFeedback") && isValid;
+  isValid = validarCuil() && isValid; // Validación personalizada para el CUIL
+  isValid = validarCampo(mail, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Por favor, ingresa un correo válido", "mailFeedback") && isValid;
+  isValid = validarCampo(contrasena, /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{7,}$/, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback") && isValid;
+
+  return isValid;
+}
+
+// Añadir eventos de validación en tiempo real
+document.querySelectorAll("input").forEach(input => {
+  input.addEventListener("input", function() {
+    switch (input.id) {
+      case "nombre":
+        validarCampo(input, /^[a-zA-Z]+$/, "El nombre solo puede contener letras", "nombreFeedback");
+        break;
+      case "apellido":
+        validarCampo(input, /^[a-zA-Z]+$/, "El apellido solo puede contener letras", "apellidoFeedback");
+        break;
+      case "dni":
+        validarCampo(input, /^\d{7,8}$/, "El DNI debe tener 7 u 8 dígitos", "dniFeedback");
+        break;
+      case "cuil":
+        validarCuil();
+        break;
+      case "mail":
+        validarCampo(input, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Por favor, ingresa un correo válido", "mailFeedback");
+        break;
+      case "contrasena":
+        validarCampo(input, /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{7,}$/, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback");
+        break;
+    }
+  });
+});
+
+// Evento del formulario para evitar el envío si hay errores
+document.getElementById("form-particular").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevenir el envío por defecto
+
+  if (validarFormulario()) {
+    alert("Formulario enviado correctamente");
+    // Aquí puedes proceder con el envío del formulario si es necesario
+    // document.getElementById("form-particular").submit(); // Comentar esta línea si no usas un backend para procesar el formulario
+  } else {
+    alert("Por favor, corrige los errores antes de continuar");
+  }
+});
