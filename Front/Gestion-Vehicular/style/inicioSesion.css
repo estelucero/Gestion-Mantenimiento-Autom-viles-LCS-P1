@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+
 /* Navbar */
 .nav-borde {
   background-color: black;
@@ -28,7 +29,7 @@ input {
   position: relative;
   width: 100%;
   background-color: #fff;
-  min-height: 90vh;
+  min-height: 100vh;
   overflow: hidden;
   margin-top: 10vh;
 }
@@ -85,8 +86,7 @@ form.sign-in-form {
 }
 
 .input-field {
-  max-width: 380px;
-  width: 100%;
+  width: 400px;
   background-color: #f0f0f0;
   margin: 5px 0;
   height: 40px;
@@ -98,14 +98,15 @@ form.sign-in-form {
 }
 
 .input-field input {
-  background: none;
-  outline: none;
-  border: none;
-  line-height: 1;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #333;
-  max-width: 400px;
+  width: 400px;
+  background-color: #f0f0f0;
+  margin: 5px 0;
+  height: 40px;
+  border-radius: 55px;
+  display: grid;
+  grid-template-columns: 15% 85%;
+  padding: 0 0.4rem;
+  position: relative;
 }
 
 .input-field input::placeholder {
@@ -213,7 +214,6 @@ form.sign-in-form {
 }
 
 /* ANIMATION */
-
 .sec-container.sign-up-mode:before {
   transform: translate(100%, -50%);
   right: 52%;
@@ -251,13 +251,49 @@ form.sign-in-form {
   pointer-events: all;
 }
 
+/* Feedback */
+.input-field input.is-invalid {
+  border: 2px solid #dc3545;
+}
+
+.input-field input.is-valid {
+  border: 2px solid #28a745;
+}
+
+.invalid-feedback,
+.valid-feedback {
+  width: 100%;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  text-align: left;
+  padding: 0;
+  margin-left: 15px;
+  display: none;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+}
+
+.valid-feedback {
+  color: #28a745;
+}
+
+.is-invalid+.invalid-feedback {
+  display: block;
+}
+
+.is-valid+.valid-feedback {
+  display: block;
+}
+
 @media (max-width: 870px) {
   .sec-container {
-    min-height: 700px;
+    min-height: 750px;
     height: 95vh;
-    margin-top: 5vh;
+    margin-top: 40px;
   }
-  
+
   .signin-signup {
     width: 100%;
     top: 95%;
@@ -301,8 +337,14 @@ form.sign-in-form {
     font-size: 1.2rem;
   }
 
+  .panel h2 {
+    font-weight: 600;
+    line-height: 1;
+    font-size: 2rem;
+  }
+
   .panel p {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     padding: 0.5rem 0;
   }
 
@@ -327,6 +369,7 @@ form.sign-in-form {
     transform: translate(-50%, 100%);
     bottom: 32%;
     right: initial;
+
   }
 
   .sec-container.sign-up-mode .left-panel .image,
@@ -365,6 +408,7 @@ form.sign-in-form {
 
   .sec-container {
     padding: 1.5rem;
+    height: 800px;
   }
 
   .sec-container:before {
@@ -382,7 +426,7 @@ form.sign-in-form {
     color: #444;
     margin-bottom: 5px;
   }
-  
+
   .input-field {
     max-width: 350px;
     width: 100%;
@@ -395,7 +439,7 @@ form.sign-in-form {
     padding: 0 0.4rem;
     position: relative;
   }
-  
+
   .input-field input {
     background: none;
     outline: none;
@@ -405,12 +449,12 @@ form.sign-in-form {
     font-size: 1.1rem;
     color: #333;
   }
-  
+
   .input-field input::placeholder {
     color: #aaa;
     font-weight: 500;
   }
-  
+
   .btn {
     width: 150px;
     background-color: rgba(255, 139, 60, 1);
@@ -425,7 +469,7 @@ form.sign-in-form {
     cursor: pointer;
     transition: 0.5s;
   }
-  
+
   .btn:hover {
     background-color: #858383;
   }
