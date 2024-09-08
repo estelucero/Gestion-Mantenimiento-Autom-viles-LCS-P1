@@ -294,21 +294,21 @@ function validarContrasenaEntidad() {
   const tieneNumero = /\d/.test(valorContrasena);
 
   if (valorContrasena.length < 7) {
-    mostrarError(contrasena, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback");
+    mostrarError(contrasena, "La contraseña debe tener al menos 7 caracteres", "contrasenaEntidadFeedback");
     return false;
   }
 
   if (!tieneLetra) {
-    mostrarError(contrasena, "La contraseña debe contener al menos una letra", "contrasenaFeedback");
+    mostrarError(contrasena, "La contraseña debe contener al menos una letra", "contrasenaEntidadFeedback");
     return false;
   }
 
   if (!tieneNumero) {
-    mostrarError(contrasena, "La contraseña debe contener al menos un número", "contrasenaFeedback");
+    mostrarError(contrasena, "La contraseña debe contener al menos un número", "contrasenaEntidadFeedback");
     return false;
   }
 
-  mostrarExito(contrasena, "contrasenaFeedback");
+  mostrarExito(contrasena, "contrasenaEntidadFeedback");
   return true;
 }
 
@@ -350,7 +350,7 @@ function validarFormularioEntidad() {
   isValid = validarCampo(mailEntidad, mailRegex, "Por favor, ingresa un correo válido", "mailEntidadFeedback") && isValid;
 
   // Validar contraseña
-  isValid = validarCampo(contrasenaEntidad, contrasenaRegex, "La contraseña debe tener al menos 7 caracteres, incluyendo un número", "contrasenaEntidadFeedback") && isValid;
+  isValid = validarCampo(contrasenaEntidad, contrasenaRegex, "La contraseña debe tener al menos 7 caracteres", "contrasenaEntidadFeedback") && isValid;
 
   return isValid; // Devuelve el estado final de validación
 }
