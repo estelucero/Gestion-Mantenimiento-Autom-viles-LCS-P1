@@ -9,6 +9,14 @@
   box-sizing: border-box;
 }
 
+.user-pic-add {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  /* margin-left: 3px; */
+}
+
 .auto-info-card {
   background-color: orange;
   padding: 40px 30px;
