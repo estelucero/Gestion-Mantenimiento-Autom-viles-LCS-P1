@@ -192,3 +192,54 @@ function formatearFecha(fecha) {
   const [dia, mes, año] = fecha.split("/");
   return `${año}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
 }
+
+//Cargar alertas
+// Realizar una solicitud GET al endpoint
+fetch(
+  `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesParticular?patente=${autoGuardado.patente}`
+)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Error en la solicitud");
+    }
+    return response.json(); // Convertir la respuesta a JSON
+  })
+  .then((data) => {
+    // Procesar el JSON recibido
+    const contenedorAlertas = document.getElementById("alertas");
+
+    // Función para crear el HTML de la alerta
+    const crearAlertaHTML = (nombre, fechaVence) => {
+      return `
+        <div class="alerta">
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/${nombre}.png" alt="${nombre}" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${nombre.replace("_", " ")}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${new Date(fechaVence).toLocaleDateString()}</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic" />
+          </div>
+        </div>
+      `;
+    };
+
+    // Iterar sobre las notificaciones y generar las alertas
+    data.listaNotif.forEach((notif) => {
+      console.log(notif);
+      const alertaHTML = crearAlertaHTML(notif.nombre, notif.fechaVence);
+      contenedorAlertas.innerHTML += alertaHTML;
+    });
+  })
+  .catch((error) => {
+    console.error("Hubo un problema con la solicitud:", error);
+  });
