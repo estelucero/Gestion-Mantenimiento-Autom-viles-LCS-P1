@@ -62,6 +62,7 @@ function registrarParticular() {
     .then((data) => {
       alert("Formulario enviado exitosamente!");
       console.log(data);
+      window.location.href = "../views/inicioSesion.html";
     })
     .catch((error) => {
       alert("Hubo un problema al enviar el formulario.");
@@ -136,6 +137,7 @@ function registrarEntidad() {
     .then((data) => {
       alert("Formulario enviado exitosamente!");
       console.log(data);
+      window.location.href = "../views/inicioSesion.html";
     })
     .catch((error) => {
       alert("Hubo un problema al enviar el formulario.");
@@ -397,7 +399,7 @@ document.getElementById("form-particular").addEventListener("submit", function (
   event.preventDefault(); // Previene el envío del formulario
 
   const esValidoParticular = validarFormularioParticular(); // Valida todo el formulario
-  const esValidoEntidad = validarFormularioEntidad();
+
   if (esValidoParticular) {
     registrarParticular();
 
