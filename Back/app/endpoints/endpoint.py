@@ -815,3 +815,39 @@ class dbCallService():
         except mysql.connector.Error as err:
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
+        
+
+    def eliminarRevisionVehiculoParticularDB(self, patente, nombreRevision):
+        try:
+            revisionPendienteDeleteUP = "DELETE FROM `controlPendienteParticular` WHERE patenteVehiculo = %s AND nombre = %s"
+            revisionPendienteDeleteUPData = (patente, nombreRevision)
+            self.dbCursor.execute(revisionPendienteDeleteUP, revisionPendienteDeleteUPData)
+            self.dbConexion.commit()
+
+            revisionDeleteUP = "DELETE FROM `revisionesVehiculoParticular` WHERE patenteVehiculo = %s AND nombre =%s"
+            revisionDeleteUPData = (patente, nombreRevision)
+            self.dbCursor.execute(revisionDeleteUP, revisionDeleteUPData)
+            self.dbConexion.commit()
+
+            return True
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
+        
+        
+    def eliminarRevisionVehiculoOrganizacionDB(self, patente, nombreRevision):
+        try:
+            revisionPendienteDeleteUP = "DELETE FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s AND nombre = %s"
+            revisionPendienteDeleteUPData = (patente, nombreRevision)
+            self.dbCursor.execute(revisionPendienteDeleteUP, revisionPendienteDeleteUPData)
+            self.dbConexion.commit()
+
+            revisionDeleteUP = "DELETE FROM `revisionesVehiculoOrganizacion` WHERE patenteVehiculo = %s AND nombre =%s"
+            revisionDeleteUPData = (patente, nombreRevision)
+            self.dbCursor.execute(revisionDeleteUP, revisionDeleteUPData)
+            self.dbConexion.commit()
+
+            return True
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
