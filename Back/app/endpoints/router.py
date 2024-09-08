@@ -313,3 +313,26 @@ def obtenerNotificacionesSinLeerOrganizacion(patente = Query()):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
+
+@router.delete("/eliminarRevisionVehiculoParticular")
+def eliminarRevisionVehiculoParticular(patente = Query(), nombreRevision = Query()):
+    call_service.chequearCnxDB()
+
+    response = call_service.eliminarRevisionVehiculoParticularDB(patente, nombreRevision)
+  
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
+
+@router.delete("/eliminarRevisionVehiculoOrganizacion")
+def eliminarRevisionVehiculoOrganizacion(patente = Query(), nombreRevision = Query()):
+
+    call_service.chequearCnxDB()
+
+    response = call_service.eliminarRevisionVehiculoOrganizacionDB(patente, nombreRevision)
+  
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+    
+    return response
