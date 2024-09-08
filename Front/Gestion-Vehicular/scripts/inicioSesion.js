@@ -8,6 +8,7 @@ const container = document.querySelector(".sec-container");
 const nombreApellidoRegex = /^[A-Za-z]+$/;
 const dniRegex = /^[0-9]{7,8}$/;
 const cuilRegex = /^[0-9]{2}-[0-9]{7,8}-[0-9]$/;
+const cuitRegex = /^[0-9]{2}-[0-9]{8}-[0-9]$/;
 const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const contrasenaRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{7,}$/;
 
@@ -68,42 +69,77 @@ function registrarParticular() {
     });
 
   //Logica de Registro Entidad
-  document
-    .getElementById("form-entidad")
-    .addEventListener("submit", function (event) {
-      event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
-      const nombre = document.getElementById("nombre-entidad").value;
-      const cuit = document.getElementById("cuit").value;
-      const mail = document.getElementById("mail-entidad").value;
-      const contrasena = document.getElementById("contrasena-entidad").value;
+  // document
+  //   .getElementById("form-entidad")
+  //   .addEventListener("submit", function (event) {
+  //     event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+  //     const nombre = document.getElementById("nombre-entidad").value;
+  //     const cuit = document.getElementById("cuit").value;
+  //     const mail = document.getElementById("mail-entidad").value;
+  //     const contrasena = document.getElementById("contrasena-entidad").value;
 
-      // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
-      // Ejemplo utilizando fetch:
-      fetch(
-        "https://back-gestion-p1.vercel.app/users/registroUsuarioOrganizacion",
-        {
-          // Reemplaza con la URL de tu servidor
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            razonSocial: nombre,
-            email: mail,
-            contraseña: contrasena,
-            cuit: cuit,
-          }),
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          alert("Formulario enviado exitosamente!");
-          console.log(data);
-        })
-        .catch((error) => {
-          alert("Hubo un problema al enviar el formulario.");
-          console.error(error);
-        });
+  //     // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
+  //     // Ejemplo utilizando fetch:
+  //     fetch(
+  //       "https://back-gestion-p1.vercel.app/users/registroUsuarioOrganizacion",
+  //       {
+  //         // Reemplaza con la URL de tu servidor
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           razonSocial: nombre,
+  //           email: mail,
+  //           contraseña: contrasena,
+  //           cuit: cuit,
+  //         }),
+  //       }
+  //     )
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         alert("Formulario enviado exitosamente!");
+  //         console.log(data);
+  //       })
+  //       .catch((error) => {
+  //         alert("Hubo un problema al enviar el formulario.");
+  //         console.error(error);
+  //       });
+  //   });
+}
+
+function registrarEntidad() {
+  const nombre = document.getElementById("nombre-entidad").value;
+  const cuit = document.getElementById("cuit").value;
+  const mail = document.getElementById("mail-entidad").value;
+  const contrasena = document.getElementById("contrasena-entidad").value;
+
+  // Aquí puedes enviar los datos a un servidor utilizando fetch o XMLHttpRequest
+  // Ejemplo utilizando fetch:
+  fetch(
+    "https://back-gestion-p1.vercel.app/users/registroUsuarioOrganizacion",
+    {
+      // Reemplaza con la URL de tu servidor
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        razonSocial: nombre,
+        email: mail,
+        contraseña: contrasena,
+        cuit: cuit,
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      alert("Formulario enviado exitosamente!");
+      console.log(data);
+    })
+    .catch((error) => {
+      alert("Hubo un problema al enviar el formulario.");
+      console.error(error);
     });
 }
 //Logica de inicion de sesion
@@ -251,7 +287,32 @@ function validarContrasena() {
   return true;
 }
 
-function validarFormulario() {
+function validarContrasenaEntidad() {
+  const contrasena = document.getElementById("contrasena-entidad");
+  const valorContrasena = contrasena.value.trim();
+  const tieneLetra = /[A-Za-z]/.test(valorContrasena);
+  const tieneNumero = /\d/.test(valorContrasena);
+
+  if (valorContrasena.length < 7) {
+    mostrarError(contrasena, "La contraseña debe tener al menos 7 caracteres", "contrasenaFeedback");
+    return false;
+  }
+
+  if (!tieneLetra) {
+    mostrarError(contrasena, "La contraseña debe contener al menos una letra", "contrasenaFeedback");
+    return false;
+  }
+
+  if (!tieneNumero) {
+    mostrarError(contrasena, "La contraseña debe contener al menos un número", "contrasenaFeedback");
+    return false;
+  }
+
+  mostrarExito(contrasena, "contrasenaFeedback");
+  return true;
+}
+
+function validarFormularioParticular() {
   let isValid = true;
 
   const nombre = document.getElementById("nombre");
@@ -270,6 +331,30 @@ function validarFormulario() {
 
   return isValid; // Devuelve el estado final de validación
 }
+
+function validarFormularioEntidad() {
+  let isValid = true;
+
+  const nombreEntidad = document.getElementById("nombre-entidad");
+  const cuit = document.getElementById("cuit");
+  const mailEntidad = document.getElementById("mail-entidad");
+  const contrasenaEntidad = document.getElementById("contrasena-entidad");
+
+  // Validar nombre de la entidad
+  isValid = validarCampo(nombreEntidad, nombreApellidoRegex, "El nombre de la entidad solo puede contener letras", "nombreEntidadFeedback") && isValid;
+
+  // Validar CUIT con la expresión regular específica
+  isValid = validarCampo(cuit, cuitRegex, "El CUIT debe tener el formato XX-XXXXXXXX-X", "cuitFeedback") && isValid;
+
+  // Validar email
+  isValid = validarCampo(mailEntidad, mailRegex, "Por favor, ingresa un correo válido", "mailEntidadFeedback") && isValid;
+
+  // Validar contraseña
+  isValid = validarCampo(contrasenaEntidad, contrasenaRegex, "La contraseña debe tener al menos 7 caracteres, incluyendo un número", "contrasenaEntidadFeedback") && isValid;
+
+  return isValid; // Devuelve el estado final de validación
+}
+
 
 document.querySelectorAll("input").forEach(input => {
   input.addEventListener("input", function () {
@@ -292,6 +377,18 @@ document.querySelectorAll("input").forEach(input => {
       case "contrasena":
         validarContrasena();
         break;
+      case "contrasena-entidad":
+        validarContrasenaEntidad();
+        break;
+      case "nombre-entidad":
+        validarCampo(input, nombreApellidoRegex, "El nombre de la entidad solo puede contener letras", "nombreEntidadFeedback");
+        break;
+      case "cuit":
+        validarCampo(input, cuitRegex, "El CUIT debe tener el formato XX-XXXXXXXX-X", "cuitFeedback");
+        break;
+      case "mail-entidad":
+        validarCampo(input, mailRegex, "Por favor, ingresa un correo válido", "mailEntidadFeedback")
+        break;
     }
   });
 });
@@ -299,10 +396,24 @@ document.querySelectorAll("input").forEach(input => {
 document.getElementById("form-particular").addEventListener("submit", function (event) {
   event.preventDefault(); // Previene el envío del formulario
 
-  const esValido = validarFormulario(); // Valida todo el formulario
-
-  if (esValido) {
+  const esValidoParticular = validarFormularioParticular(); // Valida todo el formulario
+  const esValidoEntidad = validarFormularioEntidad();
+  if (esValidoParticular) {
     registrarParticular();
+
+
+    // Aquí puedes proceder con el envío del formulario o cualquier otra acción
+  } else {
+    alert("Por favor, corrige los errores antes de continuar");
+  }
+});
+document.getElementById("form-entidad").addEventListener("submit", function (event) {
+  event.preventDefault(); // Previene el envío del formulario
+
+
+  const esValidoEntidad = validarFormularioEntidad();
+  if (esValidoEntidad) {
+    registrarEntidad();
 
 
     // Aquí puedes proceder con el envío del formulario o cualquier otra acción
@@ -312,7 +423,7 @@ document.getElementById("form-particular").addEventListener("submit", function (
 });
 
 function limpiarFormulario() {
-  const inputs = document.querySelectorAll("#form-particular input[type='text'], #form-particular input[type='email'], #form-particular input[type='password']");
+  const inputs = document.querySelectorAll("#form-particular input[type='text'], #form-particular input[type='email'], #form-particular input[type='password'], #form-entidad input[type='text'], #form-entidad input[type='email'], #form-entidad input[type='password']");
 
   // Limpiar todos los inputs (excepto el botón de registro)
   inputs.forEach(input => {
