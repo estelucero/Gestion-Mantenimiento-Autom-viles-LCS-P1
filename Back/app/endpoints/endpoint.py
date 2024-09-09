@@ -248,6 +248,16 @@ class dbCallService():
                 
             return vehiculoRevision
         
+        if(vehiculoRevision.nombre.lower() == 'revision_vtv'):
+
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=1095)
+
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=1095)
+
+            return vehiculoRevision
 
 
     
@@ -362,6 +372,14 @@ class dbCallService():
                         return
                     else:
                         return
+                    
+                if(revisionTuple[2] == 'revision_vtv'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 62):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], True)
+                        return
+                    else:
+                        return
                         
             
             #LO MISMO PERO SE CARGA PARA CUANDO SON DE ORGANIZACION
@@ -389,6 +407,14 @@ class dbCallService():
                 if(revisionTuple[2] == 'revision_bateria' or revisionTuple[2] == 'revision_refrig'):
                     delta = revisionTuple[3] - date.today()
                     if(delta.days <= 31):
+                        self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
+                        return
+                    else:
+                        return
+                    
+                if(revisionTuple[2] == 'revision_vtv'):
+                    delta = revisionTuple[3] - date.today()
+                    if(delta.days <= 62):
                         self.actualizarNuevoEstadoPorVencer(revisionTuple[0], False)
                         return
                     else:
@@ -433,14 +459,14 @@ class dbCallService():
         try:
             revisionesParticVencidas = self.obtenerRevisionesVencidas(True)
             for i in range(len(revisionesParticVencidas)):
-                revPartVencUP = "INSERT INTO `controlPendienteParticular` (`nombre`,`fechaHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,FALSE)"
+                revPartVencUP = "INSERT IGNORE INTO `controlPendienteParticular` (`nombre`,`fechaHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,FALSE)"
                 revParVencUPData = (revisionesParticVencidas[i][1], revisionesParticVencidas[i][2], revisionesParticVencidas[i][3], revisionesParticVencidas[i][0])
                 self.dbCursor.execute(revPartVencUP, revParVencUPData)
                 self.dbConexion.commit()
 
             revisionesOrgVencidas = self.obtenerRevisionesVencidas(False)
             for i in range(len(revisionesOrgVencidas)):
-                revOrgVencUP = "INSERT INTO `controlPendienteOrganizacion` (`nombre`,`fechaHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,FALSE)"
+                revOrgVencUP = "INSERT IGNORE INTO `controlPendienteOrganizacion` (`nombre`,`fechaHastaVencer`,`patenteVehiculo`,`idRevision`,`estaLeida`) VALUES (%s,%s,%s,%s,FALSE)"
                 revOrgVencUPData = (revisionesOrgVencidas[i][1], revisionesOrgVencidas[i][2], revisionesOrgVencidas[i][3], revisionesOrgVencidas[i][0])
                 self.dbCursor.execute(revOrgVencUP, revOrgVencUPData)
                 self.dbConexion.commit()
@@ -531,6 +557,16 @@ class dbCallService():
                 vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=912)
             return vehiculoRevision
             
+        if(vehiculoRevision.nombre.lower() == 'revision_vtv'):
+
+            aux = vehiculoRevision.fechaUltRevision+timedelta(days=1095)
+            if(self.fechaValida(aux)):
+                vehiculoRevision.fechaProxRevision = aux
+            else:
+                vehiculoRevision.fechaProxRevision = date.today()+timedelta(days=1095)
+
+            return vehiculoRevision
+
     def actualizarRevisiones(self):
         try:
             revisionesVencidasVerifParticulares = self.obtenerRevisionesVencidas(True)
