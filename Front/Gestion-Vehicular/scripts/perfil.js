@@ -1,18 +1,18 @@
 // Obtener datos del usuario almacenado en localStorage
-const usuario = JSON.parse(localStorage.getItem("usuario"));
-console.log(usuario.nombre);
+const usuarioSesion = JSON.parse(localStorage.getItem("usuario"));
+console.log(usuarioSesion.nombre);
 // Verificar si existe el objeto usuario
-if (usuarioJSON) {
+if (usuarioSesion) {
     // Obtener los elementos con la clase 'nombre-perfil-sesion'
     const nombrePerfilElements = document.querySelectorAll(".nombre-perfil-sesion");
 
     // Verificar si es una entidad o un usuario particular
     let nombreMostrar = "";
 
-    if (usuarioJSON.tipo === "entidad") {
-        nombreMostrar = usuarioJSON.nombreEntidad; // En caso de ser entidad
+    if (usuarioSesion.tipo === "entidad") {
+        nombreMostrar = usuarioSesion.nombreEntidad; // En caso de ser entidad
     } else {
-        nombreMostrar = `${usuarioJSON.nombre} ${usuarioJSON.apellido}`; // En caso de ser particular
+        nombreMostrar = `${usuarioSesion.nombre} ${usuarioSesion.apellido}`; // En caso de ser particular
     }
 
     // Asignar el nombre a todos los elementos con la clase 'nombre-perfil-sesion'
