@@ -68,7 +68,7 @@ function registrarParticular() {
     .then((data) => {
       alert("Formulario enviado exitosamente!");
       console.log(data);
-      /*window.location.href = "../views/inicioSesion.html";*/
+      window.location.href = "../views/inicioSesion.html";
     })
     .catch((error) => {
       alert("Hubo un problema al enviar el formulario.");
@@ -149,7 +149,7 @@ function registrarEntidad() {
     .then((data) => {
       alert("Formulario enviado exitosamente!");
       console.log(data);
-      /*window.location.href = "../views/inicioSesion.html";*/
+      window.location.href = "../views/inicioSesion.html";
     })
     .catch((error) => {
       alert("Hubo un problema al enviar el formulario.");
@@ -157,10 +157,10 @@ function registrarEntidad() {
     });
 }
 //Logica de inicion de sesion
-document
+/*document
   .getElementById("inicio-sesion-form")
   .addEventListener("submit", function (event) {
-    event.preventDefault(); // Evita el envío del formulario
+    event.preventDefault(); 
 
     const mail = document.getElementById("mail-inicio-sesion").value;
     const password = document.getElementById("password-inicio-sesion").value;
@@ -221,7 +221,63 @@ document
     } else {
       alert("Por favor, ingresa un correo y contraseña válidos.");
     }
-  });
+  });*/
+
+function iniciarSesion() {
+  const mail = document.getElementById("mail-inicio-sesion").value;
+  const password = document.getElementById("password-inicio-sesion").value;
+  fetch(
+    `https://back-gestion-p1.vercel.app/users/verificarLogeoExitosoUsuarioParticular?email=${encodeURIComponent(
+      mail
+    )}&password=${encodeURIComponent(password)}`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.statusText);
+      }
+      return response.json(); // Asumiendo que el servidor responde con JSON
+    })
+    .then((data) => {
+      if (data.esParticular == true) {
+        // Redirigir al usuario si la autenticación es exitosa
+        localStorage.setItem("usuario", JSON.stringify(data));
+        window.location.href = "../views/inicio.html";
+      } else {
+        fetch(
+          `https://back-gestion-p1.vercel.app/users/verificarLogeoExitosoUsuarioOrganizacion?email=${encodeURIComponent(
+            mail
+          )}&password=${encodeURIComponent(password)}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Error en la solicitud: " + response.statusText
+              );
+            }
+            return response.json(); // Asumiendo que el servidor responde con JSON
+          })
+          .then((data) => {
+            if (data.esParticular == false) {
+              localStorage.setItem("usuario", JSON.stringify(data));
+              // Redirigir al usuario si la autenticación es exitosa
+              window.location.href = "../views/inicio.html";
+            } else {
+              alert("Email o Contraseña erronea");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert(
+              "Hubo un problema con la autenticación. Inténtalo nuevamente."
+            );
+          });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Hubo un problema con la autenticación. Inténtalo nuevamente.");
+    });
+}
 
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -326,6 +382,31 @@ function validarContrasenaEntidad() {
   return true;
 }
 
+function validarContrasenaSesion() {
+  const contrasena = document.getElementById("password-inicio-sesion");
+  const valorContrasena = contrasena.value.trim();
+  const tieneLetra = /[A-Za-z]/.test(valorContrasena);
+  const tieneNumero = /\d/.test(valorContrasena);
+
+  if (valorContrasena.length < 7) {
+    mostrarError(contrasena, "La contraseña debe tener al menos 7 caracteres", "passwordSesionFeedback");
+    return false;
+  }
+
+  if (!tieneLetra) {
+    mostrarError(contrasena, "La contraseña debe contener al menos una letra", "passwordSesionFeedback");
+    return false;
+  }
+
+  if (!tieneNumero) {
+    mostrarError(contrasena, "La contraseña debe contener al menos un número", "passwordSesionFeedback");
+    return false;
+  }
+
+  mostrarExito(contrasena, "passwordSesionFeedback");
+  return true;
+}
+
 function validarFormularioParticular() {
   let isValid = true;
 
@@ -403,6 +484,12 @@ document.querySelectorAll("input").forEach(input => {
       case "mail-entidad":
         validarCampo(input, mailRegex, "Por favor, ingresa un correo válido", "mailEntidadFeedback")
         break;
+      case "mail-inicio-sesion":
+        validarCampo(input, mailRegex, "Por favor, ingresa un correo válido", "mailEntidadFeedback")
+        break;
+      case "password-inicio-sesion":
+        validarContrasenaSesion();
+        break;
     }
   });
 });
@@ -437,7 +524,7 @@ document.getElementById("form-entidad").addEventListener("submit", function (eve
 });
 
 function limpiarFormulario() {
-  const inputs = document.querySelectorAll("#form-particular input[type='text'], #form-particular input[type='email'], #form-particular input[type='password'], #form-entidad input[type='text'], #form-entidad input[type='email'], #form-entidad input[type='password']");
+  const inputs = document.querySelectorAll("#form-particular input[type='text'], #form-particular input[type='email'], #form-particular input[type='password'], #form-entidad input[type='text'], #form-entidad input[type='email'], #form-entidad input[type='password'], #inicio-sesion-form input[type='text'], #inicio-sesion-form input[type='email'], #inicio-sesion-form input[type='password'");
 
   // Limpiar todos los inputs (excepto el botón de registro)
   inputs.forEach(input => {
@@ -460,5 +547,47 @@ function limpiarFormulario() {
 
 
 document.getElementById("sign-in-btn").addEventListener("click", function () {
-  limpiarFormulario(); // Limpiar los campos del formulario cuando se cambia al panel de registro
+  limpiarFormulario();
+});
+
+document.getElementById("sign-up-btn-p").addEventListener("click", function () {
+  limpiarFormulario();
+});
+
+document.getElementById("sign-up-btn-e").addEventListener("click", function () {
+  limpiarFormulario();
+});
+
+
+
+
+// Validación de inicio de sesión
+document.getElementById("inicio-sesion-form").addEventListener("submit", function (event) {
+  event.preventDefault(); // Evita el envío del formulario
+
+  const mail = document.getElementById("mail-inicio-sesion");
+  const password = document.getElementById("password-inicio-sesion");
+
+  let isValid = true;
+
+  // Validar email
+  if (!mailRegex.test(mail.value.trim())) {
+    mostrarError(mail, "Por favor, ingresa un correo válido", "mailSesionFeedback");
+    isValid = false;
+  } else {
+    mostrarExito(mail, "mailSesionFeedback");
+  }
+
+  // Validar contraseña
+  if (!contrasenaRegex.test(password.value.trim())) {
+    mostrarError(password, "La contraseña debe tener al menos 7 caracteres", "passwordSesionFeedback");
+    isValid = false;
+  } else {
+    mostrarExito(password, "passwordSesionFeedback");
+  }
+
+  if (isValid) {
+    // Si es válido, envía la solicitud de inicio de sesión
+    iniciarSesion();
+  }
 });
