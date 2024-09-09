@@ -367,3 +367,22 @@ document.getElementById("save-btn").addEventListener("click", function () {
   // Ocultar el botón de guardar después de guardar los cambios
   document.getElementById("save-btn").style.display = "none";
 });
+
+//Seleccionar viajeProgramado
+document.getElementById("campo_rubro").addEventListener("change", function () {
+  const viajeInputs = document.getElementById("viaje-programado-inputs");
+  const labelViaje = document.getElementById("label-viaje");
+  const labelPatente = document.getElementById("label-patente");
+
+  if (this.value === "viaje") {
+    // Mostrar los campos adicionales
+    viajeInputs.style.display = "block";
+    labelViaje.style.display = "block";
+    labelPatente.style.display = "none";
+  } else {
+    // Ocultar los campos si se selecciona otra opción
+    viajeInputs.style.display = "none";
+    labelViaje.style.display = "none";
+    labelPatente.style.display = "block";
+  }
+});

@@ -139,10 +139,22 @@
                     <option value="enfriamiento">
                       Sistema de Enfriamiento
                     </option>
+                    <option value="viaje">Viaje Programado</option>
                   </select>
                 </div>
+                <div id="viaje-programado-inputs" style="display: none;">
+                  <div class="form-element">
+                    <label for="nombreViaje">Nombre del Viaje</label>
+                    <input type="text" id="nombreViaje" name="nombreViaje" />
+                  </div>
+                  <div class="form-element">
+                    <label for="kilometrosViaje">Kilómetros del Viaje</label>
+                    <input type="number" id="kilometrosViaje" name="kilometrosViaje" />
+                  </div>
+                </div>
                 <div class="form-element">
-                  <label for="patente">Cargar última fecha de servicio (opcional)</label>
+                  <label for="patente" id="label-patente">Cargar última fecha de servicio (opcional)</label>
+                  <label for="fecha-viaje" id="label-viaje">Cargar Fecha de Viaje</label>
                 </div>
                 <div class="form-element form-group">
                   <label for="calendar">Selecciona una fecha:</label>
