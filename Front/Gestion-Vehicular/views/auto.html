@@ -1,235 +1,182 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Control Car - Vehiculo</title>
-    <!-- Favicon -->
-    <link rel="icon" href="../assets/logos/car.png" type="image/x-icon" />
-    <!-- Style-->
-    <link rel="stylesheet" href="../style/index.css" />
-    <link rel="stylesheet" href="../style/inicio.css" />
-    <link rel="stylesheet" href="../style/autos.css" />
-    <!-- Box Icons -->
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <title>autos</title>
-  </head>
 
-  <body>
-    <!-- Navbar -->
-    <header class="header-desactive">
-      <nav>
-        <div class="nav nav-container">
-          <i class="bx bx-menu" id="menu-icon"></i>
-          <a href="./inicio.html" class="logo">Control<span>Car</span></a>
-          <ul class="navbar navbar-center">
-            <div class="user-info-menu">
-              <div class="user-info">
-                <img
-                  src="../assets/imagenes/Lando.jpg"
-                  alt=""
-                  class="user-pic"
-                />
-                <h3>Lando Norris</h3>
-              </div>
-            </div>
-            <li class="navbar-padding">
-              <a href="../views/inicio.html">Inicio</a>
-            </li>
-            <li class="navbar-padding" id="alerta">
-              <a href="../views/notificationPage.html">Notificaciones</a>
-            </li>
-            <li class="navbar-padding" id="logout">
-              <a href="">Cerrar Sesión</a>
-            </li>
-            <a href="../views/notificationPage.html"
-              ><img
-                src="../assets/logos/alerta.png"
-                alt=""
-                class="user-pic-pic"
-                id="logo-alerta"
-            /></a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control Car - Vehiculo</title>
+  <!-- Favicon -->
+  <link rel="icon" href="../assets/logos/car.png" type="image/x-icon" />
+  <!-- Style-->
+  <link rel="stylesheet" href="../style/index.css" />
+  <link rel="stylesheet" href="../style/inicio.css" />
+  <link rel="stylesheet" href="../style/autos.css" />
+  <!-- Box Icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <title>autos</title>
+</head>
 
-            <img
-              src="../assets/imagenes/Lando.jpg"
-              alt=""
-              class="user-pic"
-              onclick="toggleMenu()"
-              id="logo-user"
-            />
-          </ul>
-          <div class="sub-menu-wrap" id="subMenu">
-            <div class="sub-menu">
-              <div class="user-info">
-                <img
-                  src="../assets/imagenes/Lando.jpg"
-                  alt=""
-                  class="user-pic"
-                />
-                <h3>Lando Norris</h3>
-              </div>
-              <hr />
-              <a href="#" class="sub-menu-link">
-                <img
-                  src="../assets/logos/log-out.png"
-                  alt="logo log-out"
-                  class="user-pic-pic"
-                />
-                <p>Cerrar Sesión</p>
-                <span>></span>
-              </a>
+<body>
+  <!-- Navbar -->
+  <header class="header-desactive">
+    <nav>
+      <div class="nav nav-container">
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <a href="./inicio.html" class="logo">Control<span>Car</span></a>
+        <ul class="navbar navbar-center">
+          <div class="user-info-menu">
+            <div class="user-info">
+              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" />
+              <h3>Lando Norris</h3>
             </div>
           </div>
-        </div>
-      </nav>
-    </header>
-    <!-- Seccion Auto -->
-    <section class="auto-info-card" id="home">
-      <div class="box-img-auto">
-        <img src="../assets/imagenes/corolla.png" />
-      </div>
-      <div class="auto-info-section">
-        <h1 class="auto-info-text titulo">PATENTE</h1>
-        <div class="auto-info-text-section">
-          <h2 class="auto-info-text-subtitulo">Marca:</h2>
-          <p class="auto-info-text" id="marca">Toyota</p>
-          <img
-            src="../assets/logos/edit.png"
-            class="edit-icon user-pic-pic"
-            data-field="marca"
-          />
-        </div>
-        <div class="auto-info-text-section">
-          <h2 class="auto-info-text-subtitulo">Modelo:</h2>
-          <p class="auto-info-text" id="modelo">Corolla</p>
-          <img
-            src="../assets/logos/edit.png"
-            class="edit-icon user-pic-pic"
-            data-field="modelo"
-          />
-        </div>
-        <div class="auto-info-text-section">
-          <h2 class="auto-info-text-subtitulo">Año:</h2>
-          <p class="auto-info-text" id="anio">2024</p>
-          <img
-            src="../assets/logos/edit.png"
-            class="edit-icon user-pic-pic"
-            data-field="anio"
-          />
-        </div>
-        <div class="auto-info-text-section">
-          <h2 class="auto-info-text-subtitulo">N° chasis:</h2>
-          <p class="auto-info-text" id="chasis">222</p>
-          <img
-            src="../assets/logos/edit.png"
-            class="edit-icon user-pic-pic"
-            data-field="chasis"
-          />
-        </div>
-        <div class="auto-info-text-section">
-          <h2 class="auto-info-text-subtitulo">Kilometraje:</h2>
-          <p class="auto-info-text" id="kilometraje">22Km</p>
-          <img
-            src="../assets/logos/edit.png"
-            class="edit-icon user-pic-pic"
-            data-field="kilometraje"
-          />
-        </div>
-        <button id="save-btn" style="display: none">Guardar</button>
-      </div>
-    </section>
+          <li class="navbar-padding"></li>
+          <a href="../views/inicio.html">Inicio</a>
+          </li>
+          <li class="navbar-padding" id="alerta">
+            <a href="../views/notificationPage.html">Notificaciones</a>
+          </li>
+          <li class="navbar-padding" id="logout">
+            <a href="">Cerrar Sesión</a>
+          </li>
+          <a href="../views/notificationPage.html"><img src="../assets/logos/alerta.png" alt="" class="user-pic-pic"
+              id="logo-alerta" /></a>
 
-    <!-- Seccion Alertas -->
-    <section class="section-alertas-titulo">
-      <div class="alertas-titulo">
-        <h3>Tus <span>Alertas</span></h3>
+          <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" onclick="toggleMenu()" id="logo-user" />
+        </ul>
+        <div class="sub-menu-wrap" id="subMenu">
+          <div class="sub-menu">
+            <div class="user-info">
+              <img src="../assets/imagenes/Lando.jpg" alt="" class="user-pic" />
+              <h3>Lando Norris</h3>
+            </div>
+            <hr />
+            <a href="#" class="sub-menu-link">
+              <img src="../assets/logos/log-out.png" alt="logo log-out" class="user-pic-pic" />
+              <p>Cerrar Sesión</p>
+              <span>></span>
+            </a>
+          </div>
+        </div>
+
       </div>
-      <!-- Cards -->
-      <div class="alertas-section">
-        <div class="alertas-section-cards">
-          <div class="alertas" id="alertas">
-            <!-- Agregar Alerta -->
-            <button class="button-agregar-alerta" id="show-car">
-              <div class="centrar-div">
-                <div class="agregar-auto">
-                  <img
-                    src="../assets/logos/mas.png"
-                    alt=""
-                    class="user-pic-add"
-                  />
-                  <p>Agregar Alerta</p>
-                </div>
+    </nav>
+  </header>
+  <!-- Seccion Auto -->
+  <section class="auto-info-card" id="home">
+    <div class="box-img-auto">
+      <img src="../assets/imagenes/corolla.png" />
+    </div>
+    <div class="auto-info-section">
+      <h1 class="auto-info-text titulo">PATENTE</h1>
+      <div class="auto-info-text-section">
+        <h2 class="auto-info-text-subtitulo">Marca:</h2>
+        <p class="auto-info-text" id="marca">Toyota</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="marca" />
+      </div>
+      <div class="auto-info-text-section">
+        <h2 class="auto-info-text-subtitulo">Modelo:</h2>
+        <p class="auto-info-text" id="modelo">Corolla</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="modelo" />
+      </div>
+      <div class="auto-info-text-section">
+        <h2 class="auto-info-text-subtitulo">Año:</h2>
+        <p class="auto-info-text" id="anio">2024</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="anio" />
+      </div>
+      <div class="auto-info-text-section">
+        <h2 class="auto-info-text-subtitulo">N° chasis:</h2>
+        <p class="auto-info-text" id="chasis">222</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="chasis" />
+      </div>
+      <div class="auto-info-text-section">
+        <h2 class="auto-info-text-subtitulo">Kilometraje:</h2>
+        <p class="auto-info-text" id="kilometraje">22Km</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="kilometraje" />
+
+      </div>
+      <button id="save-btn" style="display: none">Guardar</button>
+    </div>
+  </section>
+
+
+  <!-- Seccion Alertas -->
+  <section class="section-alertas-titulo">
+    <div class="alertas-titulo">
+      <h3>Tus <span>Alertas</span></h3>
+    </div>
+    <!-- Cards -->
+    <div class="alertas-section">
+      <div class="alertas-section-cards">
+        <div class="alertas" id="alertas">
+          <!-- Agregar Alerta -->
+          <button class="button-agregar-alerta" id="show-car">
+            <div class="centrar-div">
+              <div class="agregar-auto">
+                <img src="../assets/logos/mas.png" alt="" class="user-pic-add" />
+                <p>Agregar Alerta</p>
               </div>
-            </button>
-            <!-- PopUp -->
-            <div class="popup-container">
-              <div class="popup">
-                <div class="close-btn">&times;</div>
-                <div class="form">
-                  <h2>Cargar Alerta</h2>
-                  <div class="form-element form_personal">
-                    <label for="campo_rubro">Tipo de Alerta</label>
-                    <select id="campo_rubro" name="DesplegableRubro">
-                      <option value="" disabled selected>Seleccione</option>
-                      <option value="aceite">Cambio de aceite</option>
-                      <option value="neumatico">Revisión de neumático</option>
-                      <option value="vtv">
-                        Verificación Técnica Vehicular
-                      </option>
-                      <option value="servicio">Servicio Completo</option>
-                      <option value="escape">Revisión caño de escape</option>
-                      <option value="bateria">Revisión de batería</option>
-                      <option value="enfriamiento">
-                        Sistema de Enfriamiento
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-element">
-                    <label for="patente"
-                      >Cargar última fecha de servicio (opcional)</label
-                    >
-                  </div>
-                  <div class="form-element form-group">
-                    <label for="calendar">Selecciona una fecha:</label>
-                    <div class="calendar">
-                      <div class="calendar-header">
-                        <select id="month"></select>
-                        <select id="year"></select>
-                      </div>
-                      <div class="calendar-body">
-                        <!-- Headers for days of the week -->
-                        <div class="header">Dom</div>
-                        <div class="header">Lun</div>
-                        <div class="header">Mar</div>
-                        <div class="header">Mié</div>
-                        <div class="header">Jue</div>
-                        <div class="header">Vie</div>
-                        <div class="header">Sáb</div>
-                        <!-- Days will be inserted here by JavaScript -->
-                      </div>
+            </div>
+          </button>
+          <!-- PopUp -->
+          <div class="popup-container">
+            <div class="popup">
+              <div class="close-btn">&times;</div>
+              <div class="form">
+                <h2>Cargar Alerta</h2>
+                <div class="form-element form_personal">
+                  <label for="campo_rubro">Tipo de Alerta</label>
+                  <select id="campo_rubro" name="DesplegableRubro">
+                    <option value="" disabled selected>Seleccione</option>
+                    <option value="aceite">Cambio de aceite</option>
+                    <option value="neumatico">Revisión de neumático</option>
+                    <option value="vtv">
+                      Verificación Técnica Vehicular
+                    </option>
+                    <option value="servicio">Servicio Completo</option>
+                    <option value="escape">Revisión caño de escape</option>
+                    <option value="bateria">Revisión de batería</option>
+                    <option value="enfriamiento">
+                      Sistema de Enfriamiento
+                    </option>
+                  </select>
+                </div>
+                <div class="form-element">
+                  <label for="patente">Cargar última fecha de servicio (opcional)</label>
+                </div>
+                <div class="form-element form-group">
+                  <label for="calendar">Selecciona una fecha:</label>
+                  <div class="calendar">
+                    <div class="calendar-header">
+                      <select id="month"></select>
+                      <select id="year"></select>
+                    </div>
+                    <div class="calendar-body">
+                      <!-- Headers for days of the week -->
+                      <div class="header">Dom</div>
+                      <div class="header">Lun</div>
+                      <div class="header">Mar</div>
+                      <div class="header">Mié</div>
+                      <div class="header">Jue</div>
+                      <div class="header">Vie</div>
+                      <div class="header">Sáb</div>
+                      <!-- Days will be inserted here by JavaScript -->
                     </div>
                   </div>
-                  <div class="form-element form-group">
-                    <label for="selectedDate">Fecha Seleccionada:</label>
-                    <input
-                      type="text"
-                      id="selectedDate"
-                      name="selectedDate"
-                      readonly
-                    />
-                  </div>
-                  <div class="form-element form-div">
-                    <button class="btn-form">Guardar</button>
-                    <button class="btn-form">Cancelar</button>
-                  </div>
+                </div>
+                <div class="form-element form-group">
+                  <label for="selectedDate">Fecha Seleccionada:</label>
+                  <input type="text" id="selectedDate" name="selectedDate" readonly />
+                </div>
+                <div class="form-element form-div">
+                  <button class="btn-form">Guardar</button>
+                  <button class="btn-form">Cancelar</button>
                 </div>
               </div>
             </div>
-            <!-- Alerta 1-->
-            <!-- <div class="alerta">
+          </div>
+          <!-- Alerta 1-->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img
@@ -255,8 +202,8 @@
                 />
               </div>
             </div> -->
-            <!-- Alerta 2 -->
-            <!-- <div class="alerta">
+          <!-- Alerta 2 -->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img
@@ -282,32 +229,28 @@
                 />
               </div>
             </div> -->
-            <!-- Alerta 3-->
-            <div class="alerta">
-              <div class="box-avatar-text">
-                <div class="avatar">
-                  <img src="../assets/logos/vtv.png" alt="perfil-imagen" />
-                </div>
-                <div class="box-text">
-                  <div class="text-patente">
-                    <p>VTV</p>
-                  </div>
-                  <div class="text-flex">
-                    Fecha de alerta:
-                    <p>26/6/2011</p>
-                  </div>
-                </div>
+          <!-- Alerta 3-->
+          <div class="alerta">
+            <div class="box-avatar-text">
+              <div class="avatar">
+                <img src="../assets/logos/vtv.png" alt="perfil-imagen" />
               </div>
-              <div class="box-img">
-                <img
-                  src="../assets/logos/eliminar.png"
-                  alt=""
-                  class="user-pic-pic"
-                />
+              <div class="box-text">
+                <div class="text-patente">
+                  <p>VTV</p>
+                </div>
+                <div class="text-flex">
+                  Fecha de alerta:
+                  <p>26/6/2011</p>
+                </div>
               </div>
             </div>
-            <!-- Alerta 4-->
-            <!-- <div class="alerta">
+            <div class="box-img">
+              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
+            </div>
+          </div>
+          <!-- Alerta 4-->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img src="../assets/logos/servicio.png" alt="perfil-imagen" />
@@ -330,8 +273,8 @@
                 />
               </div>
             </div> -->
-            <!-- Alerta 5-->
-            <!-- <div class="alerta">
+          <!-- Alerta 5-->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img src="../assets/logos/bateria.png" alt="perfil-imagen" />
@@ -354,8 +297,8 @@
                 />
               </div>
             </div> -->
-            <!-- Alerta 6-->
-            <!-- <div class="alerta">
+          <!-- Alerta 6-->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img
@@ -381,8 +324,8 @@
                 />
               </div>
             </div> -->
-            <!-- Alerta 7-->
-            <!-- <div class="alerta">
+          <!-- Alerta 7-->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img
@@ -408,32 +351,28 @@
                 />
               </div>
             </div> -->
-            <!-- Alerta 8-->
-            <div class="alerta">
-              <div class="box-avatar-text">
-                <div class="avatar">
-                  <img src="../assets/logos/valija.png" alt="perfil-imagen" />
-                </div>
-                <div class="box-text">
-                  <div class="text-patente">
-                    <p>Viaje Programado</p>
-                  </div>
-                  <div class="text-flex">
-                    Fecha de alerta:
-                    <p>26/6/2011</p>
-                  </div>
-                </div>
+          <!-- Alerta 8-->
+          <div class="alerta">
+            <div class="box-avatar-text">
+              <div class="avatar">
+                <img src="../assets/logos/valija.png" alt="perfil-imagen" />
               </div>
-              <div class="box-img">
-                <img
-                  src="../assets/logos/eliminar.png"
-                  alt=""
-                  class="user-pic-pic"
-                />
+              <div class="box-text">
+                <div class="text-patente">
+                  <p>Viaje Programado</p>
+                </div>
+                <div class="text-flex">
+                  Fecha de alerta:
+                  <p>26/6/2011</p>
+                </div>
               </div>
             </div>
-            <!-- Alerta 9-->
-            <!-- <div class="alerta">
+            <div class="box-img">
+              <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic" />
+            </div>
+          </div>
+          <!-- Alerta 9-->
+          <!-- <div class="alerta">
               <div class="box-avatar-text">
                 <div class="avatar">
                   <img
@@ -459,41 +398,43 @@
                 />
               </div>
             </div> -->
-          </div>
         </div>
       </div>
-    </section>
-    <!-- Footer -->
-    <section class="footer">
-      <div class="footer-container container">
-        <div class="footer-box">
-          <a href="#" class="logo">Control<span>Car</span></a>
-          <div class="social">
-            <a href=""><i class="bx bxl-facebook"></i></a>
-            <a href=""><i class="bx bxl-twitter"></i></a>
-            <a href=""><i class="bx bxl-instagram"></i></a>
-            <a href=""><i class="bx bxl-youtube"></i></a>
-          </div>
-        </div>
-        <div class="footer-box box-column">
-          <h3>Página</h3>
-          <a href="">Inicio</a>
-        </div>
-        <div class="footer-box box-column">
-          <h3>Contacto</h3>
-          <a href="">Teléfono</a>
-          <a href="">Mail</a>
-        </div>
-      </div>
-    </section>
-    <!-- Copyright -->
-    <div class="copytight">
-      <p>&#169; Universidad Nacional General Sarmiento</p>
     </div>
+  </section>
+  <!-- Footer -->
+  <section class="footer">
+    <div class="footer-container container">
+      <div class="footer-box">
+        <a href="#" class="logo">Control<span>Car</span></a>
+        <div class="social">
+          <a href=""><i class="bx bxl-facebook"></i></a>
+          <a href=""><i class="bx bxl-twitter"></i></a>
+          <a href=""><i class="bx bxl-instagram"></i></a>
+          <a href=""><i class="bx bxl-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-box box-column">
+        <h3>Página</h3>
+        <a href="">Inicio</a>
+      </div>
+      <div class="footer-box box-column">
+        <h3>Contacto</h3>
+        <a href="">Teléfono</a>
+        <a href="">Mail</a>
+      </div>
+    </div>
+  </section>
+  <!-- Copyright -->
+  <div class="copytight">
+    <p>&#169; Universidad Nacional General Sarmiento</p>
+  </div>
 
-    <!-- Scripts -->
-    <script src="../scripts/index.js"></script>
-    <script src="../scripts/popup.js"></script>
-    <script src="../scripts/auto.js"></script>
-  </body>
+  <!-- Scripts -->
+  <script src="../scripts/index.js"></script>
+  <script src="../scripts/popup.js"></script>
+  <script src="../scripts/auto.js"></script>
+
+</body>
+
 </html>
