@@ -58,11 +58,17 @@ function registrarParticular() {
       }),
     }
   )
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       alert("Formulario enviado exitosamente!");
       console.log(data);
-      window.location.href = "../views/inicioSesion.html";
+      /*window.location.href = "../views/inicioSesion.html";*/
     })
     .catch((error) => {
       alert("Hubo un problema al enviar el formulario.");
@@ -133,11 +139,17 @@ function registrarEntidad() {
       }),
     }
   )
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       alert("Formulario enviado exitosamente!");
       console.log(data);
-      window.location.href = "../views/inicioSesion.html";
+      /*window.location.href = "../views/inicioSesion.html";*/
     })
     .catch((error) => {
       alert("Hubo un problema al enviar el formulario.");
