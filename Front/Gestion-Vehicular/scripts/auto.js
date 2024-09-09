@@ -326,6 +326,97 @@ fetch(
     console.error("Hubo un problema con la solicitud:", error);
   });
 
+///Agregar Viaje Programado
+fetch(
+  `https://back-gestion-p1.vercel.app/users/obtenerViajesVehiculo?patente=${autoGuardado.patente}`
+)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Error en la solicitud");
+    }
+    return response.json(); // Convertir la respuesta a JSON
+  })
+  .then((data) => {
+    const contenedorAlertas = document.getElementById("alertas");
+
+    // Función para crear el HTML de la alerta con evento de eliminar
+    const crearAlertaHTML = (nombre, fechaVence, patente) => {
+      return `
+        <div class="alerta">
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/viaje.png" alt="${nombre}" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${nombre.replace("_", " ")}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${new Date(fechaVence).toLocaleDateString()}</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic eliminar" data-nombre="${nombre}" data-patente="${patente}"  />
+          </div>
+        </div>
+      `;
+    };
+
+    // Iterar sobre las notificaciones y generar las alertas
+    data.forEach((notif) => {
+      const alertaHTML = crearAlertaHTML(
+        notif.nombreViaje,
+        notif.fechaInicio,
+        notif.patente
+      );
+      contenedorAlertas.insertAdjacentHTML("beforeend", alertaHTML);
+    });
+
+    // Agregar evento de click a cada ícono de eliminar
+    // document.querySelectorAll(".eliminar").forEach((el) => {
+    //   el.addEventListener("click", (e) => {
+    //     const nombreAlerta = e.target.getAttribute("data-nombre");
+    //     const patente = e.target.getAttribute("data-patente");
+
+    //     // Confirmar eliminación
+    //     if (
+    //       confirm(
+    //         `¿Estás seguro de que deseas eliminar la alerta ${nombreAlerta}?`
+    //       )
+    //     ) {
+    //       // Hacer la solicitud DELETE al endpoint de eliminación
+    //       fetch(
+    //         `https://back-gestion-p1.vercel.app/users/eliminarRevisionVehiculoParticular?patente=${patente}&nombreRevision=${nombreAlerta}`,
+    //         {
+    //           method: "DELETE",
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //           },
+    //         }
+    //       )
+    //         .then((response) => {
+    //           if (!response.ok) {
+    //             throw new Error("Error al eliminar la alerta");
+    //           }
+    //           return response.json();
+    //         })
+    //         .then(() => {
+    //           // Remover la alerta del DOM después de eliminarla
+    //           e.target.closest(".alerta").remove();
+    //           alert(`La alerta ${nombreAlerta} ha sido eliminada.`);
+    //         })
+    //         .catch((error) => {
+    //           console.error("Hubo un problema con la eliminación:", error);
+    //         });
+    //     }
+    //   });
+    // });
+  })
+  .catch((error) => {
+    console.error("Hubo un problema con la solicitud:", error);
+  });
 //Editar campos
 // Seleccionar todas las imágenes con la clase 'edit-icon'
 document.querySelectorAll(".edit-icon").forEach((icon) => {
