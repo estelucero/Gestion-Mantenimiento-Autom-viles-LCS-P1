@@ -106,3 +106,11 @@ class usuarioOrganizacionLogeoDTO(BaseModel):
     email : str
     cuit : str
     esParticular : bool
+
+class viajeVehiculoDTO(BaseModel):
+    idViaje : int
+    nombreViaje : str
+    fechaInicio : date
+    cantKM : float
+    estadoViaje : bool #TRUE realizado, FALSE no realizado
+    patenteVehiculo : str

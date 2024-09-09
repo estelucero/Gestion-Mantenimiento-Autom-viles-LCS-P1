@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionLogeoDTO, usuarioOrganizacionRegistroDTO, usuarioParticularLogeoDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, viajeDTO, viajeRealizadoDTO
+from app.endpoints.dtos import notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionLogeoDTO, usuarioOrganizacionRegistroDTO, usuarioParticularLogeoDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, viajeDTO, viajeRealizadoDTO, viajeVehiculoDTO
 
 class dbCallService():
     def __init__(self):
@@ -848,6 +848,25 @@ class dbCallService():
             self.dbConexion.commit()
 
             return True
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
+        
+    def obtenerViajesVehiculoDB(self, patente):
+        try:
+            obtViajeVehiculoUP= "SELECT * FROM `viajesPendienteParticular` WHERE patenteVehiculo = %s"
+            obtViajeVehiculoUPData = (patente,)
+            self.dbCursor.execute(obtViajeVehiculoUP, obtViajeVehiculoUPData)
+            viajes = self.dbCursor.fetchall()
+
+            viajesLista = []
+            for i in range(len(viajes)):
+                viajesLista.append(viajeVehiculoDTO(idViaje=viajes[i][0], fechaInicio=viajes[i][1], cantKM=viajes[i][2], nombreViaje=viajes[i][3], estadoViaje=viajes[i][4], patenteVehiculo=viajes[i][5]))
+
+            return viajesLista
+            
+
+        
         except mysql.connector.Error as err:
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
