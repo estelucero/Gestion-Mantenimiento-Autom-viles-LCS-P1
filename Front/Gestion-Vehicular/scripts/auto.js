@@ -358,7 +358,7 @@ fetch(
             </div>
           </div>
           <div class="box-img">
-            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic eliminar" data-nombre="${nombre}" data-patente="${patente}" data-id="${id}" />
+            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic eliminar-viaje" data-nombre="${nombre}" data-patente="${patente}" data-id="${id}" />
           </div>
         </div>
       `;
@@ -376,7 +376,7 @@ fetch(
     });
 
     // Agregar evento de click a cada ícono de eliminar
-    document.querySelectorAll(".eliminar").forEach((el) => {
+    document.querySelectorAll(".eliminar-viaje").forEach((el) => {
       el.addEventListener("click", (e) => {
         const id = e.target.getAttribute("data-id");
         const nombreAlerta = e.target.getAttribute("data-nombre");
