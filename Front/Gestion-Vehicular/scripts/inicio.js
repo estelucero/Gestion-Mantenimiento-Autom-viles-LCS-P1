@@ -5,6 +5,7 @@ const modeloMarcaRegex = /^[A-Za-z]+$/;
 const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
 const chasisRegex = /^[a-zA-Z0-9]{17}$/;
 const kilometrosMax = 450000;
+const kilometrosRegex = /^([0-9]|[1-9][0-9]{1,5})$/;
 
 console.log(usuarioJSON);
 //Resgistro de auto
@@ -121,8 +122,10 @@ function validarFecha(input) {
 function validarKilometros() {
   const km = document.getElementById("km");
   const kmFeedback = document.getElementById("km-feedback");
+  const kmValor = parseInt(km.value, 10);
 
-  if (km.value < 0 || km.value > kilometrosMax || km.value === "") {
+  // Validar si el valor coincide con la expresión regular y si está dentro del rango
+  if (!kilometrosRegex.test(km.value) || kmValor < 0 || kmValor > kilometrosMax) {
     mostrarError(km, "km-feedback");
     return false;
   } else {
