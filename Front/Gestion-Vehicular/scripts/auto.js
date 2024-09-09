@@ -120,7 +120,7 @@ document
     );
     console.log(fechaUltimaRevision);
     // Asignar una patente de ejemplo, si tienes un input para la patente puedes usar su valor
-    const patente = "aa900bb"; // Puedes reemplazar esto por el valor dinámico
+    // Puedes reemplazar esto por el valor dinámico
 
     // Verifica si el tipo de alerta y la fecha han sido seleccionados
     if (!tipoAlerta || !fechaUltimaRevision) {
@@ -141,7 +141,7 @@ document
         fechaUltRevision: fechaUltimaRevision,
         fechaProxRevision: fechaProximaRevision,
         estado: estado,
-        patente: patente,
+        patente: autoGuardado.patente,
       },
     ];
 
