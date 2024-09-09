@@ -114,58 +114,96 @@ document
     const tipoAlerta = document.getElementById("campo_rubro").value;
     const tipoAlertaFormateada = transfromarAlerta(tipoAlerta);
     console.log(tipoAlertaFormateada);
-    // Obtener la fecha seleccionada del input de fecha
-    const fechaUltimaRevision = formatearFecha(
-      document.getElementById("selectedDate").value
-    );
-    console.log(fechaUltimaRevision);
-    // Asignar una patente de ejemplo, si tienes un input para la patente puedes usar su valor
-    // Puedes reemplazar esto por el valor dinámico
 
-    // Verifica si el tipo de alerta y la fecha han sido seleccionados
-    if (!tipoAlerta || !fechaUltimaRevision) {
-      alert("Por favor, complete todos los campos.");
-      return;
-    }
-
-    // Definir la fecha de próxima revisión (esto puede depender de la lógica de tu negocio)
-    const fechaProximaRevision = fechaUltimaRevision;
-
-    // Definir el estado de la revisión (puedes cambiarlo según la lógica de tu aplicación)
-    const estado = "a";
-
-    // Construir el cuerpo del JSON
-    const data = [
-      {
-        nombre: tipoAlertaFormateada,
-        fechaUltRevision: fechaUltimaRevision,
-        fechaProxRevision: fechaProximaRevision,
-        estado: estado,
-        patente: autoGuardado.patente,
-      },
-    ];
-
-    try {
-      const response = await fetch(
-        "https://back-gestion-p1.vercel.app/users/agregarRevisionesVehiculoParticular",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
+    if (tipoAlertaFormateada == "viaje") {
+      const fechaInicio = formatearFecha(
+        document.getElementById("selectedDate").value
       );
+      const nombreViaje = document.getElementById("nombreViaje").value;
+      const kilometrosViaje = document.getElementById("kilometrosViaje").value;
+      const data = {
+        fechaInicio: fechaInicio,
+        distanciaKM: parseInt(kilometrosViaje, 10), // Convertir a número
+        nombre: nombreViaje,
+        patente: autoGuardado.patente,
+      };
+      console.log(data);
+      try {
+        const response = await fetch(
+          "https://back-gestion-p1.vercel.app/users/ingresarViaje",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
 
-      if (!response.ok) {
-        throw new Error("Error en el envío de la revisión");
+        if (!response.ok) {
+          throw new Error("Error en el envío de la revisión");
+        }
+
+        const result = await response.json();
+        alert("Revisión guardada con éxito");
+        console.log(result); // Puedes hacer algo más con la respuesta
+      } catch (error) {
+        alert("Hubo un error al guardar la revisión: " + error.message);
+      }
+    } else {
+      // Obtener la fecha seleccionada del input de fecha
+      const fechaUltimaRevision = formatearFecha(
+        document.getElementById("selectedDate").value
+      );
+      console.log(fechaUltimaRevision);
+      // Asignar una patente de ejemplo, si tienes un input para la patente puedes usar su valor
+      // Puedes reemplazar esto por el valor dinámico
+
+      // Verifica si el tipo de alerta y la fecha han sido seleccionados
+      if (!tipoAlerta || !fechaUltimaRevision) {
+        alert("Por favor, complete todos los campos.");
+        return;
       }
 
-      const result = await response.json();
-      alert("Revisión guardada con éxito");
-      console.log(result); // Puedes hacer algo más con la respuesta
-    } catch (error) {
-      alert("Hubo un error al guardar la revisión: " + error.message);
+      // Definir la fecha de próxima revisión (esto puede depender de la lógica de tu negocio)
+      const fechaProximaRevision = fechaUltimaRevision;
+
+      // Definir el estado de la revisión (puedes cambiarlo según la lógica de tu aplicación)
+      const estado = "a";
+
+      // Construir el cuerpo del JSON
+      const data = [
+        {
+          nombre: tipoAlertaFormateada,
+          fechaUltRevision: fechaUltimaRevision,
+          fechaProxRevision: fechaProximaRevision,
+          estado: estado,
+          patente: autoGuardado.patente,
+        },
+      ];
+
+      try {
+        const response = await fetch(
+          "https://back-gestion-p1.vercel.app/users/agregarRevisionesVehiculoParticular",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error en el envío de la revisión");
+        }
+
+        const result = await response.json();
+        alert("Revisión guardada con éxito");
+        console.log(result); // Puedes hacer algo más con la respuesta
+      } catch (error) {
+        alert("Hubo un error al guardar la revisión: " + error.message);
+      }
     }
   });
 function transfromarAlerta(tipoAlerta) {
@@ -184,6 +222,8 @@ function transfromarAlerta(tipoAlerta) {
       return "revision_bateria";
     case "enfriamiento":
       return "revision_refrig";
+    case "viaje":
+      return "viaje";
     default:
       return ""; // Devuelve vacío si no coincide con ninguna alerta
   }
@@ -286,6 +326,98 @@ fetch(
     console.error("Hubo un problema con la solicitud:", error);
   });
 
+///Agregar Viaje Programado
+fetch(
+  `https://back-gestion-p1.vercel.app/users/obtenerViajesVehiculo?patente=${autoGuardado.patente}`
+)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Error en la solicitud");
+    }
+    return response.json(); // Convertir la respuesta a JSON
+  })
+  .then((data) => {
+    const contenedorAlertas = document.getElementById("alertas");
+
+    // Función para crear el HTML de la alerta con evento de eliminar
+    const crearAlertaHTML = (nombre, fechaVence, patente, id) => {
+      return `
+        <div class="alerta">
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/viaje.png" alt="${nombre}" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${nombre.replace("_", " ")}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${new Date(fechaVence).toLocaleDateString()}</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic eliminar-viaje" data-nombre="${nombre}" data-patente="${patente}" data-id="${id}" />
+          </div>
+        </div>
+      `;
+    };
+
+    // Iterar sobre las notificaciones y generar las alertas
+    data.forEach((notif) => {
+      const alertaHTML = crearAlertaHTML(
+        notif.nombreViaje,
+        notif.fechaInicio,
+        notif.patenteVehiculo,
+        notif.idViaje
+      );
+      contenedorAlertas.insertAdjacentHTML("beforeend", alertaHTML);
+    });
+
+    // Agregar evento de click a cada ícono de eliminar
+    document.querySelectorAll(".eliminar-viaje").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        const id = e.target.getAttribute("data-id");
+        const nombreAlerta = e.target.getAttribute("data-nombre");
+        console.log(id);
+        // Confirmar eliminación
+        if (
+          confirm(
+            `¿Estás seguro de que deseas eliminar la alerta ${nombreAlerta}?`
+          )
+        ) {
+          // Hacer la solicitud DELETE al endpoint de eliminación
+          fetch(
+            `https://back-gestion-p1.vercel.app/users/eliminarViaje?id=${id}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al eliminar la alerta");
+              }
+              return response.json();
+            })
+            .then(() => {
+              // Remover la alerta del DOM después de eliminarla
+              e.target.closest(".alerta").remove();
+              alert(`La alerta ${nombreAlerta} ha sido eliminada.`);
+            })
+            .catch((error) => {
+              console.error("Hubo un problema con la eliminación:", error);
+            });
+        }
+      });
+    });
+  })
+  .catch((error) => {
+    console.error("Hubo un problema con la solicitud:", error);
+  });
 //Editar campos
 // Seleccionar todas las imágenes con la clase 'edit-icon'
 document.querySelectorAll(".edit-icon").forEach((icon) => {
@@ -366,4 +498,23 @@ document.getElementById("save-btn").addEventListener("click", function () {
 
   // Ocultar el botón de guardar después de guardar los cambios
   document.getElementById("save-btn").style.display = "none";
+});
+
+//Seleccionar viajeProgramado
+document.getElementById("campo_rubro").addEventListener("change", function () {
+  const viajeInputs = document.getElementById("viaje-programado-inputs");
+  const labelViaje = document.getElementById("label-viaje");
+  const labelPatente = document.getElementById("label-patente");
+
+  if (this.value === "viaje") {
+    // Mostrar los campos adicionales
+    viajeInputs.style.display = "block";
+    labelViaje.style.display = "block";
+    labelPatente.style.display = "none";
+  } else {
+    // Ocultar los campos si se selecciona otra opción
+    viajeInputs.style.display = "none";
+    labelViaje.style.display = "none";
+    labelPatente.style.display = "block";
+  }
 });

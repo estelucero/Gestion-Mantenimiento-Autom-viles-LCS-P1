@@ -131,10 +131,8 @@ html {
 /* Seccion Titulo */
 .titulo-img {
   min-height: 650px;
-  background-image: linear-gradient(
-      rgba(48, 46, 44, 0.705),
-      rgba(48, 46, 44, 0.705)
-    ),
+  background-image: linear-gradient(rgba(48, 46, 44, 0.705),
+      rgba(48, 46, 44, 0.705)),
     url("../assets/imagenes/fondo-inicio.jpg");
 }
 
@@ -441,7 +439,8 @@ span.dot {
 .popup .form .form-element input[type="anio-fab"],
 .popup .form .form-element input[type="chasis"],
 .popup .form .form-element input[type="km"],
-.popup .form .form-element input[type="file"] {
+.popup .form .form-element input[type="file"],
+.popup .form .form-element input[type="number"] {
   margin-top: 5px;
   display: block;
   width: 100%;
@@ -486,10 +485,10 @@ input.is-valid {
 .invalid-feedback {
   color: red;
   font-size: 12px;
-  display: none; 
+  display: none;
 }
 
-input.is-invalid + .invalid-feedback {
+input.is-invalid+.invalid-feedback {
   display: block;
 }
 
