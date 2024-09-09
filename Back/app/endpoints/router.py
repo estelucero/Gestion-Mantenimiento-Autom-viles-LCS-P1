@@ -347,3 +347,14 @@ def obtenerViajesVehiculo(patente = Query()):
         raise HTTPException(status_code = 400, detail = response["error"])
     
     return response
+
+@router.delete("/eliminarViaje")
+def eliminarViajeVehiculo(id = Query()):
+    call_service.chequearCnxDB()
+
+    response = call_service.eliminarViajeVehiculoDB(id)
+
+    if (response != True and "error" in response):
+        raise HTTPException(status_code = 400, detail = response["error"])
+
+    return response

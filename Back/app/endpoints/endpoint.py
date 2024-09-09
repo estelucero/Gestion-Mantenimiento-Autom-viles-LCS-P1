@@ -906,3 +906,16 @@ class dbCallService():
         except mysql.connector.Error as err:
                 self.dbConexion.rollback()
                 return {"error":"Algo fue mal: {}".format(err)}
+        
+    def eliminarViajeVehiculoDB(self, id):
+        try:
+            dltViajeVehiculoUP = "DELETE FROM `viajesPendienteParticular` WHERE id = %s"
+            dltViajeVehiculoUPData = (id,)
+            self.dbCursor.execute(dltViajeVehiculoUP, dltViajeVehiculoUPData)
+            self.dbConexion.commit()
+
+            return True
+
+        except mysql.connector.Error as err:
+                self.dbConexion.rollback()
+                return {"error":"Algo fue mal: {}".format(err)}
