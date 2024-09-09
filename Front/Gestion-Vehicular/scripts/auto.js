@@ -120,7 +120,7 @@ document
     );
     console.log(fechaUltimaRevision);
     // Asignar una patente de ejemplo, si tienes un input para la patente puedes usar su valor
-    const patente = "aa900bb"; // Puedes reemplazar esto por el valor dinámico
+    // Puedes reemplazar esto por el valor dinámico
 
     // Verifica si el tipo de alerta y la fecha han sido seleccionados
     if (!tipoAlerta || !fechaUltimaRevision) {
@@ -141,7 +141,7 @@ document
         fechaUltRevision: fechaUltimaRevision,
         fechaProxRevision: fechaProximaRevision,
         estado: estado,
-        patente: patente,
+        patente: autoGuardado.patente,
       },
     ];
 
@@ -226,7 +226,7 @@ fetch(
             </div>
           </div>
           <div class="box-img">
-            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic" data-nombre="${nombre}" data-patente="${patente}" />
+            <img src="../assets/logos/eliminar.png" alt="Eliminar" class="user-pic-pic eliminar" data-nombre="${nombre}" data-patente="${patente}"  />
           </div>
         </div>
       `;
@@ -243,7 +243,7 @@ fetch(
     });
 
     // Agregar evento de click a cada ícono de eliminar
-    document.querySelectorAll(".user-pic-pic").forEach((el) => {
+    document.querySelectorAll(".eliminar").forEach((el) => {
       el.addEventListener("click", (e) => {
         const nombreAlerta = e.target.getAttribute("data-nombre");
         const patente = e.target.getAttribute("data-patente");
@@ -285,3 +285,85 @@ fetch(
   .catch((error) => {
     console.error("Hubo un problema con la solicitud:", error);
   });
+
+//Editar campos
+// Seleccionar todas las imágenes con la clase 'edit-icon'
+document.querySelectorAll(".edit-icon").forEach((icon) => {
+  icon.addEventListener("click", function () {
+    const fieldId = this.getAttribute("data-field"); // Obtener el campo que se va a editar
+    const fieldElement = document.getElementById(fieldId);
+
+    if (fieldElement.tagName === "P") {
+      const currentValue = fieldElement.innerText.trim();
+      fieldElement.innerHTML = `<input type="text" id="input-${fieldId}" value="${currentValue}" />`;
+    }
+
+    document.getElementById("save-btn").style.display = "block"; // Mostrar botón de guardar
+  });
+});
+
+// Guardar los cambios cuando se hace clic en "Guardar"
+document.getElementById("save-btn").addEventListener("click", function () {
+  // Obtener los valores de los campos y actualizar en caso de que sean inputs
+
+  const modelo = document.getElementById("modelo").querySelector("input")
+    ? document.getElementById("modelo").querySelector("input").value
+    : document.getElementById("modelo").innerText.trim();
+
+  const marca = document.getElementById("marca").querySelector("input")
+    ? document.getElementById("marca").querySelector("input").value
+    : document.getElementById("marca").innerText.trim();
+
+  const fecha = document.getElementById("anio").querySelector("input")
+    ? document.getElementById("anio").querySelector("input").value
+    : document.getElementById("anio").innerText.trim();
+
+  const vim = document.getElementById("chasis").querySelector("input")
+    ? document.getElementById("chasis").querySelector("input").value
+    : document.getElementById("chasis").innerText.trim();
+
+  const cantKM = document.getElementById("kilometraje").querySelector("input")
+    ? document.getElementById("kilometraje").querySelector("input").value
+    : document.getElementById("kilometraje").innerText.trim();
+
+  // Reemplazar los inputs por los valores guardados
+  document.querySelectorAll("input").forEach((input) => {
+    const fieldId = input.id.replace("input-", ""); // Obtener el ID del campo
+    const newValue = input.value;
+    document.getElementById(fieldId).innerHTML = newValue; // Actualizar el campo de texto
+  });
+
+  // Enviar la solicitud a través de fetch
+  const data = {
+    patente: autoGuardado.patente,
+    modelo: modelo,
+    marca: marca,
+    fecha: fecha + "-01-02",
+    vim: vim,
+    cantKM: parseInt(cantKM),
+  };
+  console.log(data);
+  fetch(
+    `https://back-gestion-p1.vercel.app/users/modificarVehiculoParticular`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+      alert("Datos del vehículo actualizados correctamente");
+      window.location.href = "../views/inicio.html";
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Hubo un error al actualizar los datos");
+    });
+
+  // Ocultar el botón de guardar después de guardar los cambios
+  document.getElementById("save-btn").style.display = "none";
+});

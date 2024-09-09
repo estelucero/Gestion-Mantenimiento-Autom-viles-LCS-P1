@@ -30,8 +30,8 @@
               <h3>Lando Norris</h3>
             </div>
           </div>
-          <li class="navbar-padding">
-            <a href="../views/inicio.html">Inicio</a>
+          <li class="navbar-padding"></li>
+          <a href="../views/inicio.html">Inicio</a>
           </li>
           <li class="navbar-padding" id="alerta">
             <a href="../views/notificationPage.html">Notificaciones</a>
@@ -58,6 +58,7 @@
             </a>
           </div>
         </div>
+
       </div>
     </nav>
   </header>
@@ -70,26 +71,35 @@
       <h1 class="auto-info-text titulo">PATENTE</h1>
       <div class="auto-info-text-section">
         <h2 class="auto-info-text-subtitulo">Marca:</h2>
-        <p class="auto-info-text">Toyota</p>
+        <p class="auto-info-text" id="marca">Toyota</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="marca" />
       </div>
       <div class="auto-info-text-section">
         <h2 class="auto-info-text-subtitulo">Modelo:</h2>
-        <p class="auto-info-text">Corolla</p>
+        <p class="auto-info-text" id="modelo">Corolla</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="modelo" />
       </div>
       <div class="auto-info-text-section">
         <h2 class="auto-info-text-subtitulo">Año:</h2>
-        <p class="auto-info-text">2024</p>
+        <p class="auto-info-text" id="anio">2024</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="anio" />
       </div>
       <div class="auto-info-text-section">
         <h2 class="auto-info-text-subtitulo">N° chasis:</h2>
-        <p class="auto-info-text">222</p>
+        <p class="auto-info-text" id="chasis">222</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="chasis" />
       </div>
       <div class="auto-info-text-section">
         <h2 class="auto-info-text-subtitulo">Kilometraje:</h2>
-        <p class="auto-info-text">22Km</p>
+        <p class="auto-info-text" id="kilometraje">22Km</p>
+        <img src="../assets/logos/edit.png" class="edit-icon user-pic-pic" data-field="kilometraje" />
+
       </div>
+      <button id="save-btn" style="display: none">Guardar</button>
     </div>
   </section>
+
+
   <!-- Seccion Alertas -->
   <section class="section-alertas-titulo">
     <div class="alertas-titulo">
