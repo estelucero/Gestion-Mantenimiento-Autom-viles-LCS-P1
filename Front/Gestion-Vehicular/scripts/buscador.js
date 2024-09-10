@@ -1,6 +1,6 @@
 document.getElementById("searchButton").addEventListener("click", function() {
     const inputValue = document.getElementById("patenteInput").value.toLowerCase();
-    const vehiculos = JSON.parse(localStorage.getItem("vehiculos")) || [];
+    const vehiculos = JSON.parse(localStorage.getItem("autos")) || [];
     
     // Filtrar vehículos por patente
     const vehiculosFiltrados = vehiculos.filter(vehiculo => 
