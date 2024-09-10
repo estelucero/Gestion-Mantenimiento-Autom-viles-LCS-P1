@@ -362,26 +362,49 @@ document.getElementById("save-btn").addEventListener("click", function () {
     cantKM: parseInt(cantKM),
   };
   console.log(data);
-  fetch(
-    `https://back-gestion-p1.vercel.app/users/modificarVehiculoParticular`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Success:", data);
-      alert("Datos del vehículo actualizados correctamente");
-      window.location.href = "../views/inicio.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("Hubo un error al actualizar los datos");
-    });
+  if (usuarioJSON.esParticular) {
+    fetch(
+      `https://back-gestion-p1.vercel.app/users/modificarVehiculoParticular`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Datos del vehículo actualizados correctamente");
+        window.location.href = "../views/inicio.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Hubo un error al actualizar los datos");
+      });
+  } else {
+    fetch(
+      `https://back-gestion-p1.vercel.app/users/modificarVehiculoOrganizacion`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Datos del vehículo actualizados correctamente");
+        window.location.href = "../views/inicio.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Hubo un error al actualizar los datos");
+      });
+  }
 
   // Ocultar el botón de guardar después de guardar los cambios
   document.getElementById("save-btn").style.display = "none";
