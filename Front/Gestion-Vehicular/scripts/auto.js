@@ -102,8 +102,12 @@ const kilometrajeElement = document.querySelector(
 
 // Asignar los valores del objeto 'auto' a los elementos del HTML
 patenteElement.textContent = autoGuardado.patente.toUpperCase();
-marcaElement.textContent = autoGuardado.marca;
-modeloElement.textContent = autoGuardado.modelo;
+marcaElement.textContent =
+  autoGuardado.marca.charAt(0).toUpperCase() +
+  autoGuardado.marca.slice(1).toLowerCase();
+modeloElement.textContent =
+  autoGuardado.modelo.charAt(0).toUpperCase() +
+  autoGuardado.modelo.slice(1).toLowerCase();
 anoElement.textContent = new Date(autoGuardado.fechaFabricacion).getFullYear();
 vimElement.textContent = autoGuardado.vim;
 kilometrajeElement.textContent = `${autoGuardado.cantKm} Km`;
@@ -460,7 +464,10 @@ async function cargarNotificacionesParticular() {
             </div>
             <div class="box-text">
               <div class="text-patente">
-                <p>${notificacion.nombre.replace("_", " ")}</p>
+                <p>${
+                  notificacion.nombre.charAt(0).toUpperCase() +
+                  notificacion.nombre.slice(1).toLowerCase().replace("_", " ")
+                }</p>
               </div>
               <div class="text-flex">
                 Fecha de alerta:
@@ -538,7 +545,10 @@ async function cargarNotificacionesOrganizacion() {
             </div>
             <div class="box-text">
               <div class="text-patente">
-                <p>${notificacion.nombre.replace("_", " ")}</p>
+                <p>${
+                  notificacion.nombre.charAt(0).toUpperCase() +
+                  notificacion.nombre.slice(1).toLowerCase().replace("_", " ")
+                }</p>
               </div>
               <div class="text-flex">
                 Fecha de alerta:
