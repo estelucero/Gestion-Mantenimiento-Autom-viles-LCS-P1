@@ -197,6 +197,7 @@ document.getElementById("searchButton").addEventListener("click", function () {
             console.log(`Vehículo con patente ${vehiculo.patente} eliminado con éxito`);
             // Eliminar la tarjeta del DOM
             divAuto.remove();
+            window.location.reload();
           } else {
             const errorData = await response.json();
             console.error("Error al eliminar el vehículo:", errorData);
