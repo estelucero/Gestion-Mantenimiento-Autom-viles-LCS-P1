@@ -632,7 +632,7 @@ input.is-invalid+.invalid-feedback {
     height: 25px;
     padding: 15px;
     outline: none;
-    border: 1px solid #aaa;
+
     border-radius: 5px;
     font-size: 15px;
   }
