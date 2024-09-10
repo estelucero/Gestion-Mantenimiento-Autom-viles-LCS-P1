@@ -161,6 +161,7 @@ document
           const result = await response.json();
           alert("Revisión guardada con éxito");
           console.log(result); // Puedes hacer algo más con la respuesta
+          location.reload(true);
         } catch (error) {
           alert("Hubo un error al guardar la revisión: " + error.message);
         }
@@ -215,6 +216,7 @@ document
           const result = await response.json();
           alert("Revisión guardada con éxito");
           console.log(result); // Puedes hacer algo más con la respuesta
+          location.reload(true);
         } catch (error) {
           alert("Hubo un error al guardar la revisión: " + error.message);
         }
@@ -270,6 +272,7 @@ document
         const result = await response.json();
         alert("Revisión guardada con éxito");
         console.log(result); // Puedes hacer algo más con la respuesta
+        location.reload(true);
       } catch (error) {
         alert("Hubo un error al guardar la revisión: " + error.message);
       }
@@ -459,6 +462,7 @@ async function cargarNotificacionesParticular() {
             );
 
             if (response.ok) {
+              location.reload(true);
               // Si la respuesta es exitosa, eliminar el div del DOM
               alertaDiv.remove();
             } else {
@@ -536,6 +540,7 @@ async function cargarNotificacionesOrganizacion() {
             );
 
             if (response.ok) {
+              location.reload(true);
               // Si la respuesta es exitosa, eliminar el div del DOM
               alertaDiv.remove();
             } else {
@@ -615,6 +620,7 @@ async function cargarViajes() {
             );
 
             if (response.ok) {
+              location.reload(true);
               // Si la respuesta es exitosa, eliminar el div del DOM
               alertaDiv.remove();
             } else {
