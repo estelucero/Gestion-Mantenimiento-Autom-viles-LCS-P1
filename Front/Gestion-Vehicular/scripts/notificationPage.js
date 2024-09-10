@@ -24,9 +24,10 @@ async function cargarNotificaciones(auto) {
           </div>
           <div class="box-text">
             <p class="notifi">
-              <a href="#" class="name">${
-                notificacion.patente
-              }</a> necesita ${notificacion.nombre.replace("_", " ")}
+              <a href="#" class="name">${notificacion.patente.toUpperCase()}</a> necesita <span class="name">${notificacion.nombre.replace(
+        "_",
+        " "
+      )}</span> para el <span class="name">${notificacion.fechaVence}</span>
             </p>
             
           </div>

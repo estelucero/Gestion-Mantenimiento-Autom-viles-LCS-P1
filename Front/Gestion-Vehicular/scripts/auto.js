@@ -101,7 +101,7 @@ const kilometrajeElement = document.querySelector(
 );
 
 // Asignar los valores del objeto 'auto' a los elementos del HTML
-patenteElement.textContent = autoGuardado.patente;
+patenteElement.textContent = autoGuardado.patente.toUpperCase();
 marcaElement.textContent = autoGuardado.marca;
 modeloElement.textContent = autoGuardado.modelo;
 anoElement.textContent = new Date(autoGuardado.fechaFabricacion).getFullYear();

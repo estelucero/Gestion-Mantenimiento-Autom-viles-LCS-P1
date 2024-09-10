@@ -304,15 +304,21 @@ if (usuarioJSON.esParticular === true) {
       </div>
       <div class="box-text">
         <div class="text-patente">
-          <p class="patente-p">${auto.patente}</p>
+          <p class="patente-p">${auto.patente.toUpperCase()}</p>
         </div>
         <div class="text-flex">
           Marca:
-          <p>${auto.marca}</p>
+          <p>${
+            auto.marca.charAt(0).toUpperCase() +
+            auto.marca.slice(1).toLowerCase()
+          }</p>
         </div>
         <div class="text-flex">
           Modelo:
-          <p>${auto.modelo}</p>
+          <p>${
+            auto.modelo.charAt(0).toUpperCase() +
+            auto.modelo.slice(1).toLowerCase()
+          }</p>
         </div>
         <div class="text-flex">
           Año de Fabricación:
@@ -427,15 +433,21 @@ if (usuarioJSON.esParticular === true) {
       </div>
       <div class="box-text">
         <div class="text-patente">
-          <p class="patente-p">${auto.patente}</p>
+          <p class="patente-p">${auto.patente.toUpperCase()}</p>
         </div>
         <div class="text-flex">
           Marca:
-          <p>${auto.marca}</p>
+          <p>${
+            auto.marca.charAt(0).toUpperCase() +
+            auto.marca.slice(1).toLowerCase()
+          }</p>
         </div>
         <div class="text-flex">
           Modelo:
-          <p>${auto.modelo}</p>
+          <p>${
+            auto.modelo.charAt(0).toUpperCase() +
+            auto.modelo.slice(1).toLowerCase()
+          }</p>
         </div>
         <div class="text-flex">
           Año de Fabricación:
