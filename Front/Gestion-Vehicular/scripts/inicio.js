@@ -286,7 +286,7 @@ if (usuarioJSON.esParticular === true) {
     .then((data) => {
       // Aquí puedes procesar los datos recibidos
       console.log("Vehículos obtenidos:", data);
-
+      localStorage.setItem("autos", JSON.stringify(data));
       const container = document.getElementById("notifications"); // Selecciona el contenedor donde se añadirán los divs
 
       data.forEach((auto) => {
@@ -415,7 +415,7 @@ if (usuarioJSON.esParticular === true) {
     .then((data) => {
       // Aquí puedes procesar los datos recibidos
       console.log("Vehículos obtenidos:", data);
-
+      localStorage.setItem("autos", JSON.stringify(data));
       const container = document.getElementById("notifications"); // Selecciona el contenedor donde se añadirán los divs
 
       data.forEach((auto) => {

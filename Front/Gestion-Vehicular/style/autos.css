@@ -9,6 +9,14 @@
   box-sizing: border-box;
 }
 
+#text-navbar-chico {
+  padding-top: 8px;
+}
+
+#notifiacaciones-navbar-chico {
+  display: flex;
+}
+
 .user-pic-add {
   width: 35px;
   height: 35px;

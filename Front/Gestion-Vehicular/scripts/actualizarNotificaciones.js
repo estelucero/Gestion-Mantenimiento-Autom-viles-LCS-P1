@@ -46,3 +46,6 @@ async function gestionarRevisiones() {
 }
 
 gestionarRevisiones();
+setInterval(() => {
+  gestionarRevisiones();
+}, 50000);
