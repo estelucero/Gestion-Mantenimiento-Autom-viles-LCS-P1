@@ -76,10 +76,16 @@ class viajeRealizadoDTO(BaseModel):
     distanciaKM : float
     patente : str
 
-class notificacionDTO(BaseModel):
+class revisionDTO(BaseModel):
     nombre : str
     fechaVence : date
     patente : str
+
+class notificacionDTO(BaseModel):
+    nombre: str
+    fechaVence : date
+    patente : str
+    id : int
 
 class vehiculoModificarDTO(BaseModel):
     patente: str
@@ -91,7 +97,7 @@ class vehiculoModificarDTO(BaseModel):
 
 class vehiculoConRevisionesDTO(BaseModel):
     vehiculo : vehiculoDTO
-    listaNotif : list[notificacionDTO]
+    listaNotif : list[revisionDTO]
 
 class usuarioParticularLogeoDTO(BaseModel):
     nombre : str
