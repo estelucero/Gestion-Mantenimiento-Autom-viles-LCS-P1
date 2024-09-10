@@ -296,6 +296,8 @@ function transfromarAlerta(tipoAlerta) {
       return "revision_refrig";
     case "viaje":
       return "viaje";
+    case "vtv":
+      return "revision_vtv";
     default:
       return ""; // Devuelve vacío si no coincide con ninguna alerta
   }
