@@ -1,6 +1,6 @@
 const autos = JSON.parse(localStorage.getItem("patentes") || "[]");
 const urlGetNotificacion = `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesSinLeerParticular?patente=`;
-const urlDeleteNotificacion = `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesSinLeerParticular?idNotif`;
+const urlDeleteNotificacion = `https://back-gestion-p1.vercel.app/users/marcarNotificacionLeidaPart?idNotif=`;
 let subMenu = document.getElementById("subMenu");
 function toggleMenu() {
   subMenu.classList.toggle("open-menu");
@@ -46,7 +46,7 @@ async function cargarNotificaciones(auto) {
       deleteBtn.addEventListener("click", async (e) => {
         e.preventDefault();
         const notificacionId = deleteBtn.getAttribute("data-id");
-        await eliminarNotificacion(notificacionId);
+        await eliminarNotificacion(notificacionId, card);
       });
     });
     localStorage.setItem("contadorNotificaciones", contador);
@@ -57,10 +57,10 @@ async function cargarNotificaciones(auto) {
 }
 
 // Función para eliminar una notificación
-async function eliminarNotificacion(id) {
+async function eliminarNotificacion(id, card) {
   try {
-    const response = await fetch(`${urlDeleteNotificacion}/${id}`, {
-      method: "DELETE",
+    const response = await fetch(urlDeleteNotificacion + `${id}`, {
+      method: "PUT",
     });
     if (response.ok) {
       console.log("Notificación eliminada");
