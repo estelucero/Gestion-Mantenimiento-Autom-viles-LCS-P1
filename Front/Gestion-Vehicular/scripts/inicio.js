@@ -482,7 +482,7 @@ if (usuarioJSON.esParticular === true) {
 
           try {
             const response = await fetch(
-              `https://back-gestion-p1.vercel.app/users/eliminarVehiculoUsuarioParticular?patente=${auto.patente}`,
+              `https://back-gestion-p1.vercel.app/users/eliminarVehiculoUsuarioOrganizacion?patente=${auto.patente}`,
               {
                 method: "DELETE",
                 headers: {
