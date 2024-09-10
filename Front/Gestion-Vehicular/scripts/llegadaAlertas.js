@@ -51,6 +51,8 @@ const verificarNotificaciones = async () => {
     const hayNotificaciones = await hayNotificacionesParaPatente(patente);
     if (hayNotificaciones) {
       logoAlerta.src = "../assets/logos/notificacionLLegada.png";
+      document.getElementById("logo-alerta2").src =
+        "../assets/logos/notificacionLLegada.png";
       console.log(`Hay notificaciones para la patente ${patente}`);
       return true; // Salir si se encuentra al menos una notificación
     }
