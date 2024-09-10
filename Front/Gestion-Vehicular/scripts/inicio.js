@@ -28,43 +28,82 @@ document
       alert("Por favor, completa todos los campos.");
       return;
     }
+    if (usuarioJSON.esParticular) {
+      // Crear un objeto JSON con los datos del formulario
+      const data = {
+        patente,
+        modelo,
+        marca,
+        fechaFabricacion: anioFab,
+        vim: chasis,
+        cantKm: parseInt(km, 10),
+        cuilDueño: usuarioJSON.cuil, // Asume que usuarioJSON es un objeto global con el cuilDueño
+      };
 
-    // Crear un objeto JSON con los datos del formulario
-    const data = {
-      patente,
-      modelo,
-      marca,
-      fechaFabricacion: anioFab,
-      vim: chasis,
-      cantKm: parseInt(km, 10),
-      cuilDueño: usuarioJSON.cuil, // Asume que usuarioJSON es un objeto global con el cuilDueño
-    };
-
-    // Enviar el JSON a la API usando fetch
-    fetch(
-      "https://back-gestion-p1.vercel.app/users/registrarVehiculoUsuarioParticular",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+      // Enviar el JSON a la API usando fetch
+      fetch(
+        "https://back-gestion-p1.vercel.app/users/registrarVehiculoUsuarioParticular",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         }
-        return response.json();
-      })
-      .then((data) => {
-        alert("Vehículo guardado con éxito");
-        // Aquí puedes hacer alguna acción tras el éxito, como redirigir o limpiar el formulario
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Hubo un problema al guardar el vehículo.");
-      });
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          alert("Vehículo guardado con éxito");
+          location.reload(true);
+          // Aquí puedes hacer alguna acción tras el éxito, como redirigir o limpiar el formulario
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Hubo un problema al guardar el vehículo.");
+        });
+    } else {
+      const data = {
+        patente,
+        modelo,
+        marca,
+        fechaFabricacion: anioFab,
+        vim: chasis,
+        cantKm: parseInt(km, 10),
+        cuitDueño: usuarioJSON.cuit, // Asume que usuarioJSON es un objeto global con el cuilDueño
+      };
+
+      // Enviar el JSON a la API usando fetch
+      fetch(
+        "https://back-gestion-p1.vercel.app/users/registrarVehiculoUsuarioOrganizacion",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          alert("Vehículo guardado con éxito");
+          location.reload(true);
+          // Aquí puedes hacer alguna acción tras el éxito, como redirigir o limpiar el formulario
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Hubo un problema al guardar el vehículo.");
+        });
+    }
   });
 
 function mostrarError(input, feedbackId) {
@@ -125,7 +164,11 @@ function validarKilometros() {
   const kmValor = parseInt(km.value, 10);
 
   // Validar si el valor coincide con la expresión regular y si está dentro del rango
-  if (!kilometrosRegex.test(km.value) || kmValor < 0 || kmValor > kilometrosMax) {
+  if (
+    !kilometrosRegex.test(km.value) ||
+    kmValor < 0 ||
+    kmValor > kilometrosMax
+  ) {
     mostrarError(km, "km-feedback");
     return false;
   } else {
@@ -184,7 +227,7 @@ function validarFormulario() {
     return false;
   }
 
-  alert("Formulario enviado correctamente.");
+  //alert("Formulario enviado correctamente.");
   return true;
 }
 
@@ -210,7 +253,7 @@ document
 
     if (formularioEsValido) {
       console.log("Formulario guardado o enviado");
-      document.getElementById("formulario").submit();
+      //document.getElementById("formulario").submit();
     } else {
       console.log("No se puede guardar, hay campos inválidos.");
     }
@@ -228,29 +271,30 @@ document.querySelector(".close-btn").addEventListener("click", function () {
 });
 
 // Realizamos la solicitud GET
-fetch(
-  `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
-    usuarioJSON.cuil
-  )}`
-)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Error en la solicitud: " + response.statusText);
-    }
-    return response.json(); // Convertimos la respuesta a JSON
-  })
-  .then((data) => {
-    // Aquí puedes procesar los datos recibidos
-    console.log("Vehículos obtenidos:", data);
+if (usuarioJSON.esParticular === true) {
+  fetch(
+    `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
+      usuarioJSON.cuil
+    )}`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.statusText);
+      }
+      return response.json(); // Convertimos la respuesta a JSON
+    })
+    .then((data) => {
+      // Aquí puedes procesar los datos recibidos
+      console.log("Vehículos obtenidos:", data);
 
-    const container = document.getElementById("notifications"); // Selecciona el contenedor donde se añadirán los divs
+      const container = document.getElementById("notifications"); // Selecciona el contenedor donde se añadirán los divs
 
-    data.forEach((auto) => {
-      console.log(auto);
-      const divAuto = document.createElement("div");
-      divAuto.classList.add("single-box");
+      data.forEach((auto) => {
+        console.log(auto);
+        const divAuto = document.createElement("div");
+        divAuto.classList.add("single-box");
 
-      divAuto.innerHTML = `
+        divAuto.innerHTML = `
     <div class="box-avatar-text">
       <div class="avatar">
         <img
@@ -291,62 +335,186 @@ fetch(
       />
     </div>
   `;
-      divAuto.addEventListener("click", () => {
-        localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
-        console.log(`Auto ${auto.patente} guardado en el localStorage`);
-      });
+        divAuto.addEventListener("click", () => {
+          localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
+          console.log(`Auto ${auto.patente} guardado en el localStorage`);
+        });
 
-      // Agregar evento para guardar en localStorage cuando se haga clic en la tarjeta
-      divAuto.addEventListener("click", () => {
-        localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
-        console.log(`Auto ${auto.patente} guardado en el localStorage`);
-      });
+        // Agregar evento para guardar en localStorage cuando se haga clic en la tarjeta
+        divAuto.addEventListener("click", () => {
+          localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
+          console.log(`Auto ${auto.patente} guardado en el localStorage`);
+        });
 
-      // Seleccionar el ícono de eliminar y añadir un evento para la solicitud de eliminación
-      const eliminarIcon = divAuto.querySelector(".eliminar-auto");
-      eliminarIcon.addEventListener("click", async (event) => {
-        event.stopPropagation(); // Evita que el click se propague al evento de la tarjeta
+        // Seleccionar el ícono de eliminar y añadir un evento para la solicitud de eliminación
+        const eliminarIcon = divAuto.querySelector(".eliminar-auto");
+        eliminarIcon.addEventListener("click", async (event) => {
+          event.stopPropagation(); // Evita que el click se propague al evento de la tarjeta
 
-        // Confirmar antes de eliminar
-        const confirmacion = confirm(
-          `¿Estás seguro de que quieres eliminar el vehículo con patente ${auto.patente}?`
-        );
-        if (!confirmacion) return;
-
-        try {
-          const response = await fetch(
-            `https://back-gestion-p1.vercel.app/users/eliminarVehiculoUsuarioParticular?patente=${auto.patente}`,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+          // Confirmar antes de eliminar
+          const confirmacion = confirm(
+            `¿Estás seguro de que quieres eliminar el vehículo con patente ${auto.patente}?`
           );
+          if (!confirmacion) return;
 
-          if (response.ok) {
-            console.log(
-              `Vehículo con patente ${auto.patente} eliminado con éxito`
+          try {
+            const response = await fetch(
+              `https://back-gestion-p1.vercel.app/users/eliminarVehiculoUsuarioParticular?patente=${auto.patente}`,
+              {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
             );
 
-            // Opcionalmente, eliminar la tarjeta del DOM
-            divAuto.remove();
-            window.location.reload();
-          } else {
-            const errorData = await response.json();
-            console.error("Error al eliminar el vehículo:", errorData);
-          }
-        } catch (error) {
-          console.error(
-            "Hubo un problema con la solicitud de eliminación:",
-            error
-          );
-        }
-      });
+            if (response.ok) {
+              console.log(
+                `Vehículo con patente ${auto.patente} eliminado con éxito`
+              );
 
-      container.appendChild(divAuto);
+              // Opcionalmente, eliminar la tarjeta del DOM
+              divAuto.remove();
+              window.location.reload();
+            } else {
+              const errorData = await response.json();
+              console.error("Error al eliminar el vehículo:", errorData);
+            }
+          } catch (error) {
+            console.error(
+              "Hubo un problema con la solicitud de eliminación:",
+              error
+            );
+          }
+        });
+
+        container.appendChild(divAuto);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
+} else {
+  fetch(
+    `https://back-gestion-p1.vercel.app/users/obtenerVehiculosOrganizacion?cuitDueño=${encodeURIComponent(
+      usuarioJSON.cuit
+    )}`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.statusText);
+      }
+      return response.json(); // Convertimos la respuesta a JSON
+    })
+    .then((data) => {
+      // Aquí puedes procesar los datos recibidos
+      console.log("Vehículos obtenidos:", data);
+
+      const container = document.getElementById("notifications"); // Selecciona el contenedor donde se añadirán los divs
+
+      data.forEach((auto) => {
+        console.log(auto);
+        const divAuto = document.createElement("div");
+        divAuto.classList.add("single-box");
+
+        divAuto.innerHTML = `
+    <div class="box-avatar-text">
+      <div class="avatar">
+        <img
+          src="../assets/imagenes/corolla.png"
+          alt="perfil-imagen"
+        />
+      </div>
+      <div class="box-text">
+        <div class="text-patente">
+          <p class="patente-p">${auto.patente}</p>
+        </div>
+        <div class="text-flex">
+          Marca:
+          <p>${auto.marca}</p>
+        </div>
+        <div class="text-flex">
+          Modelo:
+          <p>${auto.modelo}</p>
+        </div>
+        <div class="text-flex">
+          Año de Fabricación:
+          <p>${new Date(auto.fechaFabricacion).getFullYear()}</p>
+        </div>
+      </div>
+    </div>
+    <div class="box-img">
+      <a href="../views/auto.html">
+        <img
+          src="../assets/logos/edit-solid-24.png"
+          alt="Editar"
+          class="user-pic-pic"
+        />
+      </a>
+      <img
+        src="../assets/logos/eliminar.png"
+        alt="Eliminar"
+        class="user-pic-pic eliminar-auto"
+      />
+    </div>
+  `;
+        divAuto.addEventListener("click", () => {
+          localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
+          console.log(`Auto ${auto.patente} guardado en el localStorage`);
+        });
+
+        // Agregar evento para guardar en localStorage cuando se haga clic en la tarjeta
+        divAuto.addEventListener("click", () => {
+          localStorage.setItem("autoSeleccionado", JSON.stringify(auto));
+          console.log(`Auto ${auto.patente} guardado en el localStorage`);
+        });
+
+        // Seleccionar el ícono de eliminar y añadir un evento para la solicitud de eliminación
+        const eliminarIcon = divAuto.querySelector(".eliminar-auto");
+        eliminarIcon.addEventListener("click", async (event) => {
+          event.stopPropagation(); // Evita que el click se propague al evento de la tarjeta
+
+          // Confirmar antes de eliminar
+          const confirmacion = confirm(
+            `¿Estás seguro de que quieres eliminar el vehículo con patente ${auto.patente}?`
+          );
+          if (!confirmacion) return;
+
+          try {
+            const response = await fetch(
+              `https://back-gestion-p1.vercel.app/users/eliminarVehiculoUsuarioOrganizacion?patente=${auto.patente}`,
+              {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            if (response.ok) {
+              console.log(
+                `Vehículo con patente ${auto.patente} eliminado con éxito`
+              );
+
+              // Opcionalmente, eliminar la tarjeta del DOM
+              divAuto.remove();
+              window.location.reload();
+            } else {
+              const errorData = await response.json();
+              console.error("Error al eliminar el vehículo:", errorData);
+            }
+          } catch (error) {
+            console.error(
+              "Hubo un problema con la solicitud de eliminación:",
+              error
+            );
+          }
+        });
+
+        container.appendChild(divAuto);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
