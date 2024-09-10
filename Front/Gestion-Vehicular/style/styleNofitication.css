@@ -118,4 +118,11 @@ a.name:hover {
   a.read {
     font-size: 1rem;
   }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content:flex-end;
+    padding: 20px 35px;
+  }
 }
