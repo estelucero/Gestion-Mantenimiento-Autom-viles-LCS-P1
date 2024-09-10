@@ -1,4 +1,4 @@
-const usuarioSesion = JSON.parse(localStorage.getItem("usuario"));
+const usuario = JSON.parse(localStorage.getItem("usuario"));
 const autos = JSON.parse(localStorage.getItem("patentes") || "[]");
 const urlGetNotificacion = `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesSinLeerParticular?patente=`;
 const urlDeleteNotificacion = `https://back-gestion-p1.vercel.app/users/marcarNotificacionLeidaPart?idNotif=`;
@@ -15,6 +15,9 @@ async function cargarNotificacionesParticular(auto) {
     const response = await fetch(urlGetNotificacion + `${auto}`);
     const data = await response.json();
     console.log(data);
+    if (data == false) {
+      return;
+    }
     const container = document.querySelector(".notifications");
     let contador = 0;
     data.forEach((notificacion) => {
@@ -78,7 +81,7 @@ async function eliminarNotificacionParticular(id, card) {
 }
 
 // Llama a la función para cargar notificaciones cuando la página cargue
-if (usuarioSesion.esParticular) {
+if (usuario.esParticular == true) {
   autos.forEach((auto) => cargarNotificacionesParticular(auto));
 }
 
@@ -135,16 +138,22 @@ function eliminarTodasParticular() {
       });
   });
 }
-eliminarTodasParticular();
+if (usuario.esParticular) {
+  eliminarTodasParticular();
+}
 
 //Organizacion
 
 // Función para cargar notificaciones
 async function cargarNotificacionesOrganizacion(auto) {
+  console.log(auto);
   try {
     const response = await fetch(urlGetNotificacionORG + `${auto}`);
     const data = await response.json();
     console.log(data);
+    if (!data) {
+      return;
+    }
     const container = document.querySelector(".notifications");
     let contador = 0;
     data.forEach((notificacion) => {
@@ -208,46 +217,100 @@ async function eliminarNotificacionOrganizacion(id, card) {
 }
 
 // Llama a la función para cargar notificaciones cuando la página cargue
-if (!usuarioSesion.esParticular) {
+if (usuario.esParticular == false) {
   autos.forEach((auto) => cargarNotificacionesOrganizacion(auto));
 }
 
 ////Eliminar todas
-function eliminarTodasOrganizacion() {
-  document.getElementById("read").addEventListener("click", function (event) {
-    event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+// function eliminarTodasOrganizacion() {
+//   document.getElementById("read").addEventListener("click", function (event) {
+//     event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
 
-    // Obtener todas las notificaciones
-    const notifications = document.querySelectorAll(
-      ".notifications .single-box"
-    );
-    const notificationIds = [];
+//     // Obtener todas las notificaciones
+//     const notifications = document.querySelectorAll(
+//       ".notifications .single-box"
+//     );
+//     const notificationIds = [];
+//     console.log(notifications);
+//     notifications.forEach((notification) => {
+//       // Obtener el id del notification
+//       const id = notification.id.replace("single-box", ""); // Por ejemplo, si el ID es 'single-box1', obtenemos '1'
+//       notificationIds.push(id); // Guardamos el ID en el array
+//     });
 
-    notifications.forEach((notification) => {
-      // Obtener el id del notification
-      const id = notification.id.replace("single-box", ""); // Por ejemplo, si el ID es 'single-box1', obtenemos '1'
-      notificationIds.push(id); // Guardamos el ID en el array
-    });
+//     // Para cada notificación, hacer la solicitud PUT al endpoint
+//     Promise.all(
+//       notificationIds.map((id) => {
+//         return fetch(
+//           `https://back-gestion-p1.vercel.app/users/marcarNotificacionLeidaOrg?idNotif=${id}`,
+//           {
+//             method: "PUT",
+//           }
+//         ).then((response) => {
+//           if (!response.ok) {
+//             throw new Error(
+//               `Error al marcar notificación con id ${id} como leída`
+//             );
+//           }
+//           return response.json();
+//         });
+//       })
+//     )
+//       .then((results) => {
+//         // Si todas las solicitudes PUT fueron exitosas, eliminamos visualmente las notificaciones
+//         notifications.forEach((notification) => {
+//           notification.remove();
+//         });
 
-    // Para cada notificación, hacer la solicitud PUT al endpoint
-    Promise.all(
-      notificationIds.map((id) => {
-        return fetch(
-          `https://back-gestion-p1.vercel.app/users/marcarNotificacionLeidaOrg?idNotif=${id}`,
-          {
-            method: "PUT",
-          }
-        ).then((response) => {
+//         // Actualizar el contador de notificaciones a 0
+//         document.getElementById("num").textContent = "0";
+//         console.log(
+//           "Todas las notificaciones han sido eliminadas exitosamente"
+//         );
+//       })
+//       .catch((error) => {
+//         console.error("Error:", error);
+//         alert("Hubo un error al eliminar las notificaciones.");
+//       });
+//   });
+// }
+
+async function eliminarTodasOrganizacion() {
+  document
+    .getElementById("read")
+    .addEventListener("click", async function (event) {
+      event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+
+      // Obtener todas las notificaciones
+      const notifications = document.querySelectorAll(
+        ".notifications .single-box"
+      );
+      const notificationIds = [];
+      console.log(notifications);
+
+      notifications.forEach((notification) => {
+        // Obtener el id del notification
+        const id = notification.id.replace("single-box", ""); // Por ejemplo, si el ID es 'single-box1', obtenemos '1'
+        notificationIds.push(id); // Guardamos el ID en el array
+      });
+
+      try {
+        // Para cada notificación, hacer la solicitud PUT al endpoint de forma secuencial
+        for (const id of notificationIds) {
+          const response = await fetch(
+            `https://back-gestion-p1.vercel.app/users/marcarNotificacionLeidaOrg?idNotif=${id}`,
+            {
+              method: "PUT",
+            }
+          );
+
           if (!response.ok) {
             throw new Error(
               `Error al marcar notificación con id ${id} como leída`
             );
           }
-          return response.json();
-        });
-      })
-    )
-      .then((results) => {
+        }
+
         // Si todas las solicitudes PUT fueron exitosas, eliminamos visualmente las notificaciones
         notifications.forEach((notification) => {
           notification.remove();
@@ -258,11 +321,13 @@ function eliminarTodasOrganizacion() {
         console.log(
           "Todas las notificaciones han sido eliminadas exitosamente"
         );
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error:", error);
         alert("Hubo un error al eliminar las notificaciones.");
-      });
-  });
+      }
+    });
 }
-eliminarTodasOrganizacion();
+
+if (usuario.esParticular == false) {
+  eliminarTodasOrganizacion();
+}
