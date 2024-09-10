@@ -1,6 +1,7 @@
 // setTimeout(function () {
 //   location.reload();
 // }, 1000);
+const usuarioJSON = JSON.parse(localStorage.getItem("usuario"));
 function populateDateSelectors() {
   const monthSelect = document.getElementById("month");
   const yearSelect = document.getElementById("year");
@@ -107,6 +108,15 @@ anoElement.textContent = new Date(autoGuardado.fechaFabricacion).getFullYear();
 vimElement.textContent = autoGuardado.vim;
 kilometrajeElement.textContent = `${autoGuardado.cantKm} Km`;
 
+///
+function eliminarOpcionViaje() {
+  if (!usuarioJSON.esParticular) {
+    const selectRubro = document.getElementById("campo_rubro");
+    const opcionViaje = selectRubro.querySelector('option[value="viaje"]');
+    opcionViaje.style.display = "none";
+  }
+}
+eliminarOpcionViaje();
 //Cargar fomulario de alerta
 document
   .querySelector(".btn-form")
@@ -117,41 +127,99 @@ document
     const tipoAlerta = document.getElementById("campo_rubro").value;
     const tipoAlertaFormateada = transfromarAlerta(tipoAlerta);
     console.log(tipoAlertaFormateada);
-
-    if (tipoAlertaFormateada == "viaje") {
-      const fechaInicio = formatearFecha(
-        document.getElementById("selectedDate").value
-      );
-      const nombreViaje = document.getElementById("nombreViaje").value;
-      const kilometrosViaje = document.getElementById("kilometrosViaje").value;
-      const data = {
-        fechaInicio: fechaInicio,
-        distanciaKM: parseInt(kilometrosViaje, 10), // Convertir a número
-        nombre: nombreViaje,
-        patente: autoGuardado.patente,
-      };
-      console.log(data);
-      try {
-        const response = await fetch(
-          "https://back-gestion-p1.vercel.app/users/ingresarViaje",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          }
+    if (usuarioJSON.esParticular) {
+      if (tipoAlertaFormateada == "viaje") {
+        const fechaInicio = formatearFecha(
+          document.getElementById("selectedDate").value
         );
+        const nombreViaje = document.getElementById("nombreViaje").value;
+        const kilometrosViaje =
+          document.getElementById("kilometrosViaje").value;
+        const data = {
+          fechaInicio: fechaInicio,
+          distanciaKM: parseInt(kilometrosViaje, 10), // Convertir a número
+          nombre: nombreViaje,
+          patente: autoGuardado.patente,
+        };
+        console.log(data);
+        try {
+          const response = await fetch(
+            "https://back-gestion-p1.vercel.app/users/ingresarViaje",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
 
-        if (!response.ok) {
-          throw new Error("Error en el envío de la revisión");
+          if (!response.ok) {
+            throw new Error("Error en el envío de la revisión");
+          }
+
+          const result = await response.json();
+          alert("Revisión guardada con éxito");
+          console.log(result); // Puedes hacer algo más con la respuesta
+          location.reload(true);
+        } catch (error) {
+          alert("Hubo un error al guardar la revisión: " + error.message);
+        }
+      } else {
+        // Obtener la fecha seleccionada del input de fecha
+        const fechaUltimaRevision = formatearFecha(
+          document.getElementById("selectedDate").value
+        );
+        console.log(fechaUltimaRevision);
+        // Asignar una patente de ejemplo, si tienes un input para la patente puedes usar su valor
+        // Puedes reemplazar esto por el valor dinámico
+
+        // Verifica si el tipo de alerta y la fecha han sido seleccionados
+        if (!tipoAlerta || !fechaUltimaRevision) {
+          alert("Por favor, complete todos los campos.");
+          return;
         }
 
-        const result = await response.json();
-        alert("Revisión guardada con éxito");
-        console.log(result); // Puedes hacer algo más con la respuesta
-      } catch (error) {
-        alert("Hubo un error al guardar la revisión: " + error.message);
+        // Definir la fecha de próxima revisión (esto puede depender de la lógica de tu negocio)
+        const fechaProximaRevision = fechaUltimaRevision;
+
+        // Definir el estado de la revisión (puedes cambiarlo según la lógica de tu aplicación)
+        const estado = "a";
+
+        // Construir el cuerpo del JSON
+        const data = [
+          {
+            nombre: tipoAlertaFormateada,
+            fechaUltRevision: fechaUltimaRevision,
+            fechaProxRevision: fechaProximaRevision,
+            estado: estado,
+            patente: autoGuardado.patente,
+          },
+        ];
+
+        try {
+          const response = await fetch(
+            "https://back-gestion-p1.vercel.app/users/agregarRevisionesVehiculoParticular",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Error en el envío de la revisión");
+          }
+
+          const result = await response.json();
+          alert("Revisión guardada con éxito");
+          console.log(result); // Puedes hacer algo más con la respuesta
+          location.reload(true);
+        } catch (error) {
+          alert("Hubo un error al guardar la revisión: " + error.message);
+        }
       }
     } else {
       // Obtener la fecha seleccionada del input de fecha
@@ -187,7 +255,7 @@ document
 
       try {
         const response = await fetch(
-          "https://back-gestion-p1.vercel.app/users/agregarRevisionesVehiculoParticular",
+          "https://back-gestion-p1.vercel.app/users/agregarRevisionesVehiculoOrganizacion",
           {
             method: "POST",
             headers: {
@@ -204,6 +272,7 @@ document
         const result = await response.json();
         alert("Revisión guardada con éxito");
         console.log(result); // Puedes hacer algo más con la respuesta
+        location.reload(true);
       } catch (error) {
         alert("Hubo un error al guardar la revisión: " + error.message);
       }
@@ -293,26 +362,49 @@ document.getElementById("save-btn").addEventListener("click", function () {
     cantKM: parseInt(cantKM),
   };
   console.log(data);
-  fetch(
-    `https://back-gestion-p1.vercel.app/users/modificarVehiculoParticular`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Success:", data);
-      alert("Datos del vehículo actualizados correctamente");
-      window.location.href = "../views/inicio.html";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("Hubo un error al actualizar los datos");
-    });
+  if (usuarioJSON.esParticular) {
+    fetch(
+      `https://back-gestion-p1.vercel.app/users/modificarVehiculoParticular`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Datos del vehículo actualizados correctamente");
+        window.location.href = "../views/inicio.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Hubo un error al actualizar los datos");
+      });
+  } else {
+    fetch(
+      `https://back-gestion-p1.vercel.app/users/modificarVehiculoOrganizacion`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Datos del vehículo actualizados correctamente");
+        window.location.href = "../views/inicio.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Hubo un error al actualizar los datos");
+      });
+  }
 
   // Ocultar el botón de guardar después de guardar los cambios
   document.getElementById("save-btn").style.display = "none";
@@ -342,7 +434,7 @@ document.getElementById("campo_rubro").addEventListener("change", function () {
 const contenedorAlertas = document.getElementById("alertas");
 
 // Función para obtener notificaciones y crear las tarjetas
-async function cargarNotificaciones() {
+async function cargarNotificacionesParticular() {
   try {
     const response = await fetch(
       `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesParticular?patente=${autoGuardado.patente}`
@@ -393,6 +485,7 @@ async function cargarNotificaciones() {
             );
 
             if (response.ok) {
+              location.reload(true);
               // Si la respuesta es exitosa, eliminar el div del DOM
               alertaDiv.remove();
             } else {
@@ -416,11 +509,86 @@ async function cargarNotificaciones() {
     console.error("Error al obtener las notificaciones:", error);
   }
 }
-cargarNotificaciones();
-// `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
-//   usuarioJSON.cuil
-// )}`;
 
+///
+
+async function cargarNotificacionesOrganizacion() {
+  try {
+    const response = await fetch(
+      `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesOrganizacion?patente=${autoGuardado.patente}`
+    );
+    const data = await response.json();
+
+    // Verifica que `listaNotif` existe y es un array
+    if (Array.isArray(data.listaNotif)) {
+      data.listaNotif.forEach((notificacion) => {
+        // Crear el elemento tarjeta
+        const alertaDiv = document.createElement("div");
+        alertaDiv.className = "alerta";
+
+        // Crear la estructura interna de la tarjeta
+        alertaDiv.innerHTML = `
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/${
+                notificacion.nombre
+              }.png" alt="perfil-imagen" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${notificacion.nombre.replace("_", " ")}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${
+                  new Date(notificacion.fechaVence).toLocaleDateString() ||
+                  "Fecha no disponible"
+                }</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic eliminar-alerta" />
+          </div>
+        `;
+        const eliminarIcono = alertaDiv.querySelector(".eliminar-alerta");
+        eliminarIcono.addEventListener("click", async () => {
+          try {
+            // Enviar solicitud DELETE al backend para eliminar la notificación
+            const response = await fetch(
+              `https://back-gestion-p1.vercel.app/users/eliminarRevisionVehiculoOrganizacion?patente=${notificacion.patente}&nombreRevision=${notificacion.nombre}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              location.reload(true);
+              // Si la respuesta es exitosa, eliminar el div del DOM
+              alertaDiv.remove();
+            } else {
+              console.error("Error al eliminar la notificación en el backend");
+            }
+          } catch (error) {
+            console.error(
+              "Error al enviar la solicitud de eliminación:",
+              error
+            );
+          }
+        });
+
+        // Añadir la tarjeta al contenedor
+        contenedorAlertas.appendChild(alertaDiv);
+      });
+    } else {
+      console.error("La propiedad listaNotif no es un array");
+    }
+  } catch (error) {
+    console.error("Error al obtener las notificaciones:", error);
+  }
+}
+
+//
 const contenedorAlertasViajes = document.getElementById("alertas");
 ////Agregar Viajes Programados/////////
 async function cargarViajes() {
@@ -475,6 +643,7 @@ async function cargarViajes() {
             );
 
             if (response.ok) {
+              location.reload(true);
               // Si la respuesta es exitosa, eliminar el div del DOM
               alertaDiv.remove();
             } else {
@@ -497,7 +666,13 @@ async function cargarViajes() {
     console.error("Error al obtener las notificaciones:", error);
   }
 }
-cargarViajes();
+if (usuarioJSON.esParticular) {
+  cargarNotificacionesParticular();
+  cargarViajes();
+} else {
+  cargarNotificacionesOrganizacion();
+}
+
 // Función para crear una tarjeta
 // Función para crear una tarjeta
 // function crearTarjeta(viaje) {
