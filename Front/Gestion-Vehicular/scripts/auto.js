@@ -1,6 +1,6 @@
 // setTimeout(function () {
 //   location.reload();
-// }, 500);
+// }, 1000);
 function populateDateSelectors() {
   const monthSelect = document.getElementById("month");
   const yearSelect = document.getElementById("year");
@@ -418,5 +418,182 @@ async function cargarNotificaciones() {
 }
 cargarNotificaciones();
 // `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
-//     usuarioJSON.cuil
-//   )}`
+//   usuarioJSON.cuil
+// )}`;
+
+const contenedorAlertasViajes = document.getElementById("alertas");
+////Agregar Viajes Programados/////////
+async function cargarViajes() {
+  try {
+    const response = await fetch(
+      `https://back-gestion-p1.vercel.app/users/obtenerViajesVehiculo?patente=${autoGuardado.patente}`
+    );
+    const data = await response.json();
+
+    // Verifica que `listaNotif` existe y es un array
+    if (Array.isArray(data)) {
+      data.forEach((notificacion) => {
+        // Crear el elemento tarjeta
+        const alertaDiv = document.createElement("div");
+        alertaDiv.className = "alerta";
+
+        // Crear la estructura interna de la tarjeta
+        alertaDiv.innerHTML = `
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/viaje.png" alt="perfil-imagen" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${notificacion.nombreViaje}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${
+                  new Date(notificacion.fechaInicio).toLocaleDateString() ||
+                  "Fecha no disponible"
+                }</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic eliminar-viaje" />
+          </div>
+        `;
+        contenedorAlertasViajes.appendChild(alertaDiv);
+        const eliminarIcono = alertaDiv.querySelector(".eliminar-viaje");
+
+        eliminarIcono.addEventListener("click", async () => {
+          console.log(eliminarIcono);
+          try {
+            // Enviar solicitud DELETE al backend para eliminar la notificación
+            const response = await fetch(
+              `https://back-gestion-p1.vercel.app/users/eliminarViaje?id=${notificacion.idViaje}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              // Si la respuesta es exitosa, eliminar el div del DOM
+              alertaDiv.remove();
+            } else {
+              console.error("Error al eliminar la notificación en el backend");
+            }
+          } catch (error) {
+            console.error(
+              "Error al enviar la solicitud de eliminación:",
+              error
+            );
+          }
+        });
+
+        // Añadir la tarjeta al contenedor
+      });
+    } else {
+      console.error("La propiedad listaNotif no es un array");
+    }
+  } catch (error) {
+    console.error("Error al obtener las notificaciones:", error);
+  }
+}
+cargarViajes();
+// Función para crear una tarjeta
+// Función para crear una tarjeta
+// function crearTarjeta(viaje) {
+//   // Crear los elementos
+//   const alertaDiv = document.createElement("div");
+//   alertaDiv.className = "alerta";
+
+//   const boxAvatarTextDiv = document.createElement("div");
+//   boxAvatarTextDiv.className = "box-avatar-text";
+
+//   const avatarDiv = document.createElement("div");
+//   avatarDiv.className = "avatar";
+
+//   const imgAvatar = document.createElement("img");
+//   imgAvatar.src = "../assets/logos/vtv.png";
+//   imgAvatar.alt = "perfil-imagen";
+
+//   avatarDiv.appendChild(imgAvatar);
+
+//   const boxTextDiv = document.createElement("div");
+//   boxTextDiv.className = "box-text";
+
+//   const textPatenteDiv = document.createElement("div");
+//   textPatenteDiv.className = "text-patente";
+
+//   const pPatente = document.createElement("p");
+//   pPatente.textContent = "VTV"; // Cambiar esto según el tipo de alerta o viaje
+
+//   textPatenteDiv.appendChild(pPatente);
+
+//   const textFlexDiv = document.createElement("div");
+//   textFlexDiv.className = "text-flex";
+
+//   const fechaTexto = document.createElement("p");
+//   fechaTexto.textContent = `Fecha de alerta: ${viaje.fechaInicio}`; // Modificar según el formato de fecha que tengas
+
+//   textFlexDiv.appendChild(fechaTexto);
+
+//   boxTextDiv.appendChild(textPatenteDiv);
+//   boxTextDiv.appendChild(textFlexDiv);
+
+//   boxAvatarTextDiv.appendChild(avatarDiv);
+//   boxAvatarTextDiv.appendChild(boxTextDiv);
+
+//   const boxImgDiv = document.createElement("div");
+//   boxImgDiv.className = "box-img";
+
+//   const imgEliminar = document.createElement("img");
+//   imgEliminar.src = "../assets/logos/eliminar.png";
+//   imgEliminar.alt = "";
+//   imgEliminar.className = "eliminar-alerta"; // Cambiado de 'user-pic-pic' a 'eliminar-alerta'
+
+//   // Agregar evento de clic para eliminar el div
+//   imgEliminar.addEventListener("click", async () => {
+//     try {
+//       // Enviar solicitud de eliminación al backend
+//       await fetch(
+//         `https://back-gestion-p1.vercel.app/users/eliminarRevisionVehiculoParticular?patente=${viaje.patente}&nombre=${viaje.nombre}`,
+//         {
+//           method: "DELETE",
+//         }
+//       );
+
+//       // Eliminar el div del DOM
+//       alertaDiv.remove();
+//     } catch (error) {
+//       console.error("Error al eliminar la revisión:", error);
+//     }
+//   });
+
+//   boxImgDiv.appendChild(imgEliminar);
+
+//   alertaDiv.appendChild(boxAvatarTextDiv);
+//   alertaDiv.appendChild(boxImgDiv);
+
+//   return alertaDiv;
+// }
+
+// // Función para cargar los viajes y crear las tarjetas
+// async function cargarViajes() {
+//   try {
+//     const response = await fetch(
+//       `https://back-gestion-p1.vercel.app/users/obtenerViajesVehiculo?patente=${autoGuardado.patente}`
+//     );
+//     const viajes = await response.json();
+
+//     const contenedorAlertas = document.getElementById("alertas");
+//     // Limpiar el contenedor antes de añadir nuevas tarjetas
+
+//     viajes.forEach((viaje) => {
+//       const tarjeta = crearTarjeta(viaje);
+//       contenedorAlertas.appendChild(tarjeta);
+//     });
+//   } catch (error) {
+//     console.error("Error al cargar los viajes:", error);
+//   }
+// }
+
+// Llamar a la función para cargar los viajes al cargar la página
