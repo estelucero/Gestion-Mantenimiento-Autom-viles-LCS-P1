@@ -1,166 +1,3 @@
-const autoGuardado = JSON.parse(localStorage.getItem("autoSeleccionado"));
-console.log(autoGuardado);
-////Cargar alertas del vechiculo///
-// Asumiendo que 'alertas' es el ID del contenedor donde quieres agregar las tarjetas
-const contenedorAlertas = document.getElementById("alertas");
-
-// Función para obtener notificaciones y crear las tarjetas
-async function cargarNotificaciones() {
-  try {
-    const response = await fetch(
-      `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesParticular?patente=${autoGuardado.patente}`
-    );
-    const data = await response.json();
-
-    // Verifica que `listaNotif` existe y es un array
-    if (Array.isArray(data.listaNotif)) {
-      data.listaNotif.forEach((notificacion) => {
-        // Crear el elemento tarjeta
-        const alertaDiv = document.createElement("div");
-        alertaDiv.className = "alerta";
-
-        // Crear la estructura interna de la tarjeta
-        alertaDiv.innerHTML = `
-          <div class="box-avatar-text">
-            <div class="avatar">
-              <img src="../assets/logos/${
-                notificacion.nombre
-              }.png" alt="perfil-imagen" />
-            </div>
-            <div class="box-text">
-              <div class="text-patente">
-                <p>${notificacion.nombre.replace("_", " ")}</p>
-              </div>
-              <div class="text-flex">
-                Fecha de alerta:
-                <p>${
-                  new Date(notificacion.fechaVence).toLocaleDateString() ||
-                  "Fecha no disponible"
-                }</p>
-              </div>
-            </div>
-          </div>
-          <div class="box-img">
-            <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic eliminar-alerta" />
-          </div>
-        `;
-        const eliminarIcono = alertaDiv.querySelector(".eliminar-alerta");
-        eliminarIcono.addEventListener("click", async () => {
-          try {
-            // Enviar solicitud DELETE al backend para eliminar la notificación
-            const response = await fetch(
-              `https://back-gestion-p1.vercel.app/users/eliminarRevisionVehiculoParticular?patente=${notificacion.patente}&nombreRevision=${notificacion.nombre}`,
-              {
-                method: "DELETE",
-              }
-            );
-
-            if (response.ok) {
-              // Si la respuesta es exitosa, eliminar el div del DOM
-              alertaDiv.remove();
-            } else {
-              console.error("Error al eliminar la notificación en el backend");
-            }
-          } catch (error) {
-            console.error(
-              "Error al enviar la solicitud de eliminación:",
-              error
-            );
-          }
-        });
-
-        // Añadir la tarjeta al contenedor
-        contenedorAlertas.appendChild(alertaDiv);
-      });
-    } else {
-      console.error("La propiedad listaNotif no es un array");
-    }
-  } catch (error) {
-    console.error("Error al obtener las notificaciones:", error);
-  }
-}
-cargarNotificaciones();
-// `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
-//   usuarioJSON.cuil
-// )}`;
-
-const contenedorAlertasViajes = document.getElementById("alertas");
-////Agregar Viajes Programados/////////
-async function cargarViajes() {
-  try {
-    const response = await fetch(
-      `https://back-gestion-p1.vercel.app/users/obtenerViajesVehiculo?patente=${autoGuardado.patente}`
-    );
-    const data = await response.json();
-
-    // Verifica que `listaNotif` existe y es un array
-    if (Array.isArray(data)) {
-      data.forEach((notificacion) => {
-        // Crear el elemento tarjeta
-        const alertaDiv = document.createElement("div");
-        alertaDiv.className = "alerta";
-
-        // Crear la estructura interna de la tarjeta
-        alertaDiv.innerHTML = `
-          <div class="box-avatar-text">
-            <div class="avatar">
-              <img src="../assets/logos/viaje.png" alt="perfil-imagen" />
-            </div>
-            <div class="box-text">
-              <div class="text-patente">
-                <p>${notificacion.nombreViaje}</p>
-              </div>
-              <div class="text-flex">
-                Fecha de alerta:
-                <p>${
-                  new Date(notificacion.fechaInicio).toLocaleDateString() ||
-                  "Fecha no disponible"
-                }</p>
-              </div>
-            </div>
-          </div>
-          <div class="box-img">
-            <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic eliminar-viaje" />
-          </div>
-        `;
-        contenedorAlertasViajes.appendChild(alertaDiv);
-        const eliminarIcono = alertaDiv.querySelector(".eliminar-viaje");
-
-        eliminarIcono.addEventListener("click", async () => {
-          console.log(eliminarIcono);
-          try {
-            // Enviar solicitud DELETE al backend para eliminar la notificación
-            const response = await fetch(
-              `https://back-gestion-p1.vercel.app/users/eliminarViaje?id=${notificacion.idViaje}`,
-              {
-                method: "DELETE",
-              }
-            );
-
-            if (response.ok) {
-              // Si la respuesta es exitosa, eliminar el div del DOM
-              alertaDiv.remove();
-            } else {
-              console.error("Error al eliminar la notificación en el backend");
-            }
-          } catch (error) {
-            console.error(
-              "Error al enviar la solicitud de eliminación:",
-              error
-            );
-          }
-        });
-
-        // Añadir la tarjeta al contenedor
-      });
-    } else {
-      console.error("La propiedad listaNotif no es un array");
-    }
-  } catch (error) {
-    console.error("Error al obtener las notificaciones:", error);
-  }
-}
-cargarViajes();
 // setTimeout(function () {
 //   location.reload();
 // }, 1000);
@@ -241,6 +78,8 @@ document.getElementById("year").addEventListener("change", updateCalendar);
 populateDateSelectors();
 
 //Cargar datos de auto
+const autoGuardado = JSON.parse(localStorage.getItem("autoSeleccionado"));
+console.log(autoGuardado);
 
 // Seleccionar los elementos del HTML donde se insertará la información
 const patenteElement = document.querySelector(".titulo");
@@ -498,6 +337,167 @@ document.getElementById("campo_rubro").addEventListener("change", function () {
   }
 });
 
+////Cargar alertas del vechiculo///
+// Asumiendo que 'alertas' es el ID del contenedor donde quieres agregar las tarjetas
+const contenedorAlertas = document.getElementById("alertas");
+
+// Función para obtener notificaciones y crear las tarjetas
+async function cargarNotificaciones() {
+  try {
+    const response = await fetch(
+      `https://back-gestion-p1.vercel.app/users/obtenerNotificacionesParticular?patente=${autoGuardado.patente}`
+    );
+    const data = await response.json();
+
+    // Verifica que `listaNotif` existe y es un array
+    if (Array.isArray(data.listaNotif)) {
+      data.listaNotif.forEach((notificacion) => {
+        // Crear el elemento tarjeta
+        const alertaDiv = document.createElement("div");
+        alertaDiv.className = "alerta";
+
+        // Crear la estructura interna de la tarjeta
+        alertaDiv.innerHTML = `
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/${
+                notificacion.nombre
+              }.png" alt="perfil-imagen" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${notificacion.nombre.replace("_", " ")}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${
+                  new Date(notificacion.fechaVence).toLocaleDateString() ||
+                  "Fecha no disponible"
+                }</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic eliminar-alerta" />
+          </div>
+        `;
+        const eliminarIcono = alertaDiv.querySelector(".eliminar-alerta");
+        eliminarIcono.addEventListener("click", async () => {
+          try {
+            // Enviar solicitud DELETE al backend para eliminar la notificación
+            const response = await fetch(
+              `https://back-gestion-p1.vercel.app/users/eliminarRevisionVehiculoParticular?patente=${notificacion.patente}&nombreRevision=${notificacion.nombre}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              // Si la respuesta es exitosa, eliminar el div del DOM
+              alertaDiv.remove();
+            } else {
+              console.error("Error al eliminar la notificación en el backend");
+            }
+          } catch (error) {
+            console.error(
+              "Error al enviar la solicitud de eliminación:",
+              error
+            );
+          }
+        });
+
+        // Añadir la tarjeta al contenedor
+        contenedorAlertas.appendChild(alertaDiv);
+      });
+    } else {
+      console.error("La propiedad listaNotif no es un array");
+    }
+  } catch (error) {
+    console.error("Error al obtener las notificaciones:", error);
+  }
+}
+cargarNotificaciones();
+// `https://back-gestion-p1.vercel.app/users/obtenerVehiculosParticular?cuilDueño=${encodeURIComponent(
+//   usuarioJSON.cuil
+// )}`;
+
+const contenedorAlertasViajes = document.getElementById("alertas");
+////Agregar Viajes Programados/////////
+async function cargarViajes() {
+  try {
+    const response = await fetch(
+      `https://back-gestion-p1.vercel.app/users/obtenerViajesVehiculo?patente=${autoGuardado.patente}`
+    );
+    const data = await response.json();
+
+    // Verifica que `listaNotif` existe y es un array
+    if (Array.isArray(data)) {
+      data.forEach((notificacion) => {
+        // Crear el elemento tarjeta
+        const alertaDiv = document.createElement("div");
+        alertaDiv.className = "alerta";
+
+        // Crear la estructura interna de la tarjeta
+        alertaDiv.innerHTML = `
+          <div class="box-avatar-text">
+            <div class="avatar">
+              <img src="../assets/logos/viaje.png" alt="perfil-imagen" />
+            </div>
+            <div class="box-text">
+              <div class="text-patente">
+                <p>${notificacion.nombreViaje}</p>
+              </div>
+              <div class="text-flex">
+                Fecha de alerta:
+                <p>${
+                  new Date(notificacion.fechaInicio).toLocaleDateString() ||
+                  "Fecha no disponible"
+                }</p>
+              </div>
+            </div>
+          </div>
+          <div class="box-img">
+            <img src="../assets/logos/eliminar.png" alt="" class="user-pic-pic eliminar-viaje" />
+          </div>
+        `;
+        contenedorAlertasViajes.appendChild(alertaDiv);
+        const eliminarIcono = alertaDiv.querySelector(".eliminar-viaje");
+
+        eliminarIcono.addEventListener("click", async () => {
+          console.log(eliminarIcono);
+          try {
+            // Enviar solicitud DELETE al backend para eliminar la notificación
+            const response = await fetch(
+              `https://back-gestion-p1.vercel.app/users/eliminarViaje?id=${notificacion.idViaje}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              // Si la respuesta es exitosa, eliminar el div del DOM
+              alertaDiv.remove();
+            } else {
+              console.error("Error al eliminar la notificación en el backend");
+            }
+          } catch (error) {
+            console.error(
+              "Error al enviar la solicitud de eliminación:",
+              error
+            );
+          }
+        });
+
+        // Añadir la tarjeta al contenedor
+      });
+    } else {
+      console.error("La propiedad listaNotif no es un array");
+    }
+  } catch (error) {
+    console.error("Error al obtener las notificaciones:", error);
+  }
+}
+cargarViajes();
 // Función para crear una tarjeta
 // Función para crear una tarjeta
 // function crearTarjeta(viaje) {
