@@ -274,7 +274,7 @@
   /* Verde más oscuro al pasar el cursor */
 }
 
-/* Estilo para los inputs de texto */
+/* Estilo para los inputs de texto
 input[type="text"] {
   width: 100%;
   padding: 8px;
@@ -288,13 +288,49 @@ input[type="text"] {
 
 input[type="text"]:focus {
   border-color: #4CAF50;
-  /* Verde al enfocarse */
+  
   outline: none;
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
+} */
 
 #label-viaje {
   display: none;
+}
+
+/* Feedback */
+.input-field input.is-invalid {
+  border: 2px solid #dc3545;
+}
+
+.input-field input.is-valid {
+  border: 2px solid #28a745;
+}
+
+.invalid-feedback,
+.valid-feedback {
+  width: 100%;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  text-align: left;
+  padding: 0;
+  margin-left: 15px;
+  display: none;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+}
+
+.valid-feedback {
+  color: #28a745;
+}
+
+.is-invalid+.invalid-feedback {
+  display: block;
+}
+
+.is-valid+.valid-feedback {
+  display: block;
 }
 
 /* Responsive */

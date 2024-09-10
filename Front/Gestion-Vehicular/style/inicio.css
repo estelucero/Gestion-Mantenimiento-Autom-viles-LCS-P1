@@ -448,7 +448,8 @@ span.dot {
 .popup .form .form-element input[type="chasis"],
 .popup .form .form-element input[type="km"],
 .popup .form .form-element input[type="file"],
-.popup .form .form-element input[type="number"] {
+.popup .form .form-element input[type="number"],
+.popup .form .form-element input[id="nombreViaje"] {
   margin-top: 5px;
   display: block;
   width: 100%;
