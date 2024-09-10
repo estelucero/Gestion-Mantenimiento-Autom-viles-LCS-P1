@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import mysql.connector
 from app.db.mainDB import mydb, mycursor
-from app.endpoints.dtos import notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, usuarioOrganizacionLogeoDTO, usuarioOrganizacionRegistroDTO, usuarioParticularLogeoDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, viajeDTO, viajeRealizadoDTO, viajeVehiculoDTO
+from app.endpoints.dtos import notificacionDTO, nuevoVehiculoUsuarioOrganizacionDTO, nuevoVehiculoUsuarioParticularDTO, revisionDTO, usuarioOrganizacionLogeoDTO, usuarioOrganizacionRegistroDTO, usuarioParticularLogeoDTO, usuarioParticularRegistroDTO, usuarioRegistradoDTO, vehiculoConRevisionesDTO, vehiculoDTO, vehiculoModificarDTO, vehiculoRegistradoDTO, vehiculoRevisionDTO, viajeDTO, viajeRealizadoDTO, viajeVehiculoDTO
 
 class dbCallService():
     def __init__(self):
@@ -684,11 +684,18 @@ class dbCallService():
         return True
 
 
-    def generarListaNotificacion(self, lista):
+    def generarListaNotificacion(self, lista, esRevisiones):
         notificaciones = []
-        for i in range(len(lista)):
-            notificaciones.append(notificacionDTO(nombre=lista[i][0], fechaVence=lista[i][1], patente=lista[i][2]))       
-        return notificaciones
+        if esRevisiones:
+            for i in range(len(lista)):
+                notificaciones.append(revisionDTO(nombre=lista[i][0], fechaVence=lista[i][1], patente=lista[i][2]))       
+            return notificaciones
+        else:
+            for i in range(len(lista)):
+                notificaciones.append(notificacionDTO(id=lista[i][0], nombre=lista[i][1], fechaVence=lista[i][2], patente=lista[i][3]))
+            return notificaciones
+
+        
 
     def obtenerNotificacionesParticularDB(self, patente):
         try:
@@ -697,7 +704,7 @@ class dbCallService():
             obtNotifUP= "SELECT nombre, fechaProxRevision, patenteVehiculo FROM `revisionesVehiculoParticular` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
-            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall(), True)
 
             if not notifAux or aux == None:
                 return False
@@ -715,7 +722,7 @@ class dbCallService():
             obtNotifUP= "SELECT nombre, fechaProxRevision, patenteVehiculo FROM `revisionesVehiculoOrganizacion` WHERE patenteVehiculo = %s"
             obtNotifUPData = (patente,)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
-            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall(), True)
 
             if not notifAux or aux == None:
                 return False
@@ -728,10 +735,10 @@ class dbCallService():
 
     def obtenerNotificacionesSinLeerParticularDB(self, patente):
         try:
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s AND estaLeida = %s"
+            obtNotifUP= "SELECT id, nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteParticular` WHERE patenteVehiculo = %s AND estaLeida = %s"
             obtNotifUPData = (patente, False)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
-            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall(), False)
 
             if not notifAux:
                 return False
@@ -744,10 +751,10 @@ class dbCallService():
       
     def obtenerNotificacionesSinLeerOrganizacionDB(self, patente):
         try:
-            obtNotifUP= "SELECT nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s AND estaLeida = %s"
+            obtNotifUP= "SELECT id ,nombre, fechaHastaVencer, patenteVehiculo FROM `controlPendienteOrganizacion` WHERE patenteVehiculo = %s AND estaLeida = %s"
             obtNotifUPData = (patente, False)
             self.dbCursor.execute(obtNotifUP, obtNotifUPData)
-            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall())
+            notifAux = self.generarListaNotificacion(self.dbCursor.fetchall(), False)
 
             if not notifAux:
                 return False
