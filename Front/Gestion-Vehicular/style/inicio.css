@@ -16,6 +16,14 @@ html {
   scrollbar-color: orange transparent;
 }
 
+#text-navbar-chico {
+  padding-top: 8px;
+}
+
+#notifiacaciones-navbar-chico {
+  display: flex;
+}
+
 /* Navbar */
 .navbar-center {
   justify-content: center;
