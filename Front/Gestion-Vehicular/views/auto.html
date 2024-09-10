@@ -149,11 +149,13 @@
                 <div id="viaje-programado-inputs" style="display: none;">
                   <div class="form-element">
                     <label for="nombreViaje">Nombre del Viaje</label>
-                    <input type="text" id="nombreViaje" name="nombreViaje" />
+                    <input type="text" id="nombreViaje" name="nombreViaje" required/>
+                    <div id="nombreViajeFeedback" class="invalid-feedback">El nombre solo puede contener letras.</div>
                   </div>
                   <div class="form-element">
                     <label for="kilometrosViaje">Kilómetros del Viaje</label>
-                    <input type="number" id="kilometrosViaje" name="kilometrosViaje" min="1" />
+                    <input type="number" id="kilometrosViaje" name="kilometrosViaje" min="200" max="1000" required/>
+                    <div id="kilometroViajeFeedback" class="invalid-feedback">Los kilometros van desde 200 a 1000km.</div>
                   </div>
                 </div>
                 <div class="form-element">
@@ -185,7 +187,7 @@
                   <input type="text" id="selectedDate" name="selectedDate" readonly />
                 </div>
                 <div class="form-element form-div">
-                  <button class="btn-form">Guardar</button>
+                  <button id="guardar-btn" class="btn-form">Guardar</button>
                   <button class="btn-form">Cancelar</button>
                 </div>
               </div>
@@ -453,6 +455,7 @@
   <script src="../scripts/auto.js"></script>
   <script src="../scripts/perfil.js"></script>
   <script src="../scripts/llegadaAlertas.js"></script>
+  <script src="../scripts/alertaExpresionRegular.js"></script>
 </body>
 
 </html>
