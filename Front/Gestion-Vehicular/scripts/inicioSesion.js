@@ -409,33 +409,6 @@ function validarContrasenaSesion() {
   const tieneLetra = /[A-Za-z]/.test(valorContrasena);
   const tieneNumero = /\d/.test(valorContrasena);
 
-  if (valorContrasena.length < 7) {
-    mostrarError(
-      contrasena,
-      "La contraseña debe tener al menos 7 caracteres",
-      "passwordSesionFeedback"
-    );
-    return false;
-  }
-
-  if (!tieneLetra) {
-    mostrarError(
-      contrasena,
-      "La contraseña debe contener al menos una letra",
-      "passwordSesionFeedback"
-    );
-    return false;
-  }
-
-  if (!tieneNumero) {
-    mostrarError(
-      contrasena,
-      "La contraseña debe contener al menos un número",
-      "passwordSesionFeedback"
-    );
-    return false;
-  }
-
   mostrarExito(contrasena, "passwordSesionFeedback");
   return true;
 }
